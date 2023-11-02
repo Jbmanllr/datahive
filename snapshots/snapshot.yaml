@@ -1,0 +1,5959 @@
+version: 1
+directus: 14.0.1
+vendor: postgres
+collections:
+  - collection: databee
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: databee
+      color: null
+      display_template: null
+      group: null
+      hidden: false
+      icon: scatter_plot
+      item_duplication_fields: null
+      note: null
+      preview_url: null
+      singleton: false
+      sort: 1
+      sort_field: null
+      translations: null
+      unarchive_value: null
+      versioning: false
+  - collection: databee_orchestrations
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: status
+      archive_value: archived
+      collapse: open
+      collection: databee_orchestrations
+      color: null
+      display_template: null
+      group: databee
+      hidden: true
+      icon: manage_history
+      item_duplication_fields: null
+      note: null
+      preview_url: null
+      singleton: false
+      sort: 2
+      sort_field: sort
+      translations: null
+      unarchive_value: draft
+      versioning: false
+    schema:
+      name: databee_orchestrations
+  - collection: databee_projects
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: databee_projects
+      color: null
+      display_template: null
+      group: databee
+      hidden: false
+      icon: folder_copy
+      item_duplication_fields: null
+      note: null
+      preview_url: null
+      singleton: false
+      sort: 1
+      sort_field: null
+      translations: null
+      unarchive_value: null
+      versioning: false
+    schema:
+      name: databee_projects
+  - collection: databee_raw_data
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: databee_raw_data
+      color: null
+      display_template: null
+      group: databee
+      hidden: false
+      icon: raw_on
+      item_duplication_fields: null
+      note: null
+      preview_url: null
+      singleton: false
+      sort: 4
+      sort_field: null
+      translations:
+        - language: en-US
+          translation: Raw Datas
+          singular: Raw Data
+          plural: Raw Datas
+      unarchive_value: null
+      versioning: true
+    schema:
+      name: databee_raw_data
+  - collection: databee_run_reports
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: databee_run_reports
+      color: null
+      display_template: null
+      group: databee
+      hidden: true
+      icon: report
+      item_duplication_fields: null
+      note: null
+      preview_url: null
+      singleton: false
+      sort: 6
+      sort_field: null
+      translations: null
+      unarchive_value: null
+      versioning: false
+    schema:
+      name: databee_run_reports
+  - collection: databee_run_sessions
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: databee_run_sessions
+      color: null
+      display_template: null
+      group: databee
+      hidden: true
+      icon: playlist_play
+      item_duplication_fields: null
+      note: null
+      preview_url: null
+      singleton: false
+      sort: 5
+      sort_field: null
+      translations: null
+      unarchive_value: null
+      versioning: false
+    schema:
+      name: databee_run_sessions
+  - collection: databee_runs
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: databee_runs
+      color: null
+      display_template: null
+      group: databee
+      hidden: false
+      icon: directions_run
+      item_duplication_fields: null
+      note: null
+      preview_url: null
+      singleton: false
+      sort: 3
+      sort_field: null
+      translations: null
+      unarchive_value: null
+      versioning: false
+    schema:
+      name: databee_runs
+  - collection: honeycomb
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: honeycomb
+      color: null
+      display_template: null
+      group: null
+      hidden: false
+      icon: grid_4x4
+      item_duplication_fields: null
+      note: null
+      preview_url: null
+      singleton: false
+      sort: null
+      sort_field: null
+      translations: null
+      unarchive_value: null
+      versioning: false
+  - collection: pollinator
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: pollinator
+      color: null
+      display_template: null
+      group: null
+      hidden: false
+      icon: compare_arrows
+      item_duplication_fields: null
+      note: null
+      preview_url: null
+      singleton: false
+      sort: 2
+      sort_field: null
+      translations: null
+      unarchive_value: null
+      versioning: false
+  - collection: pollinator_projects
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: pollinator_projects
+      color: null
+      display_template: null
+      group: pollinator
+      hidden: false
+      icon: folder_copy
+      item_duplication_fields: null
+      note: null
+      preview_url: null
+      singleton: false
+      sort: 1
+      sort_field: null
+      translations: null
+      unarchive_value: null
+      versioning: false
+    schema:
+      name: pollinator_projects
+  - collection: pollinator_run_reports
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: pollinator_run_reports
+      color: null
+      display_template: null
+      group: pollinator
+      hidden: true
+      icon: report
+      item_duplication_fields: null
+      note: null
+      preview_url: null
+      singleton: false
+      sort: 5
+      sort_field: null
+      translations: null
+      unarchive_value: null
+      versioning: false
+    schema:
+      name: pollinator_run_reports
+  - collection: pollinator_run_sessions
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: pollinator_run_sessions
+      color: null
+      display_template: null
+      group: pollinator
+      hidden: true
+      icon: playlist_play
+      item_duplication_fields: null
+      note: null
+      preview_url: null
+      singleton: false
+      sort: 4
+      sort_field: null
+      translations: null
+      unarchive_value: null
+      versioning: false
+    schema:
+      name: pollinator_run_sessions
+  - collection: pollinator_runs
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: pollinator_runs
+      color: null
+      display_template: null
+      group: pollinator
+      hidden: false
+      icon: directions_run
+      item_duplication_fields: null
+      note: null
+      preview_url: null
+      singleton: false
+      sort: 2
+      sort_field: null
+      translations: null
+      unarchive_value: null
+      versioning: false
+    schema:
+      name: pollinator_runs
+fields:
+  - collection: databee_orchestrations
+    field: crawler_type
+    type: string
+    meta:
+      collection: databee_orchestrations
+      conditions: null
+      display: null
+      display_options: null
+      field: crawler_type
+      group: null
+      hidden: false
+      interface: select-dropdown
+      note: null
+      options:
+        choices:
+          - text: Cheerio
+            value: cheerio
+          - text: Playwright
+            value: playwright
+          - text: Puppeteer
+            value: puppeteer
+          - text: JSDOM
+            value: jsdon
+          - text: HTTP
+            value: http
+          - text: Basic
+            value: basic
+      readonly: false
+      required: true
+      sort: 11
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: crawler_type
+      table: databee_orchestrations
+      data_type: character varying
+      default_value: cheerio
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_orchestrations
+    field: date_created
+    type: timestamp
+    meta:
+      collection: databee_orchestrations
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: date_created
+      group: null
+      hidden: true
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: 5
+      special:
+        - date-created
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: date_created
+      table: databee_orchestrations
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_orchestrations
+    field: date_updated
+    type: timestamp
+    meta:
+      collection: databee_orchestrations
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: date_updated
+      group: null
+      hidden: true
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: 7
+      special:
+        - date-updated
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: date_updated
+      table: databee_orchestrations
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_orchestrations
+    field: handler
+    type: string
+    meta:
+      collection: databee_orchestrations
+      conditions: null
+      display: null
+      display_options: null
+      field: handler
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: true
+      sort: 9
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: handler
+      table: databee_orchestrations
+      data_type: character varying
+      default_value: default
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_orchestrations
+    field: id
+    type: uuid
+    meta:
+      collection: databee_orchestrations
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: 1
+      special:
+        - uuid
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: id
+      table: databee_orchestrations
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: true
+      is_primary_key: true
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_orchestrations
+    field: name
+    type: string
+    meta:
+      collection: databee_orchestrations
+      conditions: null
+      display: null
+      display_options: null
+      field: name
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: true
+      sort: 8
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: name
+      table: databee_orchestrations
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_orchestrations
+    field: project_id
+    type: uuid
+    meta:
+      collection: databee_orchestrations
+      conditions: null
+      display: related-values
+      display_options:
+        template: '{{name}} - {{key}}'
+      field: project_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{name}} - {{key}}'
+      readonly: false
+      required: true
+      sort: 10
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: project_id
+      table: databee_orchestrations
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: databee_projects
+      foreign_key_column: id
+  - collection: databee_orchestrations
+    field: require_login
+    type: boolean
+    meta:
+      collection: databee_orchestrations
+      conditions: null
+      display: boolean
+      display_options: null
+      field: require_login
+      group: null
+      hidden: false
+      interface: boolean
+      note: null
+      options: null
+      readonly: false
+      required: true
+      sort: 13
+      special:
+        - cast-boolean
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: require_login
+      table: databee_orchestrations
+      data_type: boolean
+      default_value: false
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_orchestrations
+    field: sort
+    type: integer
+    meta:
+      collection: databee_orchestrations
+      conditions: null
+      display: null
+      display_options: null
+      field: sort
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: 3
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: sort
+      table: databee_orchestrations
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_orchestrations
+    field: start_urls
+    type: json
+    meta:
+      collection: databee_orchestrations
+      conditions: null
+      display: null
+      display_options: null
+      field: start_urls
+      group: null
+      hidden: false
+      interface: list
+      note: null
+      options:
+        fields:
+          - field: url
+            name: url
+            type: string
+            meta:
+              field: url
+              width: half
+              type: string
+              required: true
+              interface: input
+              options:
+                trim: true
+          - field: label
+            name: label
+            type: string
+            meta:
+              field: label
+              width: half
+              type: string
+              required: true
+              interface: input
+              options:
+                trim: true
+      readonly: false
+      required: false
+      sort: 12
+      special:
+        - cast-json
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: start_urls
+      table: databee_orchestrations
+      data_type: json
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_orchestrations
+    field: status
+    type: string
+    meta:
+      collection: databee_orchestrations
+      conditions: null
+      display: labels
+      display_options:
+        choices:
+          - text: $t:published
+            value: published
+            foreground: '#FFFFFF'
+            background: var(--theme--primary)
+          - text: $t:draft
+            value: draft
+            foreground: '#18222F'
+            background: '#D3DAE4'
+          - text: $t:archived
+            value: archived
+            foreground: '#FFFFFF'
+            background: var(--theme--warning)
+        showAsDot: true
+      field: status
+      group: null
+      hidden: false
+      interface: select-dropdown
+      note: null
+      options:
+        choices:
+          - text: $t:published
+            value: published
+          - text: $t:draft
+            value: draft
+          - text: $t:archived
+            value: archived
+      readonly: false
+      required: false
+      sort: 2
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: status
+      table: databee_orchestrations
+      data_type: character varying
+      default_value: draft
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_orchestrations
+    field: user_created
+    type: uuid
+    meta:
+      collection: databee_orchestrations
+      conditions: null
+      display: user
+      display_options: null
+      field: user_created
+      group: null
+      hidden: true
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
+      readonly: true
+      required: false
+      sort: 4
+      special:
+        - user-created
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: user_created
+      table: databee_orchestrations
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: directus_users
+      foreign_key_column: id
+  - collection: databee_orchestrations
+    field: user_updated
+    type: uuid
+    meta:
+      collection: databee_orchestrations
+      conditions: null
+      display: user
+      display_options: null
+      field: user_updated
+      group: null
+      hidden: true
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
+      readonly: true
+      required: false
+      sort: 6
+      special:
+        - user-updated
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: user_updated
+      table: databee_orchestrations
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: directus_users
+      foreign_key_column: id
+  - collection: databee_projects
+    field: base_url
+    type: string
+    meta:
+      collection: databee_projects
+      conditions: null
+      display: null
+      display_options: null
+      field: base_url
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options:
+        trim: true
+      readonly: false
+      required: true
+      sort: 9
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: base_url
+      table: databee_projects
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_projects
+    field: databee_orchestrations
+    type: alias
+    meta:
+      collection: databee_projects
+      conditions: null
+      display: related-values
+      display_options:
+        template: '{{name}} - {{handler}}'
+      field: databee_orchestrations
+      group: null
+      hidden: false
+      interface: list-o2m
+      note: null
+      options:
+        enableLink: true
+        enableSearchFilter: true
+        fields:
+          - crawler_type
+          - date_created
+          - handler
+          - id
+          - name
+          - sort
+        layout: table
+        tableSpacing: compact
+      readonly: false
+      required: false
+      sort: 11
+      special:
+        - o2m
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+  - collection: databee_projects
+    field: databee_raw_data
+    type: alias
+    meta:
+      collection: databee_projects
+      conditions: null
+      display: related-values
+      display_options:
+        template: '{{project_id.name}} - {{entity_type}}'
+      field: databee_raw_data
+      group: null
+      hidden: false
+      interface: list-o2m
+      note: null
+      options:
+        enableLink: true
+        enableSearchFilter: true
+        fields:
+          - date_created
+          - entity_type
+          - id
+          - project_id
+        layout: table
+        tableSpacing: compact
+      readonly: false
+      required: false
+      sort: 13
+      special:
+        - o2m
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+  - collection: databee_projects
+    field: databee_runs
+    type: alias
+    meta:
+      collection: databee_projects
+      conditions: null
+      display: related-values
+      display_options:
+        template: '{{date_start}} - {{status}}'
+      field: databee_runs
+      group: null
+      hidden: false
+      interface: list-o2m
+      note: null
+      options:
+        enableLink: true
+        enableSearchFilter: true
+        fields:
+          - date_created
+          - date_end
+          - date_start
+          - id
+          - project_id
+          - status
+        layout: table
+        limit: 30
+        tableSpacing: compact
+      readonly: false
+      required: false
+      sort: 12
+      special:
+        - o2m
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+  - collection: databee_projects
+    field: date_created
+    type: timestamp
+    meta:
+      collection: databee_projects
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: date_created
+      group: null
+      hidden: true
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: 3
+      special:
+        - date-created
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: date_created
+      table: databee_projects
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_projects
+    field: date_updated
+    type: timestamp
+    meta:
+      collection: databee_projects
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: date_updated
+      group: null
+      hidden: true
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: 5
+      special:
+        - date-updated
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: date_updated
+      table: databee_projects
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_projects
+    field: default_handler
+    type: string
+    meta:
+      collection: databee_projects
+      conditions: null
+      display: raw
+      display_options: null
+      field: default_handler
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: true
+      sort: 10
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: default_handler
+      table: databee_projects
+      data_type: character varying
+      default_value: default
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_projects
+    field: description
+    type: text
+    meta:
+      collection: databee_projects
+      conditions: null
+      display: null
+      display_options: null
+      field: description
+      group: null
+      hidden: false
+      interface: input-multiline
+      note: null
+      options:
+        trim: true
+      readonly: false
+      required: false
+      sort: 8
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: description
+      table: databee_projects
+      data_type: text
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_projects
+    field: email
+    type: string
+    meta:
+      collection: databee_projects
+      conditions: null
+      display: null
+      display_options: null
+      field: email
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: 14
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: email
+      table: databee_projects
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_projects
+    field: id
+    type: uuid
+    meta:
+      collection: databee_projects
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: 1
+      special:
+        - uuid
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: id
+      table: databee_projects
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: true
+      is_primary_key: true
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_projects
+    field: key
+    type: string
+    meta:
+      collection: databee_projects
+      conditions: null
+      display: raw
+      display_options: null
+      field: key
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options:
+        slug: true
+        trim: true
+      readonly: false
+      required: true
+      sort: 7
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: key
+      table: databee_projects
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: true
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_projects
+    field: login_credentials
+    type: alias
+    meta:
+      collection: databee_projects
+      conditions: null
+      display: null
+      display_options: null
+      field: login_credentials
+      group: null
+      hidden: false
+      interface: group-detail
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: 15
+      special:
+        - alias
+        - group
+        - no-data
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+  - collection: databee_projects
+    field: name
+    type: string
+    meta:
+      collection: databee_projects
+      conditions: null
+      display: raw
+      display_options: null
+      field: name
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options:
+        trim: true
+      readonly: false
+      required: true
+      sort: 6
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: name
+      table: databee_projects
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: true
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_projects
+    field: password
+    type: hash
+    meta:
+      collection: databee_projects
+      conditions: null
+      display: null
+      display_options: null
+      field: password
+      group: null
+      hidden: false
+      interface: input-hash
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: 14
+      special:
+        - hash
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: password
+      table: databee_projects
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_projects
+    field: project_image
+    type: uuid
+    meta:
+      collection: databee_projects
+      conditions: null
+      display: image
+      display_options: null
+      field: project_image
+      group: null
+      hidden: false
+      interface: file-image
+      note: null
+      options:
+        folder: a559edc9-717f-4626-8066-cc8122a07538
+      readonly: false
+      required: false
+      sort: 16
+      special:
+        - file
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: project_image
+      table: databee_projects
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: directus_files
+      foreign_key_column: id
+  - collection: databee_projects
+    field: user_created
+    type: uuid
+    meta:
+      collection: databee_projects
+      conditions: null
+      display: user
+      display_options: null
+      field: user_created
+      group: null
+      hidden: true
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
+      readonly: true
+      required: false
+      sort: 2
+      special:
+        - user-created
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: user_created
+      table: databee_projects
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: directus_users
+      foreign_key_column: id
+  - collection: databee_projects
+    field: user_updated
+    type: uuid
+    meta:
+      collection: databee_projects
+      conditions: null
+      display: user
+      display_options: null
+      field: user_updated
+      group: null
+      hidden: true
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
+      readonly: true
+      required: false
+      sort: 4
+      special:
+        - user-updated
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: user_updated
+      table: databee_projects
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: directus_users
+      foreign_key_column: id
+  - collection: databee_projects
+    field: username
+    type: string
+    meta:
+      collection: databee_projects
+      conditions: null
+      display: null
+      display_options: null
+      field: username
+      group: login_credentials
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: 1
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: username
+      table: databee_projects
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_raw_data
+    field: data
+    type: json
+    meta:
+      collection: databee_raw_data
+      conditions: null
+      display: raw
+      display_options: null
+      field: data
+      group: null
+      hidden: false
+      interface: input-code
+      note: null
+      options:
+        lineWrapping: true
+      readonly: false
+      required: true
+      sort: 8
+      special:
+        - cast-json
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: data
+      table: databee_raw_data
+      data_type: json
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_raw_data
+    field: databee_run_reports
+    type: alias
+    meta:
+      collection: databee_raw_data
+      conditions: null
+      display: related-values
+      display_options:
+        template: '{{type}} - {{code}}'
+      field: databee_run_reports
+      group: null
+      hidden: false
+      interface: list-o2m
+      note: null
+      options:
+        enableLink: true
+        enableSearchFilter: true
+        fields:
+          - code
+          - date_created
+          - id
+          - message
+          - type
+        layout: table
+        limit: 30
+        tableSpacing: compact
+      readonly: false
+      required: false
+      sort: 14
+      special:
+        - o2m
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+  - collection: databee_raw_data
+    field: date_created
+    type: timestamp
+    meta:
+      collection: databee_raw_data
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: date_created
+      group: null
+      hidden: true
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: 3
+      special:
+        - date-created
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: date_created
+      table: databee_raw_data
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_raw_data
+    field: date_updated
+    type: timestamp
+    meta:
+      collection: databee_raw_data
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: date_updated
+      group: null
+      hidden: true
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: 5
+      special:
+        - date-updated
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: date_updated
+      table: databee_raw_data
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_raw_data
+    field: entity_type
+    type: string
+    meta:
+      collection: databee_raw_data
+      conditions: null
+      display: null
+      display_options: null
+      field: entity_type
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: true
+      sort: 6
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: entity_type
+      table: databee_raw_data
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_raw_data
+    field: id
+    type: uuid
+    meta:
+      collection: databee_raw_data
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: 1
+      special:
+        - uuid
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: id
+      table: databee_raw_data
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: true
+      is_primary_key: true
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_raw_data
+    field: idempotency_key
+    type: string
+    meta:
+      collection: databee_raw_data
+      conditions: null
+      display: null
+      display_options: null
+      field: idempotency_key
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: true
+      sort: 10
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: idempotency_key
+      table: databee_raw_data
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_raw_data
+    field: label
+    type: string
+    meta:
+      collection: databee_raw_data
+      conditions: null
+      display: null
+      display_options: null
+      field: label
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: 16
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: label
+      table: databee_raw_data
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_raw_data
+    field: migrated
+    type: boolean
+    meta:
+      collection: databee_raw_data
+      conditions: null
+      display: null
+      display_options: null
+      field: migrated
+      group: null
+      hidden: false
+      interface: boolean
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: 9
+      special:
+        - cast-boolean
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: migrated
+      table: databee_raw_data
+      data_type: boolean
+      default_value: false
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_raw_data
+    field: project_id
+    type: uuid
+    meta:
+      collection: databee_raw_data
+      conditions: null
+      display: related-values
+      display_options:
+        template: '{{name}} - {{key}}'
+      field: project_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{name}} - {{key}}'
+      readonly: false
+      required: true
+      sort: 11
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: project_id
+      table: databee_raw_data
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: databee_projects
+      foreign_key_column: id
+  - collection: databee_raw_data
+    field: run_id
+    type: uuid
+    meta:
+      collection: databee_raw_data
+      conditions: null
+      display: related-values
+      display_options:
+        template: "{{date_start}} |\_{{status}}"
+      field: run_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: "{{date_start}} |\_{{status}}"
+      readonly: false
+      required: true
+      sort: 12
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: run_id
+      table: databee_raw_data
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: databee_runs
+      foreign_key_column: id
+  - collection: databee_raw_data
+    field: run_session_id
+    type: uuid
+    meta:
+      collection: databee_raw_data
+      conditions: null
+      display: null
+      display_options: null
+      field: run_session_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{date_start}}'
+      readonly: false
+      required: true
+      sort: 13
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: run_session_id
+      table: databee_raw_data
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: databee_run_sessions
+      foreign_key_column: id
+  - collection: databee_raw_data
+    field: source
+    type: string
+    meta:
+      collection: databee_raw_data
+      conditions: null
+      display: null
+      display_options: null
+      field: source
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: true
+      sort: 7
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: source
+      table: databee_raw_data
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_raw_data
+    field: user_created
+    type: uuid
+    meta:
+      collection: databee_raw_data
+      conditions: null
+      display: user
+      display_options: null
+      field: user_created
+      group: null
+      hidden: true
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
+      readonly: true
+      required: false
+      sort: 2
+      special:
+        - user-created
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: user_created
+      table: databee_raw_data
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: directus_users
+      foreign_key_column: id
+  - collection: databee_raw_data
+    field: user_updated
+    type: uuid
+    meta:
+      collection: databee_raw_data
+      conditions: null
+      display: user
+      display_options: null
+      field: user_updated
+      group: null
+      hidden: true
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
+      readonly: true
+      required: false
+      sort: 4
+      special:
+        - user-updated
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: user_updated
+      table: databee_raw_data
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: directus_users
+      foreign_key_column: id
+  - collection: databee_run_reports
+    field: code
+    type: string
+    meta:
+      collection: databee_run_reports
+      conditions: null
+      display: null
+      display_options: null
+      field: code
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: true
+      sort: 7
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: code
+      table: databee_run_reports
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_run_reports
+    field: date_created
+    type: timestamp
+    meta:
+      collection: databee_run_reports
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: date_created
+      group: null
+      hidden: true
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: 3
+      special:
+        - date-created
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: date_created
+      table: databee_run_reports
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_run_reports
+    field: date_updated
+    type: timestamp
+    meta:
+      collection: databee_run_reports
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: date_updated
+      group: null
+      hidden: true
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: 5
+      special:
+        - date-updated
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: date_updated
+      table: databee_run_reports
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_run_reports
+    field: id
+    type: uuid
+    meta:
+      collection: databee_run_reports
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: 1
+      special:
+        - uuid
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: id
+      table: databee_run_reports
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: true
+      is_primary_key: true
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_run_reports
+    field: message
+    type: text
+    meta:
+      collection: databee_run_reports
+      conditions: null
+      display: null
+      display_options: null
+      field: message
+      group: null
+      hidden: false
+      interface: input-multiline
+      note: null
+      options:
+        trim: true
+      readonly: false
+      required: false
+      sort: 8
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: message
+      table: databee_run_reports
+      data_type: text
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_run_reports
+    field: raw_data_id
+    type: uuid
+    meta:
+      collection: databee_run_reports
+      conditions: null
+      display: related-values
+      display_options:
+        template: '{{entity_type}} - {{project_id.name}}'
+      field: raw_data_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{entity_type}} - {{project_id.name}}'
+      readonly: false
+      required: false
+      sort: 9
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: raw_data_id
+      table: databee_run_reports
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: databee_raw_data
+      foreign_key_column: id
+  - collection: databee_run_reports
+    field: run_id
+    type: uuid
+    meta:
+      collection: databee_run_reports
+      conditions: null
+      display: related-values
+      display_options:
+        template: "{{date_start}} |\_{{status}}"
+      field: run_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: "{{date_start}} |\_{{status}}"
+      readonly: false
+      required: true
+      sort: 10
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: run_id
+      table: databee_run_reports
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: databee_runs
+      foreign_key_column: id
+  - collection: databee_run_reports
+    field: run_session_id
+    type: uuid
+    meta:
+      collection: databee_run_reports
+      conditions: null
+      display: related-values
+      display_options:
+        template: '{{date_start}} - {{id}}'
+      field: run_session_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{date_start}} - {{id}}'
+      readonly: false
+      required: true
+      sort: 11
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: run_session_id
+      table: databee_run_reports
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: databee_run_sessions
+      foreign_key_column: id
+  - collection: databee_run_reports
+    field: type
+    type: string
+    meta:
+      collection: databee_run_reports
+      conditions: null
+      display: labels
+      display_options: null
+      field: type
+      group: null
+      hidden: false
+      interface: select-dropdown
+      note: null
+      options:
+        choices:
+          - text: Info
+            value: info
+          - text: Error
+            value: error
+      readonly: false
+      required: true
+      sort: 6
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: type
+      table: databee_run_reports
+      data_type: character varying
+      default_value: info
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_run_reports
+    field: user_created
+    type: uuid
+    meta:
+      collection: databee_run_reports
+      conditions: null
+      display: user
+      display_options: null
+      field: user_created
+      group: null
+      hidden: true
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
+      readonly: true
+      required: false
+      sort: 2
+      special:
+        - user-created
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: user_created
+      table: databee_run_reports
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: directus_users
+      foreign_key_column: id
+  - collection: databee_run_reports
+    field: user_updated
+    type: uuid
+    meta:
+      collection: databee_run_reports
+      conditions: null
+      display: user
+      display_options: null
+      field: user_updated
+      group: null
+      hidden: true
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
+      readonly: true
+      required: false
+      sort: 4
+      special:
+        - user-updated
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: user_updated
+      table: databee_run_reports
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: directus_users
+      foreign_key_column: id
+  - collection: databee_run_sessions
+    field: databee_raw_data
+    type: alias
+    meta:
+      collection: databee_run_sessions
+      conditions: null
+      display: related-values
+      display_options:
+        template: '{{project_id.name}} - {{entity_type}}'
+      field: databee_raw_data
+      group: null
+      hidden: false
+      interface: list-o2m
+      note: null
+      options:
+        enableLink: true
+        enableSearchFilter: true
+        fields:
+          - date_created
+          - entity_type
+          - id
+          - project_id
+        layout: table
+        limit: 30
+        tableSpacing: compact
+      readonly: true
+      required: false
+      sort: 8
+      special:
+        - o2m
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+  - collection: databee_run_sessions
+    field: databee_run_reports
+    type: alias
+    meta:
+      collection: databee_run_sessions
+      conditions: null
+      display: related-values
+      display_options:
+        template: '{{type}} - {{code}}'
+      field: databee_run_reports
+      group: null
+      hidden: false
+      interface: list-o2m
+      note: null
+      options:
+        enableLink: true
+        enableSearchFilter: true
+        fields:
+          - code
+          - date_created
+          - id
+          - message
+          - type
+        layout: table
+        limit: 30
+        tableSpacing: compact
+      readonly: false
+      required: false
+      sort: 9
+      special:
+        - o2m
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+  - collection: databee_run_sessions
+    field: date_created
+    type: timestamp
+    meta:
+      collection: databee_run_sessions
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: date_created
+      group: null
+      hidden: true
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: 2
+      special:
+        - date-created
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: date_created
+      table: databee_run_sessions
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_run_sessions
+    field: date_end
+    type: timestamp
+    meta:
+      collection: databee_run_sessions
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+        strict: true
+      field: date_end
+      group: null
+      hidden: false
+      interface: datetime
+      note: null
+      options:
+        includeSeconds: true
+      readonly: false
+      required: true
+      sort: 5
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: date_end
+      table: databee_run_sessions
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_run_sessions
+    field: date_start
+    type: timestamp
+    meta:
+      collection: databee_run_sessions
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+        strict: true
+      field: date_start
+      group: null
+      hidden: false
+      interface: datetime
+      note: null
+      options:
+        includeSeconds: true
+      readonly: false
+      required: true
+      sort: 4
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: date_start
+      table: databee_run_sessions
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_run_sessions
+    field: date_updated
+    type: timestamp
+    meta:
+      collection: databee_run_sessions
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: date_updated
+      group: null
+      hidden: true
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: 3
+      special:
+        - date-updated
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: date_updated
+      table: databee_run_sessions
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_run_sessions
+    field: env
+    type: json
+    meta:
+      collection: databee_run_sessions
+      conditions: null
+      display: null
+      display_options: null
+      field: env
+      group: null
+      hidden: false
+      interface: input-code
+      note: null
+      options:
+        lineWrapping: true
+      readonly: false
+      required: false
+      sort: 10
+      special:
+        - cast-json
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: env
+      table: databee_run_sessions
+      data_type: json
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_run_sessions
+    field: id
+    type: uuid
+    meta:
+      collection: databee_run_sessions
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: 1
+      special:
+        - uuid
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: id
+      table: databee_run_sessions
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: true
+      is_primary_key: true
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_run_sessions
+    field: run_id
+    type: uuid
+    meta:
+      collection: databee_run_sessions
+      conditions: null
+      display: related-values
+      display_options:
+        template: "{{date_start}} |\_{{status}} | {{id}}"
+      field: run_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: "{{date_start}} |\_{{status}} |\_{{id}}"
+      readonly: false
+      required: true
+      sort: 7
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: run_id
+      table: databee_run_sessions
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: databee_runs
+      foreign_key_column: id
+  - collection: databee_run_sessions
+    field: status
+    type: string
+    meta:
+      collection: databee_run_sessions
+      conditions: null
+      display: labels
+      display_options: null
+      field: status
+      group: null
+      hidden: false
+      interface: select-dropdown
+      note: null
+      options:
+        choices:
+          - text: Running
+            value: running
+          - text: Aborted
+            value: aborted
+          - text: Paused
+            value: paused
+          - text: Finished
+            value: finished
+      readonly: false
+      required: true
+      sort: 6
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: status
+      table: databee_run_sessions
+      data_type: character varying
+      default_value: running
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_runs
+    field: databee_raw_data
+    type: alias
+    meta:
+      collection: databee_runs
+      conditions: null
+      display: related-values
+      display_options:
+        template: '{{project_id.name}} - {{entity_type}}'
+      field: databee_raw_data
+      group: null
+      hidden: false
+      interface: list-o2m
+      note: null
+      options:
+        enableLink: true
+        enableSearchFilter: true
+        fields:
+          - date_created
+          - entity_type
+          - id
+          - project_id
+        layout: table
+        limit: 30
+        tableSpacing: compact
+      readonly: false
+      required: false
+      sort: 13
+      special:
+        - o2m
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+  - collection: databee_runs
+    field: databee_run_reports
+    type: alias
+    meta:
+      collection: databee_runs
+      conditions: null
+      display: related-values
+      display_options:
+        template: '{{type}} - {{code}}'
+      field: databee_run_reports
+      group: null
+      hidden: false
+      interface: list-o2m
+      note: null
+      options:
+        fields:
+          - code
+          - date_created
+          - id
+          - message
+          - type
+        layout: table
+        limit: 30
+        tableSpacing: compact
+      readonly: false
+      required: false
+      sort: 15
+      special:
+        - o2m
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+  - collection: databee_runs
+    field: databee_run_sessions
+    type: alias
+    meta:
+      collection: databee_runs
+      conditions: null
+      display: related-values
+      display_options:
+        template: '{{date_start}} - {{date_end}}'
+      field: databee_run_sessions
+      group: null
+      hidden: false
+      interface: list-o2m
+      note: null
+      options:
+        enableLink: true
+        enableSearchFilter: true
+        fields:
+          - date_created
+          - date_end
+          - date_start
+          - id
+          - run_id.project_id
+          - status
+        layout: table
+        limit: 30
+        tableSpacing: compact
+      readonly: false
+      required: false
+      sort: 14
+      special:
+        - o2m
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+  - collection: databee_runs
+    field: date_created
+    type: timestamp
+    meta:
+      collection: databee_runs
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: date_created
+      group: null
+      hidden: true
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: 3
+      special:
+        - date-created
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: date_created
+      table: databee_runs
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_runs
+    field: date_end
+    type: timestamp
+    meta:
+      collection: databee_runs
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+        strict: true
+      field: date_end
+      group: null
+      hidden: false
+      interface: datetime
+      note: null
+      options:
+        includeSeconds: true
+      readonly: false
+      required: true
+      sort: 7
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: date_end
+      table: databee_runs
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_runs
+    field: date_start
+    type: timestamp
+    meta:
+      collection: databee_runs
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+        strict: true
+      field: date_start
+      group: null
+      hidden: false
+      interface: datetime
+      note: null
+      options:
+        includeSeconds: true
+      readonly: false
+      required: true
+      sort: 6
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: date_start
+      table: databee_runs
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_runs
+    field: date_stopped
+    type: timestamp
+    meta:
+      collection: databee_runs
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+        strict: true
+      field: date_stopped
+      group: null
+      hidden: false
+      interface: datetime
+      note: null
+      options:
+        includeSeconds: true
+      readonly: true
+      required: false
+      sort: 8
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: date_stopped
+      table: databee_runs
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_runs
+    field: date_updated
+    type: timestamp
+    meta:
+      collection: databee_runs
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: date_updated
+      group: null
+      hidden: true
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: 5
+      special:
+        - date-updated
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: date_updated
+      table: databee_runs
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_runs
+    field: id
+    type: uuid
+    meta:
+      collection: databee_runs
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: 1
+      special:
+        - uuid
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: id
+      table: databee_runs
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: true
+      is_primary_key: true
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_runs
+    field: isTestRun
+    type: boolean
+    meta:
+      collection: databee_runs
+      conditions: null
+      display: null
+      display_options: null
+      field: isTestRun
+      group: null
+      hidden: false
+      interface: boolean
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: 11
+      special:
+        - cast-boolean
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: isTestRun
+      table: databee_runs
+      data_type: boolean
+      default_value: false
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_runs
+    field: project_id
+    type: uuid
+    meta:
+      collection: databee_runs
+      conditions: null
+      display: related-values
+      display_options:
+        template: '{{name}} - {{key}}'
+      field: project_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: "{{name}} |\_{{key}}"
+      readonly: false
+      required: true
+      sort: 12
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: project_id
+      table: databee_runs
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: databee_projects
+      foreign_key_column: id
+  - collection: databee_runs
+    field: status
+    type: string
+    meta:
+      collection: databee_runs
+      conditions: null
+      display: labels
+      display_options: null
+      field: status
+      group: null
+      hidden: false
+      interface: select-dropdown
+      note: null
+      options:
+        choices:
+          - text: Running
+            value: running
+          - text: Paused
+            value: paused
+          - text: Aborted
+            value: aborted
+          - text: Finished
+            value: finished
+      readonly: false
+      required: true
+      sort: 10
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: status
+      table: databee_runs
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_runs
+    field: time_elapsed
+    type: bigInteger
+    meta:
+      collection: databee_runs
+      conditions: null
+      display: formatted-value
+      display_options:
+        font: serif
+        format: true
+      field: time_elapsed
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options:
+        font: monospace
+        min: 0
+      readonly: true
+      required: false
+      sort: 9
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: time_elapsed
+      table: databee_runs
+      data_type: bigint
+      default_value: null
+      max_length: null
+      numeric_precision: 64
+      numeric_scale: 0
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: databee_runs
+    field: user_created
+    type: uuid
+    meta:
+      collection: databee_runs
+      conditions: null
+      display: user
+      display_options: null
+      field: user_created
+      group: null
+      hidden: true
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
+      readonly: true
+      required: false
+      sort: 2
+      special:
+        - user-created
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: user_created
+      table: databee_runs
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: directus_users
+      foreign_key_column: id
+  - collection: databee_runs
+    field: user_updated
+    type: uuid
+    meta:
+      collection: databee_runs
+      conditions: null
+      display: user
+      display_options: null
+      field: user_updated
+      group: null
+      hidden: true
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
+      readonly: true
+      required: false
+      sort: 4
+      special:
+        - user-updated
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: user_updated
+      table: databee_runs
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: directus_users
+      foreign_key_column: id
+  - collection: pollinator_projects
+    field: date_created
+    type: timestamp
+    meta:
+      collection: pollinator_projects
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: date_created
+      group: null
+      hidden: true
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: 3
+      special:
+        - date-created
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: date_created
+      table: pollinator_projects
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: pollinator_projects
+    field: date_updated
+    type: timestamp
+    meta:
+      collection: pollinator_projects
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: date_updated
+      group: null
+      hidden: true
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: 5
+      special:
+        - date-updated
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: date_updated
+      table: pollinator_projects
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: pollinator_projects
+    field: description
+    type: text
+    meta:
+      collection: pollinator_projects
+      conditions: null
+      display: null
+      display_options: null
+      field: description
+      group: null
+      hidden: false
+      interface: input-multiline
+      note: null
+      options:
+        trim: true
+      readonly: false
+      required: false
+      sort: 8
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: description
+      table: pollinator_projects
+      data_type: text
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: pollinator_projects
+    field: id
+    type: uuid
+    meta:
+      collection: pollinator_projects
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: 1
+      special:
+        - uuid
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: id
+      table: pollinator_projects
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: true
+      is_primary_key: true
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: pollinator_projects
+    field: key
+    type: string
+    meta:
+      collection: pollinator_projects
+      conditions: null
+      display: raw
+      display_options: null
+      field: key
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options:
+        slug: true
+        trim: true
+      readonly: false
+      required: true
+      sort: 7
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: key
+      table: pollinator_projects
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: true
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: pollinator_projects
+    field: name
+    type: string
+    meta:
+      collection: pollinator_projects
+      conditions: null
+      display: raw
+      display_options: null
+      field: name
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options:
+        trim: true
+      readonly: false
+      required: true
+      sort: 6
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: name
+      table: pollinator_projects
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: true
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: pollinator_projects
+    field: pollinator_runs
+    type: alias
+    meta:
+      collection: pollinator_projects
+      conditions: null
+      display: related-values
+      display_options:
+        template: '{{date_start}} - {{status}}'
+      field: pollinator_runs
+      group: null
+      hidden: false
+      interface: list-o2m
+      note: null
+      options:
+        enableLink: true
+        enableSearchFilter: true
+        fields:
+          - date_end
+          - date_start
+          - id
+          - project_id
+          - status
+        layout: table
+        limit: 30
+        tableSpacing: compact
+      readonly: false
+      required: false
+      sort: 13
+      special:
+        - o2m
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+  - collection: pollinator_projects
+    field: project_image
+    type: uuid
+    meta:
+      collection: pollinator_projects
+      conditions: null
+      display: null
+      display_options: null
+      field: project_image
+      group: null
+      hidden: false
+      interface: file-image
+      note: null
+      options:
+        folder: a559edc9-717f-4626-8066-cc8122a07538
+      readonly: false
+      required: false
+      sort: 14
+      special:
+        - file
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: project_image
+      table: pollinator_projects
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: directus_files
+      foreign_key_column: id
+  - collection: pollinator_projects
+    field: user_created
+    type: uuid
+    meta:
+      collection: pollinator_projects
+      conditions: null
+      display: user
+      display_options: null
+      field: user_created
+      group: null
+      hidden: true
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
+      readonly: true
+      required: false
+      sort: 2
+      special:
+        - user-created
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: user_created
+      table: pollinator_projects
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: directus_users
+      foreign_key_column: id
+  - collection: pollinator_projects
+    field: user_updated
+    type: uuid
+    meta:
+      collection: pollinator_projects
+      conditions: null
+      display: user
+      display_options: null
+      field: user_updated
+      group: null
+      hidden: true
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
+      readonly: true
+      required: false
+      sort: 4
+      special:
+        - user-updated
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: user_updated
+      table: pollinator_projects
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: directus_users
+      foreign_key_column: id
+  - collection: pollinator_run_reports
+    field: code
+    type: string
+    meta:
+      collection: pollinator_run_reports
+      conditions: null
+      display: null
+      display_options: null
+      field: code
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: true
+      sort: 7
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: code
+      table: pollinator_run_reports
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: pollinator_run_reports
+    field: date_created
+    type: timestamp
+    meta:
+      collection: pollinator_run_reports
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: date_created
+      group: null
+      hidden: true
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: 3
+      special:
+        - date-created
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: date_created
+      table: pollinator_run_reports
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: pollinator_run_reports
+    field: date_updated
+    type: timestamp
+    meta:
+      collection: pollinator_run_reports
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: date_updated
+      group: null
+      hidden: true
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: 5
+      special:
+        - date-updated
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: date_updated
+      table: pollinator_run_reports
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: pollinator_run_reports
+    field: id
+    type: uuid
+    meta:
+      collection: pollinator_run_reports
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: 1
+      special:
+        - uuid
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: id
+      table: pollinator_run_reports
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: true
+      is_primary_key: true
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: pollinator_run_reports
+    field: message
+    type: text
+    meta:
+      collection: pollinator_run_reports
+      conditions: null
+      display: null
+      display_options: null
+      field: message
+      group: null
+      hidden: false
+      interface: input-multiline
+      note: null
+      options:
+        trim: true
+      readonly: false
+      required: false
+      sort: 8
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: message
+      table: pollinator_run_reports
+      data_type: text
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: pollinator_run_reports
+    field: run_id
+    type: uuid
+    meta:
+      collection: pollinator_run_reports
+      conditions: null
+      display: related-values
+      display_options:
+        template: "{{date_start}} |\_{{status}}"
+      field: run_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: "{{date_start}} |\_{{status}}"
+      readonly: false
+      required: true
+      sort: 10
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: run_id
+      table: pollinator_run_reports
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: pollinator_runs
+      foreign_key_column: id
+  - collection: pollinator_run_reports
+    field: run_session_id
+    type: uuid
+    meta:
+      collection: pollinator_run_reports
+      conditions: null
+      display: related-values
+      display_options:
+        template: '{{date_start}} - {{id}}'
+      field: run_session_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{date_start}} - {{id}}'
+      readonly: false
+      required: true
+      sort: 11
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: run_session_id
+      table: pollinator_run_reports
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: pollinator_run_sessions
+      foreign_key_column: id
+  - collection: pollinator_run_reports
+    field: type
+    type: string
+    meta:
+      collection: pollinator_run_reports
+      conditions: null
+      display: labels
+      display_options: null
+      field: type
+      group: null
+      hidden: false
+      interface: select-dropdown
+      note: null
+      options:
+        choices:
+          - text: Info
+            value: info
+          - text: Error
+            value: error
+      readonly: false
+      required: true
+      sort: 6
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: type
+      table: pollinator_run_reports
+      data_type: character varying
+      default_value: info
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: pollinator_run_reports
+    field: user_created
+    type: uuid
+    meta:
+      collection: pollinator_run_reports
+      conditions: null
+      display: user
+      display_options: null
+      field: user_created
+      group: null
+      hidden: true
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
+      readonly: true
+      required: false
+      sort: 2
+      special:
+        - user-created
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: user_created
+      table: pollinator_run_reports
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: directus_users
+      foreign_key_column: id
+  - collection: pollinator_run_reports
+    field: user_updated
+    type: uuid
+    meta:
+      collection: pollinator_run_reports
+      conditions: null
+      display: user
+      display_options: null
+      field: user_updated
+      group: null
+      hidden: true
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
+      readonly: true
+      required: false
+      sort: 4
+      special:
+        - user-updated
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: user_updated
+      table: pollinator_run_reports
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: directus_users
+      foreign_key_column: id
+  - collection: pollinator_run_sessions
+    field: date_created
+    type: timestamp
+    meta:
+      collection: pollinator_run_sessions
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: date_created
+      group: null
+      hidden: true
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: 2
+      special:
+        - date-created
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: date_created
+      table: pollinator_run_sessions
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: pollinator_run_sessions
+    field: date_end
+    type: timestamp
+    meta:
+      collection: pollinator_run_sessions
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+        strict: true
+      field: date_end
+      group: null
+      hidden: false
+      interface: datetime
+      note: null
+      options:
+        includeSeconds: true
+      readonly: false
+      required: true
+      sort: 5
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: date_end
+      table: pollinator_run_sessions
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: pollinator_run_sessions
+    field: date_start
+    type: timestamp
+    meta:
+      collection: pollinator_run_sessions
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+        strict: true
+      field: date_start
+      group: null
+      hidden: false
+      interface: datetime
+      note: null
+      options:
+        includeSeconds: true
+      readonly: false
+      required: true
+      sort: 4
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: date_start
+      table: pollinator_run_sessions
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: pollinator_run_sessions
+    field: date_updated
+    type: timestamp
+    meta:
+      collection: pollinator_run_sessions
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: date_updated
+      group: null
+      hidden: true
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: 3
+      special:
+        - date-updated
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: date_updated
+      table: pollinator_run_sessions
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: pollinator_run_sessions
+    field: env
+    type: json
+    meta:
+      collection: pollinator_run_sessions
+      conditions: null
+      display: null
+      display_options: null
+      field: env
+      group: null
+      hidden: false
+      interface: input-code
+      note: null
+      options:
+        lineWrapping: true
+      readonly: false
+      required: false
+      sort: 8
+      special:
+        - cast-json
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: env
+      table: pollinator_run_sessions
+      data_type: json
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: pollinator_run_sessions
+    field: id
+    type: uuid
+    meta:
+      collection: pollinator_run_sessions
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: 1
+      special:
+        - uuid
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: id
+      table: pollinator_run_sessions
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: true
+      is_primary_key: true
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: pollinator_run_sessions
+    field: pollinator_run_reports
+    type: alias
+    meta:
+      collection: pollinator_run_sessions
+      conditions: null
+      display: related-values
+      display_options:
+        template: '{{type}} - {{code}}'
+      field: pollinator_run_reports
+      group: null
+      hidden: false
+      interface: list-o2m
+      note: null
+      options:
+        enableLink: true
+        enableSearchFilter: true
+        fields:
+          - code
+          - date_created
+          - id
+          - message
+          - type
+        layout: table
+        limit: 30
+        tableSpacing: compact
+      readonly: false
+      required: false
+      sort: 9
+      special:
+        - o2m
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+  - collection: pollinator_run_sessions
+    field: run_id
+    type: uuid
+    meta:
+      collection: pollinator_run_sessions
+      conditions: null
+      display: related-values
+      display_options:
+        template: "{{date_start}} |\_{{status}} | {{id}}"
+      field: run_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: "{{date_start}} |\_{{status}} |\_{{id}}"
+      readonly: false
+      required: true
+      sort: 7
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: run_id
+      table: pollinator_run_sessions
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: pollinator_runs
+      foreign_key_column: id
+  - collection: pollinator_run_sessions
+    field: status
+    type: string
+    meta:
+      collection: pollinator_run_sessions
+      conditions: null
+      display: labels
+      display_options: null
+      field: status
+      group: null
+      hidden: false
+      interface: select-dropdown
+      note: null
+      options:
+        choices:
+          - text: Running
+            value: running
+          - text: Paused
+            value: paused
+          - text: Aborted
+            value: aborted
+          - text: Finished
+            value: finished
+      readonly: false
+      required: true
+      sort: 6
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: status
+      table: pollinator_run_sessions
+      data_type: character varying
+      default_value: running
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: pollinator_runs
+    field: date_created
+    type: timestamp
+    meta:
+      collection: pollinator_runs
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: date_created
+      group: null
+      hidden: true
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: 3
+      special:
+        - date-created
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: date_created
+      table: pollinator_runs
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: pollinator_runs
+    field: date_end
+    type: timestamp
+    meta:
+      collection: pollinator_runs
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+        strict: true
+      field: date_end
+      group: null
+      hidden: false
+      interface: datetime
+      note: null
+      options:
+        includeSeconds: true
+      readonly: false
+      required: true
+      sort: 7
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: date_end
+      table: pollinator_runs
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: pollinator_runs
+    field: date_start
+    type: timestamp
+    meta:
+      collection: pollinator_runs
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+        strict: true
+      field: date_start
+      group: null
+      hidden: false
+      interface: datetime
+      note: null
+      options:
+        includeSeconds: true
+      readonly: false
+      required: true
+      sort: 6
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: date_start
+      table: pollinator_runs
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: pollinator_runs
+    field: date_stopped
+    type: timestamp
+    meta:
+      collection: pollinator_runs
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+        strict: true
+      field: date_stopped
+      group: null
+      hidden: false
+      interface: datetime
+      note: null
+      options:
+        includeSeconds: true
+      readonly: true
+      required: false
+      sort: 8
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: date_stopped
+      table: pollinator_runs
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: pollinator_runs
+    field: date_updated
+    type: timestamp
+    meta:
+      collection: pollinator_runs
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: date_updated
+      group: null
+      hidden: true
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: 5
+      special:
+        - date-updated
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: date_updated
+      table: pollinator_runs
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: pollinator_runs
+    field: id
+    type: uuid
+    meta:
+      collection: pollinator_runs
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      sort: 1
+      special:
+        - uuid
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: id
+      table: pollinator_runs
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: true
+      is_primary_key: true
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: pollinator_runs
+    field: isTestRun
+    type: boolean
+    meta:
+      collection: pollinator_runs
+      conditions: null
+      display: null
+      display_options: null
+      field: isTestRun
+      group: null
+      hidden: false
+      interface: boolean
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: 11
+      special:
+        - cast-boolean
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: isTestRun
+      table: pollinator_runs
+      data_type: boolean
+      default_value: false
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: pollinator_runs
+    field: pollinator_run_reports
+    type: alias
+    meta:
+      collection: pollinator_runs
+      conditions: null
+      display: related-values
+      display_options:
+        template: '{{type}} - {{code}}'
+      field: pollinator_run_reports
+      group: null
+      hidden: false
+      interface: list-o2m
+      note: null
+      options:
+        fields:
+          - code
+          - date_created
+          - id
+          - message
+          - type
+        layout: table
+        limit: 30
+        tableSpacing: compact
+      readonly: false
+      required: false
+      sort: 15
+      special:
+        - o2m
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+  - collection: pollinator_runs
+    field: pollinator_run_sessions
+    type: alias
+    meta:
+      collection: pollinator_runs
+      conditions: null
+      display: related-values
+      display_options:
+        template: '{{date_start}} - {{date_end}}'
+      field: pollinator_run_sessions
+      group: null
+      hidden: false
+      interface: list-o2m
+      note: null
+      options:
+        enableLink: true
+        enableSearchFilter: true
+        fields:
+          - date_created
+          - date_end
+          - date_start
+          - id
+          - run_id.project_id
+          - status
+        layout: table
+        limit: 30
+        tableSpacing: compact
+      readonly: false
+      required: false
+      sort: 13
+      special:
+        - o2m
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+  - collection: pollinator_runs
+    field: project_id
+    type: uuid
+    meta:
+      collection: pollinator_runs
+      conditions: null
+      display: related-values
+      display_options: null
+      field: project_id
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: "{{name}} |\_{{key}}"
+      readonly: false
+      required: true
+      sort: 12
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: project_id
+      table: pollinator_runs
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: pollinator_projects
+      foreign_key_column: id
+  - collection: pollinator_runs
+    field: status
+    type: string
+    meta:
+      collection: pollinator_runs
+      conditions: null
+      display: labels
+      display_options: null
+      field: status
+      group: null
+      hidden: false
+      interface: select-dropdown
+      note: null
+      options:
+        choices:
+          - text: Running
+            value: running
+          - text: Paused
+            value: paused
+          - text: Aborted
+            value: aborted
+          - text: Finished
+            value: finished
+      readonly: false
+      required: true
+      sort: 10
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: status
+      table: pollinator_runs
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: pollinator_runs
+    field: time_elapsed
+    type: bigInteger
+    meta:
+      collection: pollinator_runs
+      conditions: null
+      display: formatted-value
+      display_options:
+        font: serif
+        format: true
+      field: time_elapsed
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options:
+        font: monospace
+        min: 0
+      readonly: true
+      required: false
+      sort: 9
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: time_elapsed
+      table: pollinator_runs
+      data_type: bigint
+      default_value: null
+      max_length: null
+      numeric_precision: 64
+      numeric_scale: 0
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: pollinator_runs
+    field: user_created
+    type: uuid
+    meta:
+      collection: pollinator_runs
+      conditions: null
+      display: user
+      display_options: null
+      field: user_created
+      group: null
+      hidden: true
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
+      readonly: true
+      required: false
+      sort: 2
+      special:
+        - user-created
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: user_created
+      table: pollinator_runs
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: directus_users
+      foreign_key_column: id
+  - collection: pollinator_runs
+    field: user_updated
+    type: uuid
+    meta:
+      collection: pollinator_runs
+      conditions: null
+      display: user
+      display_options: null
+      field: user_updated
+      group: null
+      hidden: true
+      interface: select-dropdown-m2o
+      note: null
+      options:
+        template: '{{avatar.$thumbnail}} {{first_name}} {{last_name}}'
+      readonly: true
+      required: false
+      sort: 4
+      special:
+        - user-updated
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: user_updated
+      table: pollinator_runs
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: directus_users
+      foreign_key_column: id
+relations:
+  - collection: databee_orchestrations
+    field: project_id
+    related_collection: databee_projects
+    meta:
+      junction_field: null
+      many_collection: databee_orchestrations
+      many_field: project_id
+      one_allowed_collections: null
+      one_collection: databee_projects
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: databee_orchestrations
+      sort_field: null
+    schema:
+      table: databee_orchestrations
+      column: project_id
+      foreign_key_table: databee_projects
+      foreign_key_column: id
+      constraint_name: databee_orchestrations_project_id_foreign
+      on_update: NO ACTION
+      on_delete: NO ACTION
+  - collection: databee_orchestrations
+    field: user_created
+    related_collection: directus_users
+    meta:
+      junction_field: null
+      many_collection: databee_orchestrations
+      many_field: user_created
+      one_allowed_collections: null
+      one_collection: directus_users
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: databee_orchestrations
+      column: user_created
+      foreign_key_table: directus_users
+      foreign_key_column: id
+      constraint_name: databee_orchestrations_user_created_foreign
+      on_update: NO ACTION
+      on_delete: NO ACTION
+  - collection: databee_orchestrations
+    field: user_updated
+    related_collection: directus_users
+    meta:
+      junction_field: null
+      many_collection: databee_orchestrations
+      many_field: user_updated
+      one_allowed_collections: null
+      one_collection: directus_users
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: databee_orchestrations
+      column: user_updated
+      foreign_key_table: directus_users
+      foreign_key_column: id
+      constraint_name: databee_orchestrations_user_updated_foreign
+      on_update: NO ACTION
+      on_delete: NO ACTION
+  - collection: databee_projects
+    field: project_image
+    related_collection: directus_files
+    meta:
+      junction_field: null
+      many_collection: databee_projects
+      many_field: project_image
+      one_allowed_collections: null
+      one_collection: directus_files
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: databee_projects
+      column: project_image
+      foreign_key_table: directus_files
+      foreign_key_column: id
+      constraint_name: databee_projects_project_image_foreign
+      on_update: NO ACTION
+      on_delete: SET NULL
+  - collection: databee_projects
+    field: user_created
+    related_collection: directus_users
+    meta:
+      junction_field: null
+      many_collection: databee_projects
+      many_field: user_created
+      one_allowed_collections: null
+      one_collection: directus_users
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: databee_projects
+      column: user_created
+      foreign_key_table: directus_users
+      foreign_key_column: id
+      constraint_name: databee_projects_user_created_foreign
+      on_update: NO ACTION
+      on_delete: NO ACTION
+  - collection: databee_projects
+    field: user_updated
+    related_collection: directus_users
+    meta:
+      junction_field: null
+      many_collection: databee_projects
+      many_field: user_updated
+      one_allowed_collections: null
+      one_collection: directus_users
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: databee_projects
+      column: user_updated
+      foreign_key_table: directus_users
+      foreign_key_column: id
+      constraint_name: databee_projects_user_updated_foreign
+      on_update: NO ACTION
+      on_delete: NO ACTION
+  - collection: databee_raw_data
+    field: project_id
+    related_collection: databee_projects
+    meta:
+      junction_field: null
+      many_collection: databee_raw_data
+      many_field: project_id
+      one_allowed_collections: null
+      one_collection: databee_projects
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: databee_raw_data
+      sort_field: null
+    schema:
+      table: databee_raw_data
+      column: project_id
+      foreign_key_table: databee_projects
+      foreign_key_column: id
+      constraint_name: databee_raw_data_project_id_foreign
+      on_update: NO ACTION
+      on_delete: NO ACTION
+  - collection: databee_raw_data
+    field: run_id
+    related_collection: databee_runs
+    meta:
+      junction_field: null
+      many_collection: databee_raw_data
+      many_field: run_id
+      one_allowed_collections: null
+      one_collection: databee_runs
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: databee_raw_data
+      sort_field: null
+    schema:
+      table: databee_raw_data
+      column: run_id
+      foreign_key_table: databee_runs
+      foreign_key_column: id
+      constraint_name: databee_raw_data_run_id_foreign
+      on_update: NO ACTION
+      on_delete: SET NULL
+  - collection: databee_raw_data
+    field: run_session_id
+    related_collection: databee_run_sessions
+    meta:
+      junction_field: null
+      many_collection: databee_raw_data
+      many_field: run_session_id
+      one_allowed_collections: null
+      one_collection: databee_run_sessions
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: databee_raw_data
+      sort_field: null
+    schema:
+      table: databee_raw_data
+      column: run_session_id
+      foreign_key_table: databee_run_sessions
+      foreign_key_column: id
+      constraint_name: databee_raw_data_run_session_id_foreign
+      on_update: NO ACTION
+      on_delete: SET NULL
+  - collection: databee_raw_data
+    field: user_created
+    related_collection: directus_users
+    meta:
+      junction_field: null
+      many_collection: databee_raw_data
+      many_field: user_created
+      one_allowed_collections: null
+      one_collection: directus_users
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: databee_raw_data
+      column: user_created
+      foreign_key_table: directus_users
+      foreign_key_column: id
+      constraint_name: databee_raw_data_user_created_foreign
+      on_update: NO ACTION
+      on_delete: NO ACTION
+  - collection: databee_raw_data
+    field: user_updated
+    related_collection: directus_users
+    meta:
+      junction_field: null
+      many_collection: databee_raw_data
+      many_field: user_updated
+      one_allowed_collections: null
+      one_collection: directus_users
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: databee_raw_data
+      column: user_updated
+      foreign_key_table: directus_users
+      foreign_key_column: id
+      constraint_name: databee_raw_data_user_updated_foreign
+      on_update: NO ACTION
+      on_delete: NO ACTION
+  - collection: databee_run_reports
+    field: raw_data_id
+    related_collection: databee_raw_data
+    meta:
+      junction_field: null
+      many_collection: databee_run_reports
+      many_field: raw_data_id
+      one_allowed_collections: null
+      one_collection: databee_raw_data
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: databee_run_reports
+      sort_field: null
+    schema:
+      table: databee_run_reports
+      column: raw_data_id
+      foreign_key_table: databee_raw_data
+      foreign_key_column: id
+      constraint_name: databee_run_reports_raw_data_id_foreign
+      on_update: NO ACTION
+      on_delete: SET NULL
+  - collection: databee_run_reports
+    field: run_id
+    related_collection: databee_runs
+    meta:
+      junction_field: null
+      many_collection: databee_run_reports
+      many_field: run_id
+      one_allowed_collections: null
+      one_collection: databee_runs
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: databee_run_reports
+      sort_field: null
+    schema:
+      table: databee_run_reports
+      column: run_id
+      foreign_key_table: databee_runs
+      foreign_key_column: id
+      constraint_name: databee_run_reports_run_id_foreign
+      on_update: NO ACTION
+      on_delete: CASCADE
+  - collection: databee_run_reports
+    field: run_session_id
+    related_collection: databee_run_sessions
+    meta:
+      junction_field: null
+      many_collection: databee_run_reports
+      many_field: run_session_id
+      one_allowed_collections: null
+      one_collection: databee_run_sessions
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: databee_run_reports
+      sort_field: null
+    schema:
+      table: databee_run_reports
+      column: run_session_id
+      foreign_key_table: databee_run_sessions
+      foreign_key_column: id
+      constraint_name: databee_run_reports_run_session_id_foreign
+      on_update: NO ACTION
+      on_delete: CASCADE
+  - collection: databee_run_reports
+    field: user_created
+    related_collection: directus_users
+    meta:
+      junction_field: null
+      many_collection: databee_run_reports
+      many_field: user_created
+      one_allowed_collections: null
+      one_collection: directus_users
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: databee_run_reports
+      column: user_created
+      foreign_key_table: directus_users
+      foreign_key_column: id
+      constraint_name: databee_run_reports_user_created_foreign
+      on_update: NO ACTION
+      on_delete: NO ACTION
+  - collection: databee_run_reports
+    field: user_updated
+    related_collection: directus_users
+    meta:
+      junction_field: null
+      many_collection: databee_run_reports
+      many_field: user_updated
+      one_allowed_collections: null
+      one_collection: directus_users
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: databee_run_reports
+      column: user_updated
+      foreign_key_table: directus_users
+      foreign_key_column: id
+      constraint_name: databee_run_reports_user_updated_foreign
+      on_update: NO ACTION
+      on_delete: NO ACTION
+  - collection: databee_run_sessions
+    field: run_id
+    related_collection: databee_runs
+    meta:
+      junction_field: null
+      many_collection: databee_run_sessions
+      many_field: run_id
+      one_allowed_collections: null
+      one_collection: databee_runs
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: databee_run_sessions
+      sort_field: null
+    schema:
+      table: databee_run_sessions
+      column: run_id
+      foreign_key_table: databee_runs
+      foreign_key_column: id
+      constraint_name: databee_run_sessions_run_id_foreign
+      on_update: NO ACTION
+      on_delete: CASCADE
+  - collection: databee_runs
+    field: project_id
+    related_collection: databee_projects
+    meta:
+      junction_field: null
+      many_collection: databee_runs
+      many_field: project_id
+      one_allowed_collections: null
+      one_collection: databee_projects
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: databee_runs
+      sort_field: null
+    schema:
+      table: databee_runs
+      column: project_id
+      foreign_key_table: databee_projects
+      foreign_key_column: id
+      constraint_name: databee_runs_project_id_foreign
+      on_update: NO ACTION
+      on_delete: CASCADE
+  - collection: databee_runs
+    field: user_created
+    related_collection: directus_users
+    meta:
+      junction_field: null
+      many_collection: databee_runs
+      many_field: user_created
+      one_allowed_collections: null
+      one_collection: directus_users
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: databee_runs
+      column: user_created
+      foreign_key_table: directus_users
+      foreign_key_column: id
+      constraint_name: databee_runs_user_created_foreign
+      on_update: NO ACTION
+      on_delete: NO ACTION
+  - collection: databee_runs
+    field: user_updated
+    related_collection: directus_users
+    meta:
+      junction_field: null
+      many_collection: databee_runs
+      many_field: user_updated
+      one_allowed_collections: null
+      one_collection: directus_users
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: databee_runs
+      column: user_updated
+      foreign_key_table: directus_users
+      foreign_key_column: id
+      constraint_name: databee_runs_user_updated_foreign
+      on_update: NO ACTION
+      on_delete: NO ACTION
+  - collection: directus_settings
+    field: public_favicon
+    related_collection: directus_files
+    meta: null
+    schema:
+      table: directus_settings
+      column: public_favicon
+      foreign_key_table: directus_files
+      foreign_key_column: id
+      constraint_name: directus_settings_public_favicon_foreign
+      on_update: NO ACTION
+      on_delete: NO ACTION
+  - collection: pollinator_projects
+    field: project_image
+    related_collection: directus_files
+    meta:
+      junction_field: null
+      many_collection: pollinator_projects
+      many_field: project_image
+      one_allowed_collections: null
+      one_collection: directus_files
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: pollinator_projects
+      column: project_image
+      foreign_key_table: directus_files
+      foreign_key_column: id
+      constraint_name: pollinator_projects_project_image_foreign
+      on_update: NO ACTION
+      on_delete: SET NULL
+  - collection: pollinator_projects
+    field: user_created
+    related_collection: directus_users
+    meta:
+      junction_field: null
+      many_collection: pollinator_projects
+      many_field: user_created
+      one_allowed_collections: null
+      one_collection: directus_users
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: pollinator_projects
+      column: user_created
+      foreign_key_table: directus_users
+      foreign_key_column: id
+      constraint_name: pollinator_projects_user_created_foreign
+      on_update: NO ACTION
+      on_delete: NO ACTION
+  - collection: pollinator_projects
+    field: user_updated
+    related_collection: directus_users
+    meta:
+      junction_field: null
+      many_collection: pollinator_projects
+      many_field: user_updated
+      one_allowed_collections: null
+      one_collection: directus_users
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: pollinator_projects
+      column: user_updated
+      foreign_key_table: directus_users
+      foreign_key_column: id
+      constraint_name: pollinator_projects_user_updated_foreign
+      on_update: NO ACTION
+      on_delete: NO ACTION
+  - collection: pollinator_run_reports
+    field: run_id
+    related_collection: pollinator_runs
+    meta:
+      junction_field: null
+      many_collection: pollinator_run_reports
+      many_field: run_id
+      one_allowed_collections: null
+      one_collection: pollinator_runs
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: pollinator_run_reports
+      sort_field: null
+    schema:
+      table: pollinator_run_reports
+      column: run_id
+      foreign_key_table: pollinator_runs
+      foreign_key_column: id
+      constraint_name: pollinator_run_reports_run_id_foreign
+      on_update: NO ACTION
+      on_delete: CASCADE
+  - collection: pollinator_run_reports
+    field: run_session_id
+    related_collection: pollinator_run_sessions
+    meta:
+      junction_field: null
+      many_collection: pollinator_run_reports
+      many_field: run_session_id
+      one_allowed_collections: null
+      one_collection: pollinator_run_sessions
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: pollinator_run_reports
+      sort_field: null
+    schema:
+      table: pollinator_run_reports
+      column: run_session_id
+      foreign_key_table: pollinator_run_sessions
+      foreign_key_column: id
+      constraint_name: pollinator_run_reports_run_session_id_foreign
+      on_update: NO ACTION
+      on_delete: NO ACTION
+  - collection: pollinator_run_reports
+    field: user_created
+    related_collection: directus_users
+    meta:
+      junction_field: null
+      many_collection: pollinator_run_reports
+      many_field: user_created
+      one_allowed_collections: null
+      one_collection: directus_users
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: pollinator_run_reports
+      column: user_created
+      foreign_key_table: directus_users
+      foreign_key_column: id
+      constraint_name: pollinator_run_reports_user_created_foreign
+      on_update: NO ACTION
+      on_delete: NO ACTION
+  - collection: pollinator_run_reports
+    field: user_updated
+    related_collection: directus_users
+    meta:
+      junction_field: null
+      many_collection: pollinator_run_reports
+      many_field: user_updated
+      one_allowed_collections: null
+      one_collection: directus_users
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: pollinator_run_reports
+      column: user_updated
+      foreign_key_table: directus_users
+      foreign_key_column: id
+      constraint_name: pollinator_run_reports_user_updated_foreign
+      on_update: NO ACTION
+      on_delete: NO ACTION
+  - collection: pollinator_run_sessions
+    field: run_id
+    related_collection: pollinator_runs
+    meta:
+      junction_field: null
+      many_collection: pollinator_run_sessions
+      many_field: run_id
+      one_allowed_collections: null
+      one_collection: pollinator_runs
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: pollinator_run_sessions
+      sort_field: null
+    schema:
+      table: pollinator_run_sessions
+      column: run_id
+      foreign_key_table: pollinator_runs
+      foreign_key_column: id
+      constraint_name: pollinator_run_sessions_run_id_foreign
+      on_update: NO ACTION
+      on_delete: CASCADE
+  - collection: pollinator_runs
+    field: project_id
+    related_collection: pollinator_projects
+    meta:
+      junction_field: null
+      many_collection: pollinator_runs
+      many_field: project_id
+      one_allowed_collections: null
+      one_collection: pollinator_projects
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: pollinator_runs
+      sort_field: null
+    schema:
+      table: pollinator_runs
+      column: project_id
+      foreign_key_table: pollinator_projects
+      foreign_key_column: id
+      constraint_name: pollinator_runs_project_id_foreign
+      on_update: NO ACTION
+      on_delete: CASCADE
+  - collection: pollinator_runs
+    field: user_created
+    related_collection: directus_users
+    meta:
+      junction_field: null
+      many_collection: pollinator_runs
+      many_field: user_created
+      one_allowed_collections: null
+      one_collection: directus_users
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: pollinator_runs
+      column: user_created
+      foreign_key_table: directus_users
+      foreign_key_column: id
+      constraint_name: pollinator_runs_user_created_foreign
+      on_update: NO ACTION
+      on_delete: NO ACTION
+  - collection: pollinator_runs
+    field: user_updated
+    related_collection: directus_users
+    meta:
+      junction_field: null
+      many_collection: pollinator_runs
+      many_field: user_updated
+      one_allowed_collections: null
+      one_collection: directus_users
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: pollinator_runs
+      column: user_updated
+      foreign_key_table: directus_users
+      foreign_key_column: id
+      constraint_name: pollinator_runs_user_updated_foreign
+      on_update: NO ACTION
+      on_delete: NO ACTION
