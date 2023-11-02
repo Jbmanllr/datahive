@@ -1,0 +1,38 @@
+{
+  "name": "directus-extension-databee",
+  "description": "Please enter a description for your extension",
+  "version": "1.0.0",
+  "keywords": [
+    "directus",
+    "directus-extension",
+    "directus-custom-endpoint"
+  ],
+  "type": "module",
+  "directus:extension": {
+    "type": "endpoint",
+    "path": "dist/index.js",
+    "source": "src/index.js",
+    "host": "^10.1.11"
+  },
+  "scripts": {
+    "build": "directus-extension build",
+    "dev": "directus-extension build -w --no-minify",
+    "link": "directus-extension link",
+    "start": "node ./index.js 07f791aa-bf0c-48ae-8732-7e6b3cb18ff8",
+    "resume": "CRAWLEE_PURGE_ON_START=0 node ./index.js --resume f90726b2-a52c-400d-97d6-eddedc2d168",
+    "test": "echo \"Error: oops, there is no tests yet, sad ;(!\" && exit 1",
+    "postinstall": "npx crawlee install-playwright-browsers"
+  },
+  "devDependencies": {
+    "@directus/extensions-sdk": "10.1.11"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "crawlee": "^3.5.8",
+    "dotenv": "^16.3.1",
+    "playwright": "*",
+    "winston": "^3.11.0"
+  },
+  "author": "AQBF",
+  "license": "ISC"
+}
