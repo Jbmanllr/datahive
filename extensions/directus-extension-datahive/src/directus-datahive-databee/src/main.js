@@ -1,11 +1,11 @@
 // main.js
 import dotenv from "dotenv";
-import { dropQueues, loadApify } from "./src/utils/index.js";
-import databee from "./src/run-manager/index.js";
-import CrawlerRunner from "./src/crawl-manager/index.js";
-import RouterFactory from "./src/crawl-manager/routers/index.js";
-import CrawlerFactory from "./src/crawl-manager/crawlers/index.js";
-import { loadProjectHandlers } from "./src/crawl-manager/index.js";
+import { dropQueues, loadApify } from "./utils/index.js";
+import databee from "./run-manager/index.js";
+import CrawlerRunner from "./crawl-manager/index.js";
+import RouterFactory from "./crawl-manager/routers/index.js";
+import CrawlerFactory from "./crawl-manager/crawlers/index.js";
+import { loadProjectHandlers } from "./crawl-manager/index.js";
 dotenv.config();
 console.log("DOTENV", process.env);
 let Actor;

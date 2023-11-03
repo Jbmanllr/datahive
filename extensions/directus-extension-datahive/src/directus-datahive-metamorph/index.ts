@@ -2,12 +2,12 @@ import { defineModule } from '@directus/extensions-sdk';
 import ModuleComponent from './module.vue';
 
 export default defineModule({
-	id: 'directus-databee',
-	name: 'Databee',
+	id: 'custom',
+	name: 'Custom',
 	icon: 'box',
 	routes: [
 		{
-			path: '',
+			path: 'metamorph',
 			component: ModuleComponent,
 		},
 	],
