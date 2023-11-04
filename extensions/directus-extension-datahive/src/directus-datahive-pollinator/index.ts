@@ -1,5 +1,5 @@
 import { defineModule } from '@directus/extensions-sdk';
-import ModuleComponent from './src/module.vue';
+import ModuleComponent from './module.vue';
 import { runPollinator, testFC } from './pollinator/src/index'
 
 export default defineModule({

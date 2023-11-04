@@ -84,4 +84,4 @@ process.on("unhandledRejection", async (reason, promise) => {
   process.exit(1);
 });*/
 
-//await GoGather();
+await GoGather();
