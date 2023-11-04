@@ -1,9 +1,10 @@
 import { defineModule } from '@directus/extensions-sdk';
-import ModuleComponent from './module.vue';
+import ModuleComponent from './src/module.vue';
+import { runPollinator, testFC } from './src/pollinator/index'
 
 export default defineModule({
-	id: 'custom',
-	name: 'Custom',
+	id: 'pollinator',
+	name: 'Pollinator',
 	icon: 'box',
 	routes: [
 		{
@@ -11,4 +12,10 @@ export default defineModule({
 			component: ModuleComponent,
 		},
 	],
+	actions: {
+		runPollinator,
+		testFC
+	},
 });
+
+export { runPollinator, testFC };

@@ -19,12 +19,13 @@ export const ENTITY_TABLES = {
 };
 
 export const TRANSFORM_FUNCTIONS = {
-  removeRootUrl: (value) => removeRootUrl(value),
-  slugToNameIfEmpty: (value, data) =>
+  removeRootUrl: (value: any) => removeRootUrl(value),
+  slugToNameIfEmpty: (value: any, data: any) =>
+    //@ts-ignore
     value ? value : slugToName(getSlug(data.url)),
-  integer: (value) => (value && value !== "N/A" ? value : null),
-  extractUsageFromContext: (value) => extractUsageFromContext(value),
-  inferMissingValue: (value) => value == null,
+  integer: (value: any) => (value && value !== "N/A" ? value : null),
+  extractUsageFromContext: (value: any) => extractUsageFromContext(value),
+  inferMissingValue: (value: any) => value == null,
 };
 
 export const TRANSFORM_MAPPINGS = {

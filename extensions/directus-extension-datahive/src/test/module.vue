@@ -1,5 +1,5 @@
 <template>
-	<private-view title="Databee Module">Databee content goes here...</private-view>
+	<private-view title="My Custom Module">Content goes here...</private-view>
 </template>
 
 <script lang="ts">

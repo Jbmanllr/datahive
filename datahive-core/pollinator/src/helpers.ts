@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosRequestConfig, Method } from "axios";
 
 const DIRECTUS_API_ENDPOINT = "http://0.0.0.0:8055/items";
 const DIRECTUS_API_TOKEN = "gf1WRZJD2hDYcI73ZQgXYBBZ1dlbV7zs";
@@ -7,37 +7,65 @@ const DIRECTUS_API_TOKEN = "gf1WRZJD2hDYcI73ZQgXYBBZ1dlbV7zs";
 const ERROR_CODES = {
   RECORD_NOT_UNIQUE: "RECORD_NOT_UNIQUE",
   // Add other error codes as needed
-};
+} as const;
+
+type ErrorCode = typeof ERROR_CODES[keyof typeof ERROR_CODES];
+
+interface ApiRequestParams {
+  method: Method;
+  collection: string;
+  data?: any; // Replace `any` with the actual expected data type
+  params?: any; // Replace `any` with the actual expected params type
+  id?: string | number;
+  isErrorReport: boolean;
+  run?: {
+    data: {
+      id: string;
+    };
+  };
+}
+
+interface ErrorDetail {
+  message: string;
+  extensions: {
+    code: ErrorCode;
+  };
+}
+
+interface ErrorResponse {
+  response: {
+    data: {
+      errors: ErrorDetail[];
+    };
+  };
+}
 
 export async function apiRequest({
   method,
   collection,
   data = null,
   params = null,
+  //@ts-ignore
   id = null,
   isErrorReport = false,
+  //@ts-ignore
   run = null,
-}) {
+}: ApiRequestParams): Promise<any> { // Replace `any` with the actual expected return type
   const endpoint = id
     ? `${DIRECTUS_API_ENDPOINT}/${collection}/${id}`
     : `${DIRECTUS_API_ENDPOINT}/${collection}`;
 
+  const config: AxiosRequestConfig = {
+    method: method,
+    url: endpoint,
+    headers: {
+      Authorization: `Bearer ${DIRECTUS_API_TOKEN}`,
+      "Content-Type": "application/json",
+    },
+    ...(method === "GET" ? { params } : { data }),
+  };
+
   try {
-    const config = {
-      method: method,
-      url: endpoint,
-      headers: {
-        Authorization: `Bearer ${DIRECTUS_API_TOKEN}`,
-        "Content-Type": "application/json",
-      },
-    };
-
-    if (method === "GET") {
-      config.params = params;
-    } else {
-      config.data = data;
-    }
-
     const response = await axios(config);
 
     if (method === "POST") {
@@ -49,11 +77,12 @@ export async function apiRequest({
     }
 
     return response.data;
-  } catch (error) {
-    if (error.response && error.response.data && error.response.data.errors) {
-      for (const err of error.response.data.errors) {
+  } catch (error: any) {
+    const err = error as ErrorResponse;
+    if (err.response && err.response.data && err.response.data.errors) {
+      for (const errorDetail of err.response.data.errors) {
         if (!isErrorReport) {
-          let errorCode = err.extensions.code;
+          let errorCode = errorDetail.extensions.code;
           let reportType = determineReportType(errorCode);
           try {
             await apiRequest({
@@ -61,21 +90,21 @@ export async function apiRequest({
               collection: "data_factory_migrations_report",
               data: {
                 type: reportType,
-                item_id: data.raw_data_id,
-                run_id: run.data.id,
+                item_id: data?.raw_data_id,
+                run_id: run?.data.id,
                 code: errorCode,
-                message: err.message,
+                message: errorDetail.message,
                 raw_data: error,
               },
               isErrorReport: true,
             });
-          } catch (error) {
+          } catch (error : any) {
             console.log("ERROR SENDING ERROR:", error.message);
           }
         }
 
         console.error(
-          `ERROR: "${err.extensions.code}" ${method} DATA TO DIRECTUS FOR "${data.url}": ${err.message}`
+          `ERROR: "${errorDetail.extensions.code}" ${method} DATA TO DIRECTUS FOR "${data?.url}": ${errorDetail.message}`
         );
       }
     } else {
@@ -88,14 +117,12 @@ export async function apiRequest({
 }
 
 // Function to determine the report type based on the error code
-function determineReportType(errorCode) {
+function determineReportType(errorCode: ErrorCode): "info" | "error" {
   switch (errorCode) {
     case ERROR_CODES.RECORD_NOT_UNIQUE:
-      // This error code is expected in certain scenarios, log as info
       return "info";
     // Add other cases as needed
     default:
-      // For all other error codes, log as error
       return "error";
   }
 }
