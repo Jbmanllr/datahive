@@ -36,10 +36,11 @@ interface TransformedData {
 }
 
 export async function testFC(): Promise<void> {
-  console.log('TEST FC LOG')
+  console.log('TEST FC LOG INSIDE MODULE')
 }
 
 export async function runPollinator(): Promise<void> {
+  // @ts-ignore
   console.log('Process ENV', process.env);
   let run: RunData | undefined;
 
@@ -52,6 +53,7 @@ export async function runPollinator(): Promise<void> {
       status: 'running',
       batch_size: BATCH_SIZE,
       concurrencies: CONCURRENCIES,
+      // @ts-ignore
       env: process.env,
     },
     isErrorReport: false,
@@ -167,7 +169,7 @@ function transformData(data: any, entityType: EntityType): TransformedData {
   if (!mapping) return {};
 
   const transformedData: TransformedData = {};
-
+// @ts-ignore
   for (const [key, value] of Object.entries(mapping)) {
     if (typeof value === 'string') {
       transformedData[key] = data[value];

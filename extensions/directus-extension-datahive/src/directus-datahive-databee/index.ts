@@ -1,9 +1,9 @@
 import { defineModule } from '@directus/extensions-sdk';
-import ModuleComponent from './module.vue';
+import ModuleComponent from './src/module.vue';
 
 export default defineModule({
-	id: 'custom',
-	name: 'Custom',
+	id: 'databee',
+	name: 'Databee',
 	icon: 'box',
 	routes: [
 		{

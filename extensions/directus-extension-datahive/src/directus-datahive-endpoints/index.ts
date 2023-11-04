@@ -1,10 +1,8 @@
 //import { defineEndpoint } from '@directus/extensions-sdk';
-import { runPollinator, testFC } from '../directus-datahive-pollinator/index'
-import { testTEST } from '../test/index'
 
-function testINSIDE() {
-	console.log("TEST INSIDE")
-}
+//import { runPollinator, testFC } from '../../../../datahive-core/pollinator/src/index'
+import { runPollinator, testFC } from '../directus-datahive-pollinator/pollinator/src/index'
+
 export default {
 	id: "datahive",
 	handler: (router: any) => {
@@ -26,10 +24,7 @@ export default {
 			try {
 				const message = `POLLINATOR START NEW RUN - PROJECT ID: ${req.params.projectId}, Query: ${JSON.stringify(req.query)}`;
 				console.log(message);
-
-				// If runPollinator is async, you should await it
-				//await testFC();
-				testTEST()
+				await testFC();
 				console.log("AFTER TEST FC");
 				res.send(message);
 			} catch (error) {
