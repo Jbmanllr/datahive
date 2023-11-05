@@ -1,47 +1,76 @@
-// main.js
-//@ts-nocheck
 import dotenv from "dotenv";
-import { dropQueues, loadApify } from "./utils/index.js";
-import databee from "./run-manager/index.js";
-import CrawlerRunner from "./crawl-manager/index.js";
-import RouterFactory from "./crawl-manager/routers/index.js";
-import CrawlerFactory from "./crawl-manager/crawlers/index.js";
-import { loadProjectHandlers } from "./crawl-manager/index.js";
+import { dropQueues } from "./utils/index";
+// import { loadApify } from "./utils/index";
+import databee from "./run-manager/index";
+import CrawlerRunner from "./crawl-manager/index";
+import RouterFactory from "./crawl-manager/routers/index";
+import CrawlerFactory from "./crawl-manager/crawlers/index";
+import { loadProjectHandlers } from "./crawl-manager/index";
+
 dotenv.config();
 console.log("DOTENV", process.env);
 
-let Actor;
+interface IRunSession {
+  data: any;
+}
+
+interface IRun {
+  data: any;
+  runSession: IRunSession;
+  end: (status: string, session: IRunSession) => Promise<void>;
+}
+
+interface IRunManager {
+  project: {
+    data: any;
+  };
+  run: IRun;
+  isNewRun: boolean;
+}
+
+interface IDataBee {
+  init: (process: NodeJS.Process) => Promise<void>;
+  runManager: IRunManager;
+}
+
+let Actor: any;
 
 // Initialize your dependencies
 const routerFactory = new RouterFactory();
 const crawlerFactory = new CrawlerFactory();
 const handlerLoader = { load: loadProjectHandlers };
 
-export default async function GoGather() {
-  let project, run, runSession, isNewRun;
+export async function testFCDatabee(): Promise<void> {
+  console.log('TEST FC LOG INSIDE DATABEE');
+}
+
+export default async function GoGather(): Promise<void> {
+  let project: any, run: IRun, isNewRun: boolean;
 
   if (process.env.APIFY_IS_AT_HOME) {
-    await loadApify();
+    // await loadApify();
   }
 
   // START RUN
   if (true) {
     try {
-      await databee.init(process);
+      //@ts-ignore
+      await (databee as IDataBee).init(process);
     } catch (error) {
       console.error("An error occurred initiating run manager:", error);
     }
 
     console.log("Databee", databee);
-
-    project = databee.runManager.project.data;
-    run = databee.runManager.run.data;
-    runSession = databee.runManager.run.runSession.data;
-    isNewRun = databee.runManager.isNewRun;
+    //@ts-ignore
+    project = (databee as IDataBee).runManager.project.data;
+    //@ts-ignore
+    run = (databee as IDataBee).runManager.run;
+    //@ts-ignore
+    isNewRun = (databee as IDataBee).runManager.isNewRun;
 
     if (isNewRun) {
       await dropQueues(project);
-      //await dropData(LABEL_NAMES);
+      // await dropData(LABEL_NAMES);
     }
   }
 
@@ -56,8 +85,10 @@ export default async function GoGather() {
   }
 
   // END RUN
-  if (databee && databee.runManager && databee.runManager.run) {
-    await databee.runManager.run.end("finished", databee.runManager.runSession);
+  //@ts-ignore
+  if (databee && (databee as IDataBee).runManager && (databee as IDataBee).runManager.run) {
+    //@ts-ignore
+    await (databee as IDataBee).runManager.run.end("finished", (databee as IDataBee).runManager.run.runSession);
   } else {
     console.error("RunManager or Run is not initialized.");
   }
@@ -85,5 +116,3 @@ process.on("unhandledRejection", async (reason, promise) => {
   await runManager.run.end(runManager.run, runManager.runSession, "aborted");
   process.exit(1);
 });*/
-
-//await GoGather();

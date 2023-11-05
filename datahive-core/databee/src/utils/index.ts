@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { RequestQueue } from "crawlee";
 
 export function delay(ms) {
@@ -102,7 +103,7 @@ export async function calculateTimeSpent(dateStart, dateEnd) {
 
   return result.join(", ").replace(/, ([^,]*)$/, " and $1");
 }
-
+/*
 export async function loadApify() {
   try {
     const apifyModule = await import("apify");
@@ -112,3 +113,4 @@ export async function loadApify() {
     console.error("Failed to import Actor from apify:", error);
   }
 }
+*/

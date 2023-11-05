@@ -1,4 +1,3 @@
-// RouterFactory.js
 import {
   createCheerioRouter,
   createPlaywrightRouter,
@@ -6,13 +5,17 @@ import {
 } from "crawlee";
 
 class RouterFactory {
+  private playwrightRouter: any;
+  private cheerioRouter: any;
+  private puppeteerRouter: any;
+
   constructor() {
     this.playwrightRouter = createPlaywrightRouter();
     this.cheerioRouter = createCheerioRouter();
     this.puppeteerRouter = createPuppeteerRouter();
   }
 
-  getRouterByCrawlerType(crawlerType) {
+  getRouterByCrawlerType(crawlerType: string): any {
     switch (crawlerType) {
       case "playwright":
         return this.playwrightRouter;
@@ -25,13 +28,11 @@ class RouterFactory {
     }
   }
 
-  addHandler(sequence, handlerFunction, router) {
+  addHandler(sequence: any, handlerFunction: any, router: any): void {
     if (handlerFunction.name === "DEFAULT") {
-      router.addDefaultHandler(async (context) => handlerFunction(context));
+      router.addDefaultHandler(async (context: any) => handlerFunction(context));
     } else {
-      router.addHandler(sequence.handler_label, async (context) =>
-        handlerFunction(context)
-      );
+      router.addHandler(sequence.handler_label, async (context: any) => handlerFunction(context));
     }
   }
 }

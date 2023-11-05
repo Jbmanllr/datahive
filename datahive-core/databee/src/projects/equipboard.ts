@@ -1,4 +1,5 @@
 // equipboard.js (handlers)
+// @ts-nocheck
 import {
   getApproxPublishDate,
   prepareLink,
@@ -6,8 +7,8 @@ import {
 } from "../utils/index.js";
 import { RequestQueue, KeyValueStore } from "crawlee";
 import { EXTRACT_FREQUENCY_MINUTES } from "../constants.js";
-import { apiRequest } from "../connectors/index.js";
-import databee from "../run-manager/index.js";
+import { apiRequest } from "../connectors/index";
+import databee from "../run-manager/index";
 
 const LABEL_NAMES = {
   HOMEPAGE: "HOMEPAGE",
@@ -27,11 +28,11 @@ const LABEL_NAMES = {
 const useLastRunEndDate = true;
 const defaultRawDataCollection = databee.config.raw_data_collection;
 
-export const handlers = {
-  PRE_NAVIGATION_PREPARATION: async (context) => {
+export const handlers: { [key: string]: (context: any) => Promise<void> } = {
+  PRE_NAVIGATION_PREPARATION: async (context: any): Promise<void> => {
     const { page, request, log, enqueueLinks, pushData } = context;
     // Intercept network requests
-    await page.route("**/*", (route) => {
+    await page.route("**/*", (route: any) => {
       const resourceType = route.request().resourceType();
 
       // List of resource types to block
@@ -46,7 +47,7 @@ export const handlers = {
     await page.waitForTimeout(1000);
     await removeOverlays(page);
   },
-  LOGIN: async (context) => {
+  LOGIN: async (context: any): Promise<void> => {
     const { email, username, password } = databee.runManager.project.data;
     if ((email || username) && password) {
     } else {
@@ -77,10 +78,10 @@ export const handlers = {
       await KeyValueStore.setValue("SESSION_COOKIES", cookies);
     }
   },
-  DEFAULT: async (context) => {
+  DEFAULT: async (context: any): Promise<void> => {
     console.log("RUNNING DEFAULT HANDLER");
   },
-  HOMEPAGE: async (context) => {
+  HOMEPAGE: async (context: any): Promise<void> => {
     const { page, request, log, enqueueLinks, pushData } = context;
     // Navigate to the desired URL that lists the gear
     await page.goto("https://equipboard.com/?filter=gear");
@@ -195,7 +196,7 @@ export const handlers = {
       }
     }
   },
-  DETAILOCCURRENCES: async (context) => {
+  DETAILOCCURRENCES: async (context: any): Promise<void> => {
     const { page, request, log, enqueueLinks, pushData } = context;
     //await removeOverlays(page);
     //const { pathname: path } = new URL(request.loadedUrl);
@@ -262,7 +263,7 @@ export const handlers = {
       }
     }
   },
-  DETAILPROS: async (context) => {
+  DETAILPROS: async (context: any): Promise<void> => {
     const { request, log, enqueueLinks, pushData, $ } = context;
     const path = new URL(request.loadedUrl).pathname;
 
@@ -518,7 +519,7 @@ export const handlers = {
       });
     }
   },
-  DETAILPRODUCTS: async (context) => {
+  DETAILPRODUCTS: async (context: any): Promise<void> => {
     const { request, log, enqueueLinks, pushData, $ } = context;
     const path = new URL(request.loadedUrl).pathname;
     const errors = [];
@@ -982,7 +983,7 @@ export const handlers = {
       });
     }
   },
-  DETAILBRANDS: async (context) => {
+  DETAILBRANDS: async (context: any): Promise<void> => {
     const { request, log, enqueueLinks, pushData, $ } = context;
     const errors = [];
     const path = new URL(request.loadedUrl).pathname;
