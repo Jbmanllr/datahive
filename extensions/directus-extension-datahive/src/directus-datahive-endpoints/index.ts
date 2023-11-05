@@ -1,8 +1,8 @@
 //import { defineEndpoint } from '@directus/extensions-sdk';
 //import { runPollinator, testFC } from '../directus-datahive-pollinator/pollinator/src/index'
 //import goGather from './datahive-core/databee/main'
-//import { testFCDatabee } from '../../../../datahive-core/databee/main'
-//import { testFC } from '../../../../datahive-core/pollinator/index'
+import goGather, { testFCDatabee } from '../../../../datahive-core/dist/databee/main.js'
+import { testFC } from '../../../../datahive-core/dist/pollinator/index.js'
 
 export default {
 	id: "datahive",
@@ -25,8 +25,8 @@ export default {
 			try {
 				const message = `POLLINATOR START NEW RUN - PROJECT ID: ${req.params.projectId}, Query: ${JSON.stringify(req.query)}`;
 				console.log(message);
-				//await testFC();
-				//await testFCDatabee();
+				await testFC();
+				await testFCDatabee();
 				//await goGather();
 				console.log("AFTER TEST FC");
 				res.send(message);

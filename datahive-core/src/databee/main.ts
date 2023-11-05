@@ -33,18 +33,18 @@ interface IDataBee {
   runManager: IRunManager;
 }
 
-let Actor: any;
-
-// Initialize your dependencies
-const routerFactory = new RouterFactory();
-const crawlerFactory = new CrawlerFactory();
-const handlerLoader = { load: loadProjectHandlers };
-
 export async function testFCDatabee(): Promise<void> {
   console.log('TEST FC LOG INSIDE DATABEE');
 }
 
 export default async function GoGather(): Promise<void> {
+
+  let Actor: any;
+
+  // Initialize your dependencies
+  const routerFactory = new RouterFactory();
+  const crawlerFactory = new CrawlerFactory();
+  const handlerLoader = { load: loadProjectHandlers };
   let project: any, run: IRun, isNewRun: boolean;
 
   if (process.env.APIFY_IS_AT_HOME) {

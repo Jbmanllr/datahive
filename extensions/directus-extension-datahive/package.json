@@ -50,7 +50,8 @@
 		"dotenv": "^16.3.1",
 		"p-limit": "^4.0.0",
 		"playwright": "*",
-		"winston": "^3.11.0"
+		"winston": "^3.11.0",
+		"datahive-core": "file:../../datahive-core"
 	},
 	"devDependencies": {
 		"@directus/extensions-sdk": "10.1.14",
