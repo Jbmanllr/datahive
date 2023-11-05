@@ -1,4 +1,5 @@
 // main.js
+//@ts-nocheck
 import dotenv from "dotenv";
 import { dropQueues, loadApify } from "./utils/index.js";
 import databee from "./run-manager/index.js";
@@ -8,6 +9,7 @@ import CrawlerFactory from "./crawl-manager/crawlers/index.js";
 import { loadProjectHandlers } from "./crawl-manager/index.js";
 dotenv.config();
 console.log("DOTENV", process.env);
+
 let Actor;
 
 // Initialize your dependencies
@@ -15,7 +17,7 @@ const routerFactory = new RouterFactory();
 const crawlerFactory = new CrawlerFactory();
 const handlerLoader = { load: loadProjectHandlers };
 
-async function GoGather() {
+export default async function GoGather() {
   let project, run, runSession, isNewRun;
 
   if (process.env.APIFY_IS_AT_HOME) {
@@ -84,4 +86,4 @@ process.on("unhandledRejection", async (reason, promise) => {
   process.exit(1);
 });*/
 
-await GoGather();
+//await GoGather();
