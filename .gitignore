@@ -2,3 +2,8 @@
 node_modules
 dist
 .env
+.venv
+.idea
+apify_storage
+crawlee_storage
+storage

@@ -1,9 +1,17 @@
 {
-	"name": "directus-extension-datahive",
+	"name": "directus-extension-datahive-old",
 	"version": "1.0.0",
 	"type": "module",
 	"description": "Please enter a description for your extension",
 	"icon": "extension",
+	"dependencies": {
+		"axios": "^1.6.0",
+		"crawlee": "^3.5.8",
+		"dotenv": "^16.3.1",
+		"p-limit": "^4.0.0",
+		"playwright": "*",
+		"winston": "^3.11.0"
+	},
 	"directus:extension": {
 		"host": "^10.1.14",
 		"type": "bundle",
@@ -18,14 +26,24 @@
 				"source": "src/directus-datahive-endpoints/index.ts"
 			},
 			{
-				"type": "hook",
-				"name": "directus-datahive-hooks",
-				"source": "src/directus-datahive-hooks/index.ts"
+				"type": "module",
+				"name": "directus-datahive-pollinator",
+				"source": "src/directus-datahive-pollinator/index.ts"
 			},
 			{
 				"type": "module",
-				"name": "directus-datahive-modules",
-				"source": "src/directus-datahive-modules/index.ts"
+				"name": "directus-datahive-metamorph",
+				"source": "src/directus-datahive-metamorph/index.ts"
+			},
+			{
+				"type": "module",
+				"name": "directus-datahive-databee",
+				"source": "src/directus-datahive-databee/index.ts"
+			},
+			{
+				"type": "module",
+				"name": "test",
+				"source": "src/test/index.ts"
 			}
 		]
 	},
@@ -43,13 +61,6 @@
 		"resume": "CRAWLEE_PURGE_ON_START=0 node ./src/directus-datahive-databee/src/main.js --resume f90726b2-a52c-400d-97d6-eddedc2d168",
 		"test": "echo \"Error: oops, there is no tests yet, sad ;(!\" && exit 1",
 		"postinstall": "npx crawlee install-playwright-browsers"
-	},
-	"dependencies": {
-		"crawlee": "^3.5.8",
-		"dotenv": "^16.3.1",
-		"p-limit": "^4.0.0",
-		"playwright": "*",
-		"winston": "^3.11.0"
 	},
 	"devDependencies": {
 		"@directus/extensions-sdk": "10.1.14",
