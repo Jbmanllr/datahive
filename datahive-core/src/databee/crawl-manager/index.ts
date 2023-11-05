@@ -89,7 +89,7 @@ export default CrawlerRunner;
 
 export async function loadProjectHandlers(projectName: string): Promise<any> {
   try {
-    const module = await import(`../projects/${projectName}`);
+    const module = await import(`../projects/${projectName}.js`);
     return module.handlers;
   } catch (error) {
     console.error(`Failed to load project handlers for ${projectName}`, error);

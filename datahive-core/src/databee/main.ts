@@ -1,11 +1,11 @@
 import dotenv from "dotenv";
-import { dropQueues } from "./utils/index";
+import { dropQueues } from "./utils/index.js";
 // import { loadApify } from "./utils/index";
-import databee from "./run-manager/index";
-import CrawlerRunner from "./crawl-manager/index";
-import RouterFactory from "./crawl-manager/routers/index";
-import CrawlerFactory from "./crawl-manager/crawlers/index";
-import { loadProjectHandlers } from "./crawl-manager/index";
+import databee from "./run-manager/index.js";
+import CrawlerRunner from "./crawl-manager/index.js";
+import RouterFactory from "./crawl-manager/routers/index.js";
+import CrawlerFactory from "./crawl-manager/crawlers/index.js";
+import { loadProjectHandlers } from "./crawl-manager/index.js";
 
 dotenv.config();
 console.log("DOTENV", process.env);

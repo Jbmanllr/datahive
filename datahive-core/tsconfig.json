@@ -1,11 +1,10 @@
 {
 	"compilerOptions": {
 		"lib": [
-			"ES2019",
-			"DOM"
+			"ES2019"
 		],
 		"moduleResolution": "node",
-		"module": "esnext", // pour Node.js ou "esnext" pour les modules ES
+		//"module": "esnext",
 		"target": "ES2019",
 		"strict": true,
 		"noFallthroughCasesInSwitch": true,
@@ -21,7 +20,7 @@
 		"strictFunctionTypes": true,
 		"strictBindCallApply": true,
 		"strictPropertyInitialization": true,
-		"resolveJsonModule": false,
+		"resolveJsonModule": true, // Changed to true to allow importing .json files
 		"skipLibCheck": true,
 		"forceConsistentCasingInFileNames": true,
 		"allowSyntheticDefaultImports": true,
@@ -29,7 +28,7 @@
 		"rootDir": "./src",
 		"outDir": "./dist",
 		"declaration": true,
-		"sourceMap": true,
+		"sourceMap": true
 	},
 	"include": [
 		"src/**/*"

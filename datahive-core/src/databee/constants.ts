@@ -1,7 +1,7 @@
 // CONSTANT.JS
 export const QUEUE_PICTURES = false;
 export const DOWNLOAD_PICTURES = false;
-export const EXTRACT_FREQUENCY_MINUTES = 70;
+export const EXTRACT_FREQUENCY_MINUTES = 14400;
 
 export const CRAWLER_TYPES = {
   PLAYWRIGHT: "playwright",

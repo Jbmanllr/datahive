@@ -7,8 +7,8 @@ import {
 } from "../utils/index.js";
 import { RequestQueue, KeyValueStore } from "crawlee";
 import { EXTRACT_FREQUENCY_MINUTES } from "../constants.js";
-import { apiRequest } from "../connectors/index";
-import databee from "../run-manager/index";
+import { apiRequest } from "../connectors/index.js";
+import databee from "../run-manager/index.js";
 
 const LABEL_NAMES = {
   HOMEPAGE: "HOMEPAGE",
@@ -25,7 +25,7 @@ const LABEL_NAMES = {
   LISTING_OCCURRENCES: "LISTINGOCCURRENCES",
 };
 
-const useLastRunEndDate = true;
+const useLastRunEndDate = false;
 const defaultRawDataCollection = databee.config.raw_data_collection;
 
 export const handlers: { [key: string]: (context: any) => Promise<void> } = {
@@ -244,6 +244,7 @@ export const handlers: { [key: string]: (context: any) => Promise<void> } = {
               project_id: databee.runManager.project.data.id,
               run_id: databee.runManager.run.data.id,
               run_session_id: databee.runManager.runSession.data.id,
+              label: "updater"
             },
           });
         }
@@ -515,6 +516,7 @@ export const handlers: { [key: string]: (context: any) => Promise<void> } = {
           project_id: databee.runManager.project.data.id,
           run_id: databee.runManager.run.data.id,
           run_session_id: databee.runManager.runSession.data.id,
+          label: "updater"
         },
       });
     }
@@ -814,6 +816,7 @@ export const handlers: { [key: string]: (context: any) => Promise<void> } = {
           project_id: databee.runManager.project.data.id,
           run_id: databee.runManager.run.data.id,
           run_session_id: databee.runManager.runSession.data.id,
+          label: "updater"
         },
       });
     }
@@ -979,6 +982,7 @@ export const handlers: { [key: string]: (context: any) => Promise<void> } = {
           project_id: databee.runManager.project.data.id,
           run_id: databee.runManager.run.data.id,
           run_session_id: databee.runManager.runSession.data.id,
+          label: "updater"
         },
       });
     }
@@ -1045,6 +1049,7 @@ export const handlers: { [key: string]: (context: any) => Promise<void> } = {
           project_id: databee.runManager.project.data.id,
           run_id: databee.runManager.run.data.id,
           run_session_id: databee.runManager.runSession.data.id,
+          label: "updater"
         },
       });
     }

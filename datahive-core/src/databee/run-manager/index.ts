@@ -1,5 +1,5 @@
 // All related Databee integration
-import { apiRequest } from "../connectors/index";
+import { apiRequest } from "../connectors/index.js";
 import { createLogger, format, transports, Logger } from "winston";
 
 const RUN_STATUS_RUNNING = "running";
