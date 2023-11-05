@@ -1,9 +1,12 @@
 {
 	"compilerOptions": {
-		"target": "ES2019",
-		"lib": ["ES2019", "DOM"],
+		"lib": [
+			"ES2019",
+			"DOM"
+		],
 		"moduleResolution": "node",
-		"module": "commonjs", // pour Node.js ou "esnext" pour les modules ES
+		"module": "esnext", // pour Node.js ou "esnext" pour les modules ES
+		"target": "ES2019",
 		"strict": true,
 		"noFallthroughCasesInSwitch": true,
 		"esModuleInterop": true,
@@ -23,7 +26,16 @@
 		"forceConsistentCasingInFileNames": true,
 		"allowSyntheticDefaultImports": true,
 		"isolatedModules": true,
-		"rootDir": "./src"
+		"rootDir": "./src",
+		"outDir": "./dist",
+		"declaration": true,
+		"sourceMap": true,
 	},
-	"include": ["./src/**/*.ts"]
+	"include": [
+		"src/**/*"
+	],
+	"exclude": [
+		"node_modules",
+		"**/*.spec.ts"
+	]
 }
