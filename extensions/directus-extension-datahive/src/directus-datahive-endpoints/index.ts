@@ -1,8 +1,8 @@
 //import { defineEndpoint } from '@directus/extensions-sdk';
 //import { runPollinator, testFC } from '../directus-datahive-pollinator/pollinator/src/index'
 //import goGather from './datahive-core/databee/main'
-import goGather, { testFCDatabee } from '../../../../datahive-core/dist/databee/main.js'
-import { testFC } from '../../../../datahive-core/dist/pollinator/index.js'
+import goGather, { testFCDatabee } from 'datahive-core/dist/databee/main.js'
+import { testFC } from 'datahive-core/dist/pollinator/index.js'
 
 export default {
 	id: "datahive",
