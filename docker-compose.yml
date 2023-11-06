@@ -8,6 +8,7 @@ services:
       - ./uploads:/directus/uploads
       - ./extensions:/directus/extensions
       - ./snapshots:/directus/snapshots
+      - ./datahive-core:/directus/node_modules/datahive-core
     # - ./database:/directus/database
     environment:
       KEY: "6288b48a-35cf-483d-8ebd-13c09118566e"

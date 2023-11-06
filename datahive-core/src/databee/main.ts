@@ -36,8 +36,8 @@ interface IDataBee {
 export async function testFCDatabee(): Promise<void> {
   console.log('TEST FC LOG INSIDE DATABEE');
 }
-
-export default async function GoGather(): Promise<void> {
+//@ts-ignore
+export default async function GoGather(process, projectId, runId): Promise<void> {
 
   let Actor: any;
 
@@ -55,7 +55,7 @@ export default async function GoGather(): Promise<void> {
   if (true) {
     try {
       //@ts-ignore
-      await (databee as IDataBee).init(process);
+      await (databee as IDataBee).init(process, projectId, runId);
     } catch (error) {
       console.error("An error occurred initiating run manager:", error);
     }
@@ -117,4 +117,4 @@ process.on("unhandledRejection", async (reason, promise) => {
   process.exit(1);
 });*/
 //@ts-ignore
-await GoGather()
+//await GoGather()

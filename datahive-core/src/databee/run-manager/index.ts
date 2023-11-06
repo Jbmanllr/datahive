@@ -44,7 +44,8 @@ class Databee {
     this.runManager = new RunManager();
   }
 
-  async init(process: NodeJS.Process): Promise<void> {
+  async init(process: NodeJS.Process, projectId: any, runId: any): Promise<void> {
+    console.log("INIT THE RUUUUN", process.env, projectId, runId)
     try {
       const response = await apiRequest({
         method: "GET",
@@ -53,7 +54,7 @@ class Databee {
       });
       this.config = response.data;
       logger.info("Databee config fetched successfully");
-      await this.runManager.init(process);
+      await this.runManager.init(process, projectId, runId);
     } catch (error) {
       handleError("Failed to fetch project:", error, true);
     }
@@ -73,14 +74,19 @@ class RunManager {
     this.isNewRun = null;
   }
 
-  async init(process: NodeJS.Process): Promise<void> {
+  async init(process: NodeJS.Process, projectId: any, runId: any): Promise<void> {
+
     const args = process.argv.slice(2);
     console.log("args", args);
     const resumeFlagIndex = args.indexOf("--resume");
 
-    if (resumeFlagIndex !== -1) {
+    console.log("WATCH ARG FOR RUNS", projectId, runId)
+    if (runId || resumeFlagIndex !== -1) {
       // Ensure that the argument after "--resume" exists before calling `this.resume`
-      const runId = args[resumeFlagIndex + 1];
+
+      if (!runId) {
+        runId = args[resumeFlagIndex + 1];
+      }
       if (runId) {
         await this.resume(runId);
       } else {
@@ -89,7 +95,10 @@ class RunManager {
       }
     } else {
       // Ensure that the first argument exists before calling `this.startNew`
-      const projectId = args[0];
+      if (!projectId) {
+        projectId = args[0];
+      }
+
       if (projectId) {
         await this.startNew(projectId);
       } else {
@@ -103,7 +112,7 @@ class RunManager {
   async resume(runId: string): Promise<void> {
     if (!runId) {
       console.error("Run ID is required after --resume flag.");
-      process.exit(1);
+      //process.exit(1);
     }
 
     await this.run.resume(runId, this.project, this.runSession);
@@ -111,11 +120,12 @@ class RunManager {
   }
 
   async startNew(projectId: string): Promise<void> {
+    console.log("START NEW RUN", projectId)
     if (!projectId) {
       console.error(
         "Project ID is required to start a new run. Usage: npm start <PROJECT_ID>"
       );
-      process.exit(1);
+      //process.exit(1);
     }
 
     await this.project.init(projectId);
@@ -131,6 +141,8 @@ class Project {
   data: ProjectData | undefined;
 
   async init(projectId: string): Promise<ProjectData | undefined> {
+
+    console.log("GET PROJECT", projectId, databee.config!.project_collection)
     try {
       const response = await apiRequest({
         method: "GET",
@@ -194,7 +206,7 @@ export class Run {
   async resume(runId: string, projectInstance: Project, runSessionInstance: RunSession): Promise<void> {
     if (!runId) {
       console.error("Run ID is required after --resume flag.");
-      process.exit(1);
+      //process.exit(1);
     }
     try {
       this.data = await this.init(runId);
@@ -218,15 +230,16 @@ export class Run {
 
       if (!this.data) {
         console.error("Run not found or invalid response.");
-        process.exit(1);
+        //process.exit(1);
       }
-
+      //@ts-ignore
       if (this.data.status !== RUN_STATUS_RUNNING) {
+        //@ts-ignore
         this.data = await this.update(this.data.id, {
           status: RUN_STATUS_RUNNING,
         });
       }
-
+      //@ts-ignore
       return this.data;
     } catch (error) {
       handleError("Failed to retrieve or update the run by ID:", error, true);

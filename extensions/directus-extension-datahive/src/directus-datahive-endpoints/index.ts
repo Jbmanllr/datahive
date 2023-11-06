@@ -27,7 +27,7 @@ export default {
 				console.log(message);
 				await testFC();
 				await testFCDatabee();
-				//await goGather();
+				await goGather(process, req.params.projectId, null);
 				console.log("AFTER TEST FC");
 				res.send(message);
 			} catch (error) {

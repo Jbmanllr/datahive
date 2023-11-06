@@ -22,15 +22,15 @@ export async function apiRequest({
   fields = "",
 }: ApiRequestOptions): Promise<any> {
   const endpoint = id
-    ? `${process.env.DIRECTUS_API_BASE_URL}/${collection}/${id}${fields}`
-    : `${process.env.DIRECTUS_API_BASE_URL}/${collection}`;
+    ? `http://0.0.0.0:8055/items/${collection}/${id}${fields}`
+    : `http://0.0.0.0:8055/items/${collection}`;
 
   try {
     const config: AxiosRequestConfig = {
       method: method,
       url: endpoint,
       headers: {
-        Authorization: `Bearer ${process.env.DIRECTUS_API_TOKEN}`,
+        Authorization: `Bearer mYYPJypxN5ecLk2bxz-kztKpL_8oinXT`,
         "Content-Type": "application/json",
       },
     };
@@ -63,7 +63,7 @@ export async function apiRequest({
           try {
             await apiRequest({
               method: "POST",
-              collection: "data_factory_migrations_report",
+              collection: "databee_run_reports",
               data: {
                 type: "info",
                 run_id: run?.data.id,

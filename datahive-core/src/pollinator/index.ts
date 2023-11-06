@@ -1,10 +1,10 @@
 import pLimit from 'p-limit';
-import { apiRequest } from './helpers';
+import { apiRequest } from './helpers.js';
 import {
   TRANSFORM_MAPPINGS,
   ENTITY_TABLES,
   TRANSFORM_FUNCTIONS,
-} from './migrations-data';
+} from './migrations-data.js';
 
 const DATA_FACTORY_RUNS_COLLECTION = 'data_factory_migrations_runs';
 
