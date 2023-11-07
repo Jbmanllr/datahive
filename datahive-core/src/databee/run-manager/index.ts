@@ -44,8 +44,9 @@ class Databee {
     this.runManager = new RunManager();
   }
 
-  async init(process: NodeJS.Process, projectId: any, runId: any): Promise<void> {
-    console.log("INIT THE RUUUUN", process.env, projectId, runId)
+  async init(projectId: any, runId: any): Promise<void> {
+    console.log("INIT THE RUUUUN", process.env)
+    console.log("CHECK ARGUMENTS", projectId, runId)
     try {
       const response = await apiRequest({
         method: "GET",
@@ -54,7 +55,7 @@ class Databee {
       });
       this.config = response.data;
       logger.info("Databee config fetched successfully");
-      await this.runManager.init(process, projectId, runId);
+      await this.runManager.init(projectId, runId);
     } catch (error) {
       handleError("Failed to fetch project:", error, true);
     }
@@ -74,7 +75,7 @@ class RunManager {
     this.isNewRun = null;
   }
 
-  async init(process: NodeJS.Process, projectId: any, runId: any): Promise<void> {
+  async init(projectId: any, runId: any): Promise<void> {
 
     const args = process.argv.slice(2);
     console.log("args", args);

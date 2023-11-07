@@ -37,7 +37,7 @@ export async function testFCDatabee(): Promise<void> {
   console.log('TEST FC LOG INSIDE DATABEE');
 }
 //@ts-ignore
-export default async function GoGather(process, projectId, runId): Promise<void> {
+export default async function GoGather(projectId, runId): Promise<void> {
 
   let Actor: any;
 
@@ -55,7 +55,7 @@ export default async function GoGather(process, projectId, runId): Promise<void>
   if (true) {
     try {
       //@ts-ignore
-      await (databee as IDataBee).init(process, projectId, runId);
+      await (databee as IDataBee).init(projectId, runId);
     } catch (error) {
       console.error("An error occurred initiating run manager:", error);
     }

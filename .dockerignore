@@ -1,0 +1,12 @@
+**/node_modules
+**/node_modules/
+**/.git
+**/*.log
+
+# configurations
+.idea
+
+# crawlee and apify storage folders
+apify_storage
+crawlee_storage
+storage
