@@ -199,6 +199,9 @@ export class Run {
       this.data = response.data;
       // @ts-ignore
       logger.info("New run created successfully", { runId: this.data.id });
+      console.log("CREATE RUN AND EXITE", process.pid, process.ppid)
+      // @ts-ignore
+      io
     } catch (error) {
       handleError("Failed to create a new run:", error, true);
     }
