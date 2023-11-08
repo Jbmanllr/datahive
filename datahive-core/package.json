@@ -19,9 +19,8 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./dist/databee/main.js 07f791aa-bf0c-48ae-8732-7e6b3cb18ff8",
-    "resume": "CRAWLEE_PURGE_ON_START=0 node ./src/directus-datahive-databee/src/main.js --resume f90726b2-a52c-400d-97d6-eddedc2d168",
-    "postinstall": "npx crawlee install-playwright-browsers"
+    "start": "node ./dist/databee/main.js $PROJECT_ID",
+    "resume": "CRAWLEE_PURGE_ON_START=0 node ./src/directus-datahive-databee/src/main.js --resume $RUN_ID"
   },
   "keywords": [],
   "author": "",

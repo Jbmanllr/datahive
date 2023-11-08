@@ -22,15 +22,15 @@ export async function apiRequest({
   fields = "",
 }: ApiRequestOptions): Promise<any> {
   const endpoint = id
-    ? `http://0.0.0.0:8055/items/${collection}/${id}${fields}`
-    : `http://0.0.0.0:8055/items/${collection}`;
+    ? `${process.env.DIRECTUS_API_BASE_URL}/items/${collection}/${id}${fields}`
+    : `${process.env.DIRECTUS_API_BASE_URL}/items/${collection}`;
 
   try {
     const config: AxiosRequestConfig = {
       method: method,
       url: endpoint,
       headers: {
-        Authorization: `Bearer mYYPJypxN5ecLk2bxz-kztKpL_8oinXT`,
+        Authorization: `Bearer ${process.env.DIRECTUS_API_TOKEN}`,
         "Content-Type": "application/json",
       },
     };

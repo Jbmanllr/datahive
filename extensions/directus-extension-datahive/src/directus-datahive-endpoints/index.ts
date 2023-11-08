@@ -1,8 +1,6 @@
 //import { defineEndpoint } from '@directus/extensions-sdk';
-//import { runPollinator, testFC } from '../directus-datahive-pollinator/pollinator/src/index'
-//import goGather from './datahive-core/databee/main'
-import goGather, { testFCDatabee } from 'datahive-core/dist/databee/main.js'
-import { testFC } from 'datahive-core/dist/pollinator/index.js'
+import goGather from 'datahive-core/dist/databee/main.js'
+import { testFC, runPollinator } from 'datahive-core/dist/pollinator/index.js'
 
 export default {
 	id: "datahive",
@@ -25,10 +23,9 @@ export default {
 			try {
 				const message = `POLLINATOR START NEW RUN - PROJECT ID: ${req.params.projectId}, Query: ${JSON.stringify(req.query)}`;
 				console.log(message);
+				await runPollinator();
 				await testFC();
-				await testFCDatabee();
-				await goGather(req.params.projectId, null);
-				console.log("AFTER TEST FC");
+
 				res.send(message);
 			} catch (error) {
 				console.error("Error running pollinator:", error);
@@ -70,6 +67,7 @@ export default {
 		router.get("/databee/start/:projectId", async (req: any, res: any) => {
 			const message = `DATABEE START NEW RUN - PROJECT ID: ${req.params.projectId}, Query: ${JSON.stringify(req.query)}`;
 			console.log(message);
+			await goGather(req.params.projectId, null);
 			res.send(message);
 		});
 

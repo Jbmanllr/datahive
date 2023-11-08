@@ -39,13 +39,11 @@
 		"dev": "directus-extension build -w --no-minify",
 		"link": "directus-extension link",
 		"add": "directus-extension add",
-		"start": "node ./src/datahive-core/databee/main.ts 07f791aa-bf0c-48ae-8732-7e6b3cb18ff8",
-		"resume": "CRAWLEE_PURGE_ON_START=0 node ./src/directus-datahive-databee/src/main.js --resume f90726b2-a52c-400d-97d6-eddedc2d168",
-		"test": "echo \"Error: oops, there is no tests yet, sad ;(!\" && exit 1"
+		"test": "echo \"Error: oops, there is no tests yet !\" && exit 1"
 	},
 	"dependencies": {
-		"rollup-plugin-node-externals": "^6.1.1",
-		"datahive-core": "file:../../datahive-core"
+		"datahive-core": "file:../../datahive-core",
+		"rollup-plugin-node-externals": "^6.1.1"
 	},
 	"devDependencies": {
 		"@directus/extensions-sdk": "10.1.14",
