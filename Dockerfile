@@ -11,6 +11,9 @@ USER root
 COPY .env ./
 RUN chmod 644 .env
 
+COPY nodemon.json ./
+RUN chmod 644 nodemon.json
+
 RUN npm install -g typescript ts-node
 # Copy the datahive-core directory
 COPY ./datahive-core ./datahive-core
@@ -59,7 +62,7 @@ USER root
 EXPOSE 8055
 
 # Start Directus
-CMD ["npx", "nodemon", "directus", "start"]
+CMD ["npx", "ts-node", "directus", "start"]
 
 ## Start with PM2
 #CMD : \
