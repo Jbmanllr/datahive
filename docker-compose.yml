@@ -8,7 +8,8 @@ services:
       - ./uploads:/directus/uploads
       - ./extensions:/directus/extensions
       - ./snapshots:/directus/snapshots
-      - ./datahive-core:/directus/node_modules/datahive-core
+      - ./datahive-core:/directus/extensions/directus-extension-datahive/node_modules/datahive-core
+    #  - ./datahive-core:/directus/node_modules/datahive-core
     # - ./database:/directus/database
     environment:
       KEY: "6288b48a-35cf-483d-8ebd-13c09118566e"
@@ -22,3 +23,5 @@ services:
       DB_USER: "nsrgsilqrgmapr"
       DB_PASSWORD: "c3c83bf16985c065b0be0a1d277d544cd764b61f78944ada4017020fa4294a5e"
       DB_SSL__REJECT_UNAUTHORIZED: "false"
+      DIRECTUS_API_BASE_URL: "http://0.0.0.0:8055"
+      DIRECTUS_API_TOKEN: "mYYPJypxN5ecLk2bxz-kztKpL_8oinXT"
