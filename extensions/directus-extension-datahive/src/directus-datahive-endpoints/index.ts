@@ -76,7 +76,7 @@ export default {
 			}
 
 			const projectId = req.params.projectId;
-			console.log(`DATABEE START NEW RUN test changrs - PROJECT ID: ${projectId}`);
+			console.log(`DATABEE START NEW RUN test chanPO - PROJECT ID: ${projectId}`);
 
 			const children = {};
 
