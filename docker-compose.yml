@@ -1,7 +1,7 @@
 version: "3"
 services:
   directus:
-    image: directus-node18:10.7.2
+    image: datahive:latest
     ports:
       - 8055:8055
     volumes:
@@ -25,4 +25,4 @@ services:
       DB_SSL__REJECT_UNAUTHORIZED: "false"
       DIRECTUS_API_BASE_URL: "http://0.0.0.0:8055"
       DIRECTUS_API_TOKEN: "mYYPJypxN5ecLk2bxz-kztKpL_8oinXT"
-      EXTENSIONS_AUTO_RELOAD : "true"
+      EXTENSIONS_AUTO_RELOAD: "true"
