@@ -11,6 +11,7 @@ USER root
 COPY .env ./
 RUN chmod 644 .env
 
+RUN npm install -g typescript ts-node
 # Copy the datahive-core directory
 COPY ./datahive-core ./datahive-core
 # Ensure the node user owns the datahive-core directory and has the correct permissions
@@ -62,6 +63,6 @@ EXPOSE 8055
 
 ## Start with PM2
 CMD : \
-    && node cli.js bootstrap \
+    && ts-node cli.js bootstrap \
     && pm2-runtime start ecosystem.config.cjs \
     ;

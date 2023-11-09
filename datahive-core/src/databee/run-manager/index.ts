@@ -199,7 +199,7 @@ export class Run {
       this.data = response.data;
       // @ts-ignore
       logger.info("New run created successfully", { runId: this.data.id });
-      console.log("CREATE RUN AND EXITE", process.pid, process.ppid)
+      console.log("CREATE RUN AND EXIT TEST CHANGES", process.pid, process.ppid)
       // @ts-ignore
       io
     } catch (error) {
