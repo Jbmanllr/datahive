@@ -59,10 +59,10 @@ USER root
 EXPOSE 8055
 
 # Start Directus
-# CMD ["npx", "directus", "start"]
+CMD ["npx", "nodemon", "directus", "start"]
 
 ## Start with PM2
-CMD : \
-    && ts-node cli.js bootstrap \
-    && pm2-runtime start ecosystem.config.cjs \
-    ;
+#CMD : \
+#    && ts-node cli.js bootstrap \
+#    && pm2-runtime start ecosystem.config.cjs \
+#    ;
