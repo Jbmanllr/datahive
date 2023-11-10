@@ -2,6 +2,9 @@
 //import goGather from 'datahive-core/dist/databee/main.js'
 import { testFC, runPollinator } from 'datahive-core/dist/pollinator/index.js'
 import { fork, ChildProcess } from 'child_process';
+import { Mutex } from 'async-mutex';
+
+const mutex = new Mutex();
 
 function logWithPrefix(prefix: any, message: any) {
   const yellow = '\x1b[33m';
@@ -11,6 +14,24 @@ function logWithPrefix(prefix: any, message: any) {
 
 const databeeProcessPath = 'datahive-core/dist/databee/process.js'
 let activeDatabeeProcess: ChildProcess | null = null;
+
+// Define the checkProcessHealth function
+function checkProcessHealth(process: any) {
+  console.log("CHECK PROCESS HEALTH")
+  return new Promise((resolve) => {
+    const timeout = setTimeout(() => {
+      resolve(false); // No response within timeout, process is not healthy
+    }, 5000); // Set an appropriate timeout duration
+
+    process.once('message', (message: any) => {
+      if (message === 'alive') {
+        console.log("PROCESS IS ALIVE")
+        clearTimeout(timeout);
+        resolve(true); // Process responded, it's alive
+      }
+    });
+  });
+}
 
 export default {
   id: "datahive",
@@ -81,6 +102,17 @@ export default {
 
       const children = {};
 
+      if (activeDatabeeProcess && !activeDatabeeProcess.killed) {
+        // Send a heartbeat message to the existing process
+        activeDatabeeProcess.send({ command: 'heartbeat' });
+
+        // Wait for a response or timeout
+        const isAlive = await checkProcessHealth(activeDatabeeProcess);
+        if (!isAlive) {
+          // Process is unresponsive, consider it dead and create a new one
+          activeDatabeeProcess = null;
+        }
+      }
       if (!activeDatabeeProcess) {
         // Fork a new process if there isn't an active one
         activeDatabeeProcess = fork(databeeProcessPath, [projectId, '--name=databee'], {
@@ -90,7 +122,7 @@ export default {
         });
 
         //@ts-ignore
-        children[activeDatabeeProcess?.pid] = 'databee'; 
+        children[activeDatabeeProcess?.pid] = 'databee';
 
         if (activeDatabeeProcess?.stdout) {
           activeDatabeeProcess.stdout.on('data', (data) => {

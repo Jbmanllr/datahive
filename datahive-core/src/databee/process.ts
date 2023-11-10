@@ -42,7 +42,7 @@ function terminateWorker(workerId: string) {
         const worker = new Worker(currentFilePath);
         const workerId = generateWorkerId(worker);
         workers.set(workerId, worker);
-        console.log(`Worker created with ID !!: ${workerId}`); 
+        console.log(`Worker created with ID !!: ${workerId}`);
 
         worker.on('message', (message) => {
           if (message.status === 'completed' || message.status === 'error') {
@@ -57,6 +57,11 @@ function terminateWorker(workerId: string) {
         });
 
         worker.postMessage({ projectId: message.projectId, workerId });
+      } else if (message.command === 'heartbeat') {
+        // Respond to heartbeat check
+        if (typeof process.send === 'function') {
+          process.send('alive');
+        }
       }
     });
   } else {

@@ -40,6 +40,8 @@ class CrawlerFactory {
           requestHandlerTimeoutSecs: 800,
           minConcurrency: 1,
           maxConcurrency: 1,
+          retryOnBlocked: true,
+          keepAlive: false,
           preNavigationHooks: [
             async (context) => handlers.PRE_NAVIGATION_PREPARATION(context),
             async (context) => {
