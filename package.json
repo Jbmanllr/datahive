@@ -1,0 +1,28 @@
+{
+  "name": "datahive",
+  "version": "1.0.0",
+  "description": "Datahive",
+  "scripts": {
+    "start": "docker compose up",
+    "dev": "docker-compose up & cd ./datahive-core && npm run dev & cd ./extensions/directus-extension-datahive && npm run dev",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jbmanllr/datahive.git"
+  },
+  "author": "JB Manillier",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jbmanllr/datahive/issues"
+  },
+  "dependencies": {
+    "directus-extension-wpslug-interface": "*",
+    "directus-extension-tags-m2m-interface": "*",
+    "directus-extension-field-actions": "*",
+    "directus-extension-computed-interface": "*",
+    "directus-extension-group-tabs-interface": "*"
+  },
+  "devDependencies": {},
+  "homepage": "https://github.com/Jbmanllr/datahive#readme"
+}
