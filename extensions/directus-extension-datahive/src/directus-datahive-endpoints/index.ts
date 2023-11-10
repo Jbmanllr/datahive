@@ -2,8 +2,9 @@
 import goGather from 'datahive-core/dist/databee/main.js'
 import { testFC, runPollinator } from 'datahive-core/dist/pollinator/index.js'
 import express from 'express';
-import { spawn } from 'child_process';
+import { fork, ChildProcess } from 'child_process';
 
+let activeDatabeeProcess: ChildProcess | null = null;
 
 export default {
   id: "datahive",
@@ -80,28 +81,37 @@ export default {
 
       const children = {};
 
-      // Spawn a new process to run the goGather function
-      const child = spawn(process.execPath, ['datahive-core/dist/databee/process.js', projectId, '--name=databee'], {
-        stdio: ['ignore', 'pipe', 'pipe', 'ipc'], // This will share the I/O with the parent process
-        detached: true, // This will make the process independent of the parent
-        env: { ...process.env, PROJECT_ID: projectId, PROCESS_NAME: 'databee' } // Pass environment variables if needed
-      });
-
-      //@ts-ignore
-      children[child.pid] = 'databee';
-      console.log("CHILDREN", children)
-
-      if (child.stdout) {
-        child.stdout.on('data', (data) => {
-          logWithPrefix(`[Databee (${child.pid})]: `, data.toString());
+      if (!activeDatabeeProcess) {
+        // Fork a new process if there isn't an active one
+        activeDatabeeProcess = fork('datahive-core/dist/databee/process.js', [projectId, '--name=databee'], {
+          stdio: ['ignore', 'pipe', 'pipe', 'ipc'],
+          detached: true,
+          env: { ...process.env, PROJECT_ID: projectId, PROCESS_NAME: 'databee' }
         });
-      }
-      if (child.stderr) {
-        child.stderr.on('data', (data) => {
-          logWithPrefix(`[Databee (${child.pid})]: `, data.toString());
+
+        activeDatabeeProcess.on('exit', () => {
+          activeDatabeeProcess = null; // Reset when process exits
         });
+
+        if (activeDatabeeProcess?.stdout) {
+          activeDatabeeProcess.stdout.on('data', (data) => {
+            logWithPrefix(`[Databee (${activeDatabeeProcess?.pid})]: `, data.toString());
+          });
+        }
+        if (activeDatabeeProcess?.stderr) {
+          activeDatabeeProcess.stderr.on('data', (data) => {
+            logWithPrefix(`[Databee (${activeDatabeeProcess?.pid})]: `, data.toString());
+          });
+        }
+        //@ts-ignore
+        children[activeDatabeeProcess?.pid] = 'databee';
+        console.log("CHILDREN", activeDatabeeProcess)
+
+        //activeDatabeeProcess.unref(); // This allows the parent process to exit independently of the spawned process
       }
-      child.unref(); // This allows the parent process to exit independently of the spawned process
+
+      // Send a message to the databee process to start a new worker
+      activeDatabeeProcess.send({ command: 'startWorker', projectId }); 
 
       res.send(`Databee process started for project ID: ${projectId}`);
     });

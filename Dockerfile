@@ -17,14 +17,11 @@ RUN corepack enable \
     && corepack prepare pnpm@8.9.0 --activate
 
 USER node
-RUN pnpm install directus-extension-wpslug-interface
-RUN pnpm install directus-extension-tags-m2m-interface
-RUN pnpm install directus-extension-field-actions
-RUN pnpm install directus-extension-computed-interface
-RUN pnpm install directus-extension-group-tabs-interface
-#RUN pnpm install directus-extension-api-viewer-module
-#RUN pnpm install directus-sql-panel
-#RUN pnpm install directus-extension-generate-types
+RUN pnpm install directus-extension-wpslug-interface@latest \
+    directus-extension-tags-m2m-interface@latest \
+    directus-extension-field-actions@latest \
+    directus-extension-computed-interface@latest \
+    directus-extension-group-tabs-interface@latest
 
 USER root
 

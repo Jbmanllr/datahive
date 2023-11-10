@@ -37,7 +37,7 @@ export async function testFCDatabee(): Promise<void> {
   console.log('TEST FC LOG INSIDE DATABEE');
 }
 //@ts-ignore
-export default async function GoGather(projectId, runId): Promise<void> {
+export default async function GoGather(projectId, runId, worker): Promise<void> {
 
   let Actor: any;
 

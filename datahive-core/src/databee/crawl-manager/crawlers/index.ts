@@ -38,8 +38,8 @@ class CrawlerFactory {
           ...commonCrawlerOptions as PlaywrightCrawlerOptions,
           headless: true,
           requestHandlerTimeoutSecs: 800,
-          minConcurrency: 2,
-          maxConcurrency: 3,
+          minConcurrency: 1,
+          maxConcurrency: 1,
           preNavigationHooks: [
             async (context) => handlers.PRE_NAVIGATION_PREPARATION(context),
             async (context) => {

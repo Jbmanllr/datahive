@@ -2,6 +2,7 @@
   "name": "datahive",
   "version": "1.0.0",
   "description": "Datahive",
+  "type": "module",
   "scripts": {
     "start": "docker compose up",
     "dev": "docker-compose up & cd ./datahive-core && npm run dev & cd ./extensions/directus-extension-datahive && npm run dev",
