@@ -45,8 +45,7 @@ class Databee {
   }
 
   async init(projectId: any, runId: any): Promise<void> {
-    console.log("INIT THE RUUUUN", process.env)
-    console.log("CHECK ARGUMENTS", projectId, runId)
+    console.log("Init Run: ", projectId, runId)
     try {
       const response = await apiRequest({
         method: "GET",

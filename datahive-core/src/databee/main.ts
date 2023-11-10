@@ -8,7 +8,6 @@ import CrawlerFactory from "./crawl-manager/crawlers/index.js";
 import { loadProjectHandlers } from "./crawl-manager/index.js";
 
 dotenv.config();
-console.log("DOTENV", process.env);
 
 interface IRunSession {
   data: any;
@@ -33,11 +32,8 @@ interface IDataBee {
   runManager: IRunManager;
 }
 
-export async function testFCDatabee(): Promise<void> {
-  console.log('TEST FC LOG INSIDE DATABEE');
-}
 //@ts-ignore
-export default async function GoGather(projectId, runId, worker): Promise<void> {
+export default async function GoGather(projectId, runId): Promise<void> {
 
   let Actor: any;
 
@@ -96,6 +92,8 @@ export default async function GoGather(projectId, runId, worker): Promise<void> 
   if (process.env.APIFY_IS_AT_HOME && Actor) {
     await Actor.exit();
   }
+  //@ts-ignore
+  return "Run ended successsss"
 }
 
 // Handle process exit signals
@@ -116,5 +114,3 @@ process.on("unhandledRejection", async (reason, promise) => {
   await runManager.run.end(runManager.run, runManager.runSession, "aborted");
   process.exit(1);
 });*/
-//@ts-ignore
-//await GoGather()

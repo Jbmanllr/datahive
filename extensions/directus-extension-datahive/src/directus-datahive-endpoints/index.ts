@@ -1,9 +1,15 @@
 //import { defineEndpoint } from '@directus/extensions-sdk';
-import goGather from 'datahive-core/dist/databee/main.js'
+//import goGather from 'datahive-core/dist/databee/main.js'
 import { testFC, runPollinator } from 'datahive-core/dist/pollinator/index.js'
-import express from 'express';
 import { fork, ChildProcess } from 'child_process';
 
+function logWithPrefix(prefix: any, message: any) {
+  const yellow = '\x1b[33m';
+  const reset = '\x1b[0m';
+  console.log(`${yellow}${prefix} ${message}${reset}`);
+}
+
+const databeeProcessPath = 'datahive-core/dist/databee/process.js'
 let activeDatabeeProcess: ChildProcess | null = null;
 
 export default {
@@ -70,28 +76,21 @@ export default {
 
     router.get("/databee/start/:projectId", async (req: any, res: any) => {
 
-      function logWithPrefix(prefix: any, message: any) {
-        const yellow = '\x1b[33m';
-        const reset = '\x1b[0m';
-        console.log(`${yellow}${prefix} ${message}${reset}`);
-      }
-
       const projectId = req.params.projectId;
-      console.log(`DATABEE START NEW RUN TESTME  ol- PROJECT ID: ${projectId}`);
+      console.log(`DATABEE START NEW RUN TESTME - PROJECT ID: ${projectId}`);
 
       const children = {};
 
       if (!activeDatabeeProcess) {
         // Fork a new process if there isn't an active one
-        activeDatabeeProcess = fork('datahive-core/dist/databee/process.js', [projectId, '--name=databee'], {
+        activeDatabeeProcess = fork(databeeProcessPath, [projectId, '--name=databee'], {
           stdio: ['ignore', 'pipe', 'pipe', 'ipc'],
           detached: true,
           env: { ...process.env, PROJECT_ID: projectId, PROCESS_NAME: 'databee' }
         });
 
-        activeDatabeeProcess.on('exit', () => {
-          activeDatabeeProcess = null; // Reset when process exits
-        });
+        //@ts-ignore
+        children[activeDatabeeProcess?.pid] = 'databee';
 
         if (activeDatabeeProcess?.stdout) {
           activeDatabeeProcess.stdout.on('data', (data) => {
@@ -103,15 +102,15 @@ export default {
             logWithPrefix(`[Databee (${activeDatabeeProcess?.pid})]: `, data.toString());
           });
         }
-        //@ts-ignore
-        children[activeDatabeeProcess?.pid] = 'databee';
-        console.log("CHILDREN", activeDatabeeProcess)
+        activeDatabeeProcess.on('exit', () => {
+          activeDatabeeProcess = null; // Reset when process exits
+        });
 
         //activeDatabeeProcess.unref(); // This allows the parent process to exit independently of the spawned process
       }
 
       // Send a message to the databee process to start a new worker
-      activeDatabeeProcess.send({ command: 'startWorker', projectId }); 
+      activeDatabeeProcess.send({ command: 'startWorker', projectId });
 
       res.send(`Databee process started for project ID: ${projectId}`);
     });
