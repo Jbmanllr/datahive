@@ -90,7 +90,7 @@ export default {
         });
 
         //@ts-ignore
-        children[activeDatabeeProcess?.pid] = 'databee';
+        children[activeDatabeeProcess?.pid] = 'databee'; 
 
         if (activeDatabeeProcess?.stdout) {
           activeDatabeeProcess.stdout.on('data', (data) => {

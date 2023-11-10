@@ -7,7 +7,28 @@ const projectId = process.argv[2]; // Get the projectId from the command line ar
 const workers = new Map();
 
 function generateWorkerId(worker: Worker) {
-  return `${process.pid}/${worker.threadId}`;
+  return `${process.pid}-${worker.threadId}`;
+}
+
+// Function to handle worker termination
+function terminateWorker(workerId: string) {
+  const worker = workers.get(workerId);
+  if (worker) {
+    worker.terminate().then(() => {
+      console.log(`Worker ${workerId} terminated.`);
+    }).catch((error: any) => {
+      console.error(`Error terminating worker ${workerId}:`, error);
+    });
+
+    // Remove the worker from the map
+    workers.delete(workerId);
+
+    // Check if there are no more active workers
+    if (workers.size === 0) {
+      console.log('No active workers left. Terminating the process.');
+      process.exit(0); // or use a different exit code if needed
+    }
+  }
 }
 
 (async () => {
@@ -16,28 +37,29 @@ function generateWorkerId(worker: Worker) {
   console.log("Process", projectId, process.title);
 
   if (isMainThread) {
-    // Main thread logic
     process.on('message', (message: any) => {
       if (message.command === 'startWorker') {
         const worker = new Worker(currentFilePath);
         const workerId = generateWorkerId(worker);
         workers.set(workerId, worker);
-        console.log(`Worker created with ID: ${workerId}`);
+        console.log(`Worker created with ID !!: ${workerId}`); 
 
         worker.on('message', (message) => {
-          console.log(`Message from worker ${workerId}:`, message);
+          if (message.status === 'completed' || message.status === 'error') {
+            console.log(`Worker ${workerId} ${message.status === 'completed' ? 'completed its task' : 'encountered an error'}.`);
+            terminateWorker(workerId);
+          }
         });
 
         worker.on('exit', (code) => {
           console.log(`Worker ${workerId} stopped with exit code ${code}`);
-          workers.delete(workerId);
+          terminateWorker(workerId);
         });
 
         worker.postMessage({ projectId: message.projectId, workerId });
       }
     });
   } else {
-    // Worker thread logic
     // Worker thread logic
     if (parentPort) {
       let workerId = '';
@@ -58,13 +80,14 @@ function generateWorkerId(worker: Worker) {
 
         try {
           const result = await goGather(message.projectId, null);
-          parentPort?.postMessage(result);
+          // Notify main thread that the task is complete
+          parentPort?.postMessage({ status: 'completed', result });
         } catch (error) {
-          console.error(`[${workerId}] Error in worker:`, error);
-          process.exit(1);
+          console.error(`Error in worker:`, error);
+          // Notify main thread that there is an error
+          parentPort?.postMessage({ status: 'error', error });
         }
       });
     }
-
   }
 })();
