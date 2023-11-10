@@ -61,13 +61,13 @@ RUN chmod 644 .env
 #RUN npx crawlee install-playwright-browsers --prefix ./datahive-core --verbose
 
 # Expose the port Directus runs on
-EXPOSE 8055
+# EXPOSE 8055
 
 # Start Directus
-#CMD ["npx", "directus", "start"]
+# CMD ["npx", "directus", "start"]
 
 ## Start with PM2
-CMD : \
-    && node cli.js bootstrap \
-    && pm2-runtime start ecosystem.config.cjs \
-    ;
+#CMD : \
+#    && node cli.js bootstrap \
+#    && pm2-runtime start ecosystem.config.cjs \
+#    ;

@@ -7,12 +7,12 @@
   "dependencies": {
     "axios": "^1.6.0",
     "crawlee": "^3.5.8",
-    "dotenv": "^16.3.1",
     "p-limit": "^4.0.0",
     "playwright": "*",
     "winston": "^3.11.0"
   },
   "devDependencies": {
+    "dotenv": "^16.3.1",
     "@types/node": "^20.8.10",
     "nodemon": "^3.0.1",
     "typescript": "^5.2.2"
