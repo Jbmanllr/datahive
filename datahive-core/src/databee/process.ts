@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url';
 const currentFilePath = fileURLToPath(import.meta.url);
 const projectId = process.argv[2]; // Get the projectId from the command line arguments
 const workers = new Map();
+const differentProcessForEachRun = true;
 
 function generateWorkerId(worker: Worker) {
   return `${process.pid}-${worker.threadId}`;
@@ -32,67 +33,83 @@ function terminateWorker(workerId: string) {
 }
 
 (async () => {
-  process.title = 'databee';
+  process.title = 'Databee';
 
-  console.log("Process", projectId, process.title);
+  console.log("Process", process.title);
+  if (differentProcessForEachRun) {
+    // Directly run goGather if differentProcessForEachRun is true
+    const projectId = process.env.PROJECT_ID;
+    const runId = process.env.RUN_ID;
 
-  if (isMainThread) {
-    process.on('message', (message: any) => {
-      if (message.command === 'startWorker') {
-        const worker = new Worker(currentFilePath);
-        const workerId = generateWorkerId(worker);
-        workers.set(workerId, worker);
-        console.log(`Worker created with ID !!: ${workerId}`);
+    console.log("Project ID, Run ID", projectId, runId);
 
-        worker.on('message', (message) => {
-          if (message.status === 'completed' || message.status === 'error') {
-            console.log(`Worker ${workerId} ${message.status === 'completed' ? 'completed its task' : 'encountered an error'}.`);
-            terminateWorker(workerId);
-          }
-        });
-
-        worker.on('exit', (code) => {
-          console.log(`Worker ${workerId} stopped with exit code ${code}`);
-          terminateWorker(workerId);
-        });
-
-        worker.postMessage({ projectId: message.projectId, workerId });
-      } else if (message.command === 'heartbeat') {
-        // Respond to heartbeat check
-        if (typeof process.send === 'function') {
-          process.send('alive');
-        }
-      }
-    });
+    try {
+      const result = await goGather(projectId, null);
+      console.log(`goGather completed for project ID: ${projectId}`, result);
+      process.exit(0); // Exit the process after completion
+    } catch (error) {
+      console.error(`Error in goGather for project ID: ${projectId}:`, error);
+      process.exit(1); // Exit with error code
+    }
   } else {
-    // Worker thread logic
-    if (parentPort) {
-      let workerId = '';
+    if (isMainThread) {
+      process.on('message', (message: any) => {
+        if (message.command === 'startWorker') {
+          const worker = new Worker(currentFilePath);
+          const workerId = generateWorkerId(worker);
+          workers.set(workerId, worker);
+          console.log(`Worker created with ID !!: ${workerId}`);
 
-      parentPort.on('message', async (message) => {
-        if (message.workerId) {
-          workerId = message.workerId;
+          worker.on('message', (message) => {
+            if (message.status === 'completed' || message.status === 'error') {
+              console.log(`Worker ${workerId} ${message.status === 'completed' ? 'completed its task' : 'encountered an error'}.`);
+              terminateWorker(workerId);
+            }
+          });
 
-          // Override console functions
-          const originalConsoleLog = console.log;
-          const originalConsoleWarn = console.warn;
-          const originalConsoleError = console.error;
+          worker.on('exit', (code) => {
+            console.log(`Worker ${workerId} stopped with exit code ${code}`);
+            terminateWorker(workerId);
+          });
 
-          console.log = (...args) => originalConsoleLog(`[${workerId}]`, ...args);
-          console.warn = (...args) => originalConsoleWarn(`[${workerId}]`, ...args);
-          console.error = (...args) => originalConsoleError(`[${workerId}]`, ...args);
-        }
-
-        try {
-          const result = await goGather(message.projectId, null);
-          // Notify main thread that the task is complete
-          parentPort?.postMessage({ status: 'completed', result });
-        } catch (error) {
-          console.error(`Error in worker:`, error);
-          // Notify main thread that there is an error
-          parentPort?.postMessage({ status: 'error', error });
+          worker.postMessage({ projectId: message.projectId, workerId });
+        } else if (message.command === 'heartbeat') {
+          // Respond to heartbeat check
+          if (typeof process.send === 'function') {
+            process.send('alive');
+          }
         }
       });
+    } else {
+      // Worker thread logic
+      if (parentPort) {
+        let workerId = '';
+
+        parentPort.on('message', async (message) => {
+          if (message.workerId) {
+            workerId = message.workerId;
+
+            // Override console functions
+            const originalConsoleLog = console.log;
+            const originalConsoleWarn = console.warn;
+            const originalConsoleError = console.error;
+
+            console.log = (...args) => originalConsoleLog(`[${workerId}]`, ...args);
+            console.warn = (...args) => originalConsoleWarn(`[${workerId}]`, ...args);
+            console.error = (...args) => originalConsoleError(`[${workerId}]`, ...args);
+          }
+
+          try {
+            const result = await goGather(message.projectId, null);
+            // Notify main thread that the task is complete
+            parentPort?.postMessage({ status: 'completed', result });
+          } catch (error) {
+            console.error(`Error in worker:`, error);
+            // Notify main thread that there is an error
+            parentPort?.postMessage({ status: 'error', error });
+          }
+        });
+      }
     }
   }
 })();

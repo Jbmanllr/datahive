@@ -3,8 +3,31 @@
 import { testFC, runPollinator } from 'datahive-core/dist/pollinator/index.js'
 import { fork, ChildProcess } from 'child_process';
 import { Mutex } from 'async-mutex';
+import ps from 'ps-node'
 
 const mutex = new Mutex();
+const differentProcessForEachRun = true;
+const activeDatabeeProcesses = new Map();
+
+function checkForExistingProcesses(title: string, args: any) {
+  return new Promise((resolve, reject) => {
+    ps.lookup({
+      command: title,
+      psargs: 'ux'
+    }, function (err, resultList) {
+      if (err) {
+        reject(err);
+        return;
+      }
+
+      console.log("Existing Databee Process(es): ", resultList);
+      const foundProcess = resultList.find(p => p.command === title);
+
+      resolve(foundProcess); // Resolve with the found process or `undefined` if not found
+    });
+  });
+}
+
 
 function logWithPrefix(prefix: any, message: any) {
   const yellow = '\x1b[33m';
@@ -16,7 +39,7 @@ const databeeProcessPath = 'datahive-core/dist/databee/process.js'
 let activeDatabeeProcess: ChildProcess | null = null;
 
 // Define the checkProcessHealth function
-function checkProcessHealth(process: any) {
+function checkProcessHealth(process: ChildProcess) {
   console.log("CHECK PROCESS HEALTH")
   return new Promise((resolve) => {
     const timeout = setTimeout(() => {
@@ -30,6 +53,65 @@ function checkProcessHealth(process: any) {
         resolve(true); // Process responded, it's alive
       }
     });
+  });
+}
+
+async function createDatabeeProcess({
+  projectId,
+  runId,
+  differentProcessForEachRun
+}: any) {
+  try {
+    console.log('Starting a new Databee process...');
+    const databeeProcess = fork(databeeProcessPath, [projectId, '--name=Databee'], {
+      stdio: ['ignore', 'pipe', 'pipe', 'ipc'],
+      detached: false,
+      env: {
+        ...process.env,
+        PROJECT_ID: projectId,
+        RUN_ID: runId,
+        PROCESS_NAME: 'Databee',
+        DPFER: differentProcessForEachRun
+      }
+    });
+
+    databeeProcess.stdout?.on('data', (data) => {
+      logWithPrefix(`[Databee (${databeeProcess.pid})]: `, data.toString());
+    });
+
+    databeeProcess.stderr?.on('data', (data) => {
+      logWithPrefix(`[Databee (${databeeProcess.pid})]: `, data.toString());
+    });
+
+    databeeProcess.on('exit', () => {
+      console.log(`Databee process (${databeeProcess.pid}) exited`);
+      activeDatabeeProcesses.delete(databeeProcess.pid);
+      console.log(`Removed process ${databeeProcess.pid} from active processes.`);
+    });
+
+    // Add the new process to the map
+    activeDatabeeProcesses.set(databeeProcess.pid, databeeProcess);
+
+    console.log("ACTIVE DATABEE PROCESS(ES)", activeDatabeeProcesses.size)
+
+    return databeeProcess;
+  } catch (error) {
+    console.error('Error creating Databee process:', error);
+    throw error; // Rethrow the error to be handled by the caller 
+  }
+}
+
+async function terminateProcess(process: ChildProcess): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (process && !process.killed) {
+      process.kill();
+      process.on('exit', () => {
+        console.log(`Terminated process with PID: ${process.pid}`);
+        resolve();
+      });
+    } else {
+      resolve();
+    }
   });
 }
 
@@ -96,56 +178,52 @@ export default {
     });
 
     router.get("/databee/start/:projectId", async (req: any, res: any) => {
+      const release = await mutex.acquire();
+      try {
+        const projectId = req.params.projectId;
+        logWithPrefix('DATABEE', `START NEW RUN - PROJECT ID: ${projectId}`);
 
-      const projectId = req.params.projectId;
-      console.log(`DATABEE START NEW RUN TESTME - PROJECT ID: ${projectId}`);
+        if (differentProcessForEachRun) {
+          // Always create a new process for each run
+          await createDatabeeProcess({
+            projectId: projectId,
+            runId: null,
+            differentProcessForEachRun: differentProcessForEachRun
+          });
+        } else {
+          // Handle the case where differentProcessForEachRun is false
+          if (activeDatabeeProcess && !activeDatabeeProcess.killed) {
+            activeDatabeeProcess.send({ command: 'heartbeat' });
+            const isAlive = await checkProcessHealth(activeDatabeeProcess);
 
-      const children = {};
+            if (!isAlive) {
+              await terminateProcess(activeDatabeeProcess);
+              activeDatabeeProcess = null;
+            }
+          }
 
-      if (activeDatabeeProcess && !activeDatabeeProcess.killed) {
-        // Send a heartbeat message to the existing process
-        activeDatabeeProcess.send({ command: 'heartbeat' });
+          if (!activeDatabeeProcess) {
+            const existingProcesses = await checkForExistingProcesses("Databee", null)
+            activeDatabeeProcess = await createDatabeeProcess({ projectId: projectId });
+          }
 
-        // Wait for a response or timeout
-        const isAlive = await checkProcessHealth(activeDatabeeProcess);
-        if (!isAlive) {
-          // Process is unresponsive, consider it dead and create a new one
-          activeDatabeeProcess = null;
-        }
-      }
-      if (!activeDatabeeProcess) {
-        // Fork a new process if there isn't an active one
-        activeDatabeeProcess = fork(databeeProcessPath, [projectId, '--name=databee'], {
-          stdio: ['ignore', 'pipe', 'pipe', 'ipc'],
-          detached: true,
-          env: { ...process.env, PROJECT_ID: projectId, PROCESS_NAME: 'databee' }
-        });
-
-        //@ts-ignore
-        children[activeDatabeeProcess?.pid] = 'databee';
-
-        if (activeDatabeeProcess?.stdout) {
-          activeDatabeeProcess.stdout.on('data', (data) => {
-            logWithPrefix(`[Databee (${activeDatabeeProcess?.pid})]: `, data.toString());
+          // Send a message to the databee process to start a new worker
+          activeDatabeeProcess.send({ command: 'startWorker', projectId }, (error) => {
+            if (error) {
+              console.error('Error sending message to Databee process:', error);
+            }
           });
         }
-        if (activeDatabeeProcess?.stderr) {
-          activeDatabeeProcess.stderr.on('data', (data) => {
-            logWithPrefix(`[Databee (${activeDatabeeProcess?.pid})]: `, data.toString());
-          });
-        }
-        activeDatabeeProcess.on('exit', () => {
-          activeDatabeeProcess = null; // Reset when process exits
-        });
 
-        //activeDatabeeProcess.unref(); // This allows the parent process to exit independently of the spawned process
+        res.send(`Databee process started for project ID: ${projectId}`);
+      } catch (error) {
+        console.error("Error in starting Databee process:", error);
+        res.status(500).send("Error in starting Databee process");
+      } finally {
+        release();
       }
-
-      // Send a message to the databee process to start a new worker
-      activeDatabeeProcess.send({ command: 'startWorker', projectId });
-
-      res.send(`Databee process started for project ID: ${projectId}`);
     });
+
 
     router.get("/databee/pause/:runId", (req: any, res: any) => {
       const message = `DATABEE PAUSE - RUN ID: ${req.params.runId}`;
