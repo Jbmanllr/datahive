@@ -37,15 +37,15 @@ COPY ./extensions/directus-extension-datahive ./extensions/directus-extension-da
 RUN chown -R node:node ./extensions/directus-extension-datahive && chmod -R 755 ./extensions/directus-extension-datahive
 
 # Copy only the package.json (and package-lock.json if available) first
-#COPY ./datahive-core/package*.json ./datahive-core/
+COPY ./datahive-core/package*.json ./datahive-core/
 
 # Install the datahive-core dependencies
-#RUN npm install --prefix ./datahive-core --omit=dev
+RUN npm install --prefix ./datahive-core --omit=dev
 
 # Copy the datahive-core directory
-#COPY ./datahive-core ./datahive-core
+COPY ./datahive-core ./datahive-core
 # Ensure the node user owns the datahive-core directory and has the correct permissions
-#RUN chown -R node:node ./datahive-core && chmod -R 755 ./datahive-core
+RUN chown -R node:node ./datahive-core && chmod -R 755 ./datahive-core
 
 # Copy the .env file into the container and change its permissions
 COPY .env ./

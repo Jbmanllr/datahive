@@ -1,7 +1,10 @@
 {
 	"compilerOptions": {
 		"target": "ES2019",
-		"lib": ["ES2019", "DOM"],
+		"lib": [
+			"ES2019",
+			"DOM"
+		],
 		"moduleResolution": "node",
 		"strict": true,
 		"noFallthroughCasesInSwitch": true,
@@ -22,8 +25,11 @@
 		"forceConsistentCasingInFileNames": true,
 		"allowSyntheticDefaultImports": true,
 		"isolatedModules": true,
-		"incremental" : true,
-		"rootDir": "./src"
+		"incremental": true,
+		"rootDir": "./src",
+		"noEmitOnError": false
 	},
-	"include": ["./src/**/*.ts"]
+	"include": [
+		"./src/**/*.ts"
+	]
 }

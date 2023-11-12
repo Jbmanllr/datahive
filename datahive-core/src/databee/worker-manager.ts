@@ -47,7 +47,7 @@ class WorkerManager {
   areWorkersActive(): boolean {
     return this.workers.size > 0;
   }
-
+  //@ts-ignore
   private generateWorkerId(worker: Worker): string {
     return "worker-" + worker.threadId;
   }

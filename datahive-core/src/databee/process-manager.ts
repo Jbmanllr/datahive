@@ -1,5 +1,5 @@
 // process-manager.ts
-import { spawn, fork, ChildProcess } from 'child_process';
+import { fork, ChildProcess } from 'child_process';
 import ps from 'ps-node';
 
 const databeeProcessPath = 'datahive-core/dist/databee/process.js';
@@ -9,23 +9,23 @@ interface ProcessInfo {
   startTime: number;
 }
 
-interface CreateDatabeeProcessOptions {
+interface CreateProcessOptions {
   projectId: string;
   runId?: string;
   differentProcessForEachRun: boolean;
 }
 
 class ProcessManager {
-  private activeDatabeeProcesses: Map<number, ProcessInfo>;
+  public activeProcesses: Map<number, ProcessInfo>;
   constructor() {
-    this.activeDatabeeProcesses = new Map();
+    this.activeProcesses = new Map();
   }
 
-  async createDatabeeProcess({
+  async createProcess({
     projectId,
     runId,
     differentProcessForEachRun
-  }: CreateDatabeeProcessOptions): Promise<ChildProcess> {
+  }: CreateProcessOptions): Promise<ChildProcess> {
     try {
       const databeeProcess = fork(databeeProcessPath, [projectId, '--name=Databee'], {
         stdio: ['ignore', 'pipe', 'pipe', 'ipc'],
@@ -40,16 +40,16 @@ class ProcessManager {
       });
 
       databeeProcess.stdout?.on('data', (data) => {
-        console.log(`[Databee (${databeeProcess.pid})]: `, data.toString());
+        logWithPrefix(`[Databee (${databeeProcess.pid})]: `, data.toString());
       });
 
       databeeProcess.stderr?.on('data', (data) => {
-        console.error(`[Databee (${databeeProcess.pid})]: `, data.toString());
+        logWithPrefix(`[Databee (${databeeProcess.pid})]: `, data.toString());
       });
 
       databeeProcess.on('exit', () => {
         if (databeeProcess.pid !== undefined) {
-          this.activeDatabeeProcesses.delete(databeeProcess.pid);
+          this.activeProcesses.delete(databeeProcess.pid);
           console.log(`Exited & Removed process ${databeeProcess.pid} from active processes.`);
         }
       });
@@ -60,7 +60,7 @@ class ProcessManager {
           startTime: Date.now()
         };
 
-        this.activeDatabeeProcesses.set(databeeProcess.pid, processInfo);
+        this.activeProcesses.set(databeeProcess.pid, processInfo);
       }
 
       return databeeProcess;
@@ -71,13 +71,14 @@ class ProcessManager {
   }
 
   async terminateProcess(process: ChildProcess): Promise<void> {
+    //@ts-ignore
     return new Promise((resolve, reject) => {
       const pid = process.pid;
       if (process && !process.killed && pid !== undefined) {
         process.kill();
         process.on('exit', () => {
           console.log(`Terminated process with PID: ${pid}`);
-          this.activeDatabeeProcesses.delete(pid);
+          this.activeProcesses.delete(pid);
           resolve();
         });
       } else {
@@ -90,13 +91,14 @@ class ProcessManager {
   async checkForExistingProcesses(
     title: string,
     args: string[]
-  ): Promise<ps.PS[]> {
+  ): Promise<any[]> {
     return new Promise((resolve, reject) => {
       ps.lookup({
         command: title,
+        //@ts-ignore
         arguments: args,
         psargs: 'ux'
-      }, (err: Error | null, resultList: ps.PS[]) => {
+      }, (err: Error | null, resultList: any[]) => {
         if (err) {
           console.error('Error checking for existing processes:', err);
           reject(err);
@@ -138,8 +140,14 @@ class ProcessManager {
   }
 
   getActiveProcesses(): Map<number, ProcessInfo> {
-    return this.activeDatabeeProcesses;
+    return this.activeProcesses;
   }
+}
+
+function logWithPrefix(prefix: any, message: any) {
+  const yellow = '\x1b[33m';
+  const reset = '\x1b[0m';
+  console.log(`${yellow}${prefix} ${message}${reset}`);
 }
 
 export default ProcessManager;

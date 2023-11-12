@@ -75,7 +75,7 @@ export default async function GoGather(projectId, runId): Promise<void> {
       project,
       routerFactory,
       crawlerFactory,
-      handlerLoader
+      handlerLoader 
     );
     await runner.run().catch(console.error);
   }

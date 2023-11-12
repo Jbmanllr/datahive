@@ -29,7 +29,8 @@
 		"outDir": "./dist",
 		"declaration": true,
 		"sourceMap": true,
-		"incremental": true
+		"incremental": true,
+		"noEmitOnError": false,
 	},
 	"include": [
 		"src/**/*"
