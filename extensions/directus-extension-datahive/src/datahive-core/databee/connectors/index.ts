@@ -7,7 +7,7 @@ interface ApiRequestOptions {
   params?: any;
   id?: string | number;
   isErrorReport?: boolean;
-  run?: { data: { id: string | number } };
+  run?: { data: { id: string | number } }; 
   fields?: string;
 }
 

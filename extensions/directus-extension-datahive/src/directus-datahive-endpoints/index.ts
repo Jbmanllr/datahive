@@ -1,12 +1,12 @@
 //import { defineEndpoint } from '@directus/extensions-sdk';
 //import goGather from 'datahive-core/dist/databee/main.js'
-import { testFC, runPollinator } from 'datahive-core/dist/pollinator/index.js'
+import { testFC, runPollinator } from '../datahive-core/pollinator/index.js'
 import { fork, ChildProcess } from 'child_process';
 import { Mutex } from 'async-mutex';
 import ps from 'ps-node'
 
-const databeeProcessPath = 'datahive-core/dist/databee/process.js'
-
+const databeeProcessPath = '/datahive-core/databee/process.js' 
+ 
 const mutex = new Mutex();
 const differentProcessForEachRun = true;
 const activeDatabeeProcesses = new Map();

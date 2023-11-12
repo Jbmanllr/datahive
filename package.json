@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "docker compose up",
-    "dev": "docker-compose up & cd ./datahive-core && npm run dev & cd ./extensions/directus-extension-datahive && npm run dev",
+    "dev": "docker-compose up & cd ./extensions/directus-extension-datahive && npm run dev",
     "test": "test"
   },
   "repository": {

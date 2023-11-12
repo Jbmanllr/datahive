@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 import WorkerManager from './worker-manager.js';
 
 const workerManager = new WorkerManager();
+//@ts-ignore
 const currentFilePath = fileURLToPath(import.meta.url);
 const differentProcessForEachRun = true;
 
