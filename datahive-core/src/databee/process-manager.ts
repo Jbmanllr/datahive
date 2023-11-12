@@ -27,6 +27,7 @@ class ProcessManager {
     differentProcessForEachRun
   }: CreateProcessOptions): Promise<ChildProcess> {
     try {
+      console.log("CREATING NUE PROCESS")
       const databeeProcess = fork(databeeProcessPath, [projectId, '--name=Databee'], {
         stdio: ['ignore', 'pipe', 'pipe', 'ipc'],
         detached: false,
@@ -61,6 +62,7 @@ class ProcessManager {
         };
 
         this.activeProcesses.set(databeeProcess.pid, processInfo);
+        console.log("activeProcesses", this.activeProcesses)
       }
 
       return databeeProcess;

@@ -1,3 +1,4 @@
+//process.ts
 import { isMainThread, parentPort } from 'worker_threads';
 import goGather from './main.js'; // Ensure this path is correct
 import { fileURLToPath } from 'url';
@@ -5,7 +6,7 @@ import WorkerManager from './worker-manager.js';
 
 const workerManager = new WorkerManager();
 const currentFilePath = fileURLToPath(import.meta.url);
-const differentProcessForEachRun = true;
+const differentProcessForEachRun = false;
 
 (async () => {
   process.title = 'Databee';

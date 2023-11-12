@@ -1,16 +1,5 @@
 import { testFC, runPollinator } from 'datahive-core/dist/pollinator/index.js'
-import { Mutex } from 'async-mutex';
-import ProcessManager from 'datahive-core/dist/databee/process-manager.js';
-
-const mutex = new Mutex();
-const differentProcessForEachRun = true;
-const processManager = new ProcessManager();
-
-function logWithPrefix(prefix: any, message: any) {
-  const yellow = '\x1b[33m';
-  const reset = '\x1b[0m';
-  console.log(`${yellow}${prefix} ${message}${reset}`);
-}
+import { startProcess } from 'datahive-core/dist/databee/orchestrator.js';
 
 export default {
   id: "datahive",
@@ -75,60 +64,12 @@ export default {
     });
 
     router.get("/databee/start/:projectId", async (req: any, res: any) => {
-
-      const release = await mutex.acquire();
       try {
-        const projectId = req.params.projectId;
-        logWithPrefix('DATABEE', `START NEW RUN - PROJECT ID: ${projectId}`);
-
-        if (differentProcessForEachRun) {
-          // Always create a new process for each run
-          await processManager.createProcess({
-            projectId: projectId,
-            //@ts-ignore
-            runId: null,
-            differentProcessForEachRun: differentProcessForEachRun
-          });
-        } else {
-          let activeProcess = null;
-          let latestProcessStartTime = 0;
-
-          for (let [processInfo] of processManager.activeProcesses) {
-            //@ts-ignore
-            const isAlive = await processManager.checkProcessHealth(processInfo.process);
-            //@ts-ignore
-            if (isAlive && processInfo.startTime > latestProcessStartTime) {
-              //@ts-ignore
-              activeProcess = processInfo.process;
-              //@ts-ignore
-              latestProcessStartTime = processInfo.startTime;
-            }
-          }
-
-          if (!activeProcess) {
-            //const existingProcesses = await checkForExistingProcesses("Databee", null)
-            activeProcess = await processManager.createProcess({
-              projectId: projectId,
-              //@ts-ignore
-              runId: null,
-              differentProcessForEachRun: differentProcessForEachRun
-            });
-          }
-
-          // Send a message to the databee process to start a new worker
-          activeProcess.send({ command: 'startWorker', projectId }, (error: any) => {
-            if (error) {
-              console.error('Error sending message to Databee process:', error);
-            }
-          });
-        }
-
-        res.send(`Databee process started for project ID: ${projectId}`);
+        await startProcess(req.params.projectId);
+        res.send(`Databee process started for project ID: ${req.params.projectId}`);
       } catch (error) {
         console.error("Error in starting Databee process:", error);
         res.status(500).send("Error in starting Databee process");
-      } finally {
-        release();
       }
     });
 
