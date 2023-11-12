@@ -5,9 +5,16 @@ import { fork, ChildProcess } from 'child_process';
 import { Mutex } from 'async-mutex';
 import ps from 'ps-node'
 
+const databeeProcessPath = 'datahive-core/dist/databee/process.js'
+
 const mutex = new Mutex();
 const differentProcessForEachRun = true;
 const activeDatabeeProcesses = new Map();
+
+interface DatabeeProcessInfo {
+  process: ChildProcess;
+  startTime: number;
+}
 
 function checkForExistingProcesses(title: string, args: any) {
   return new Promise((resolve, reject) => {
@@ -35,26 +42,36 @@ function logWithPrefix(prefix: any, message: any) {
   console.log(`${yellow}${prefix} ${message}${reset}`);
 }
 
-const databeeProcessPath = 'datahive-core/dist/databee/process.js'
-let activeDatabeeProcess: ChildProcess | null = null;
-
-// Define the checkProcessHealth function
 function checkProcessHealth(process: ChildProcess) {
-  console.log("CHECK PROCESS HEALTH")
   return new Promise((resolve) => {
-    const timeout = setTimeout(() => {
-      resolve(false); // No response within timeout, process is not healthy
-    }, 5000); // Set an appropriate timeout duration
+    if (process && !process.killed && process.connected) {
+      const timeout = setTimeout(() => {
+        resolve(false); // No response within timeout, process is not healthy
+      }, 5000); // Set an appropriate timeout duration
 
-    process.once('message', (message: any) => {
-      if (message === 'alive') {
-        console.log("PROCESS IS ALIVE")
+      process.once('message', (message: any) => {
+        if (message === 'alive') {
+          console.log(`Process  ${process.pid} exist and is alive !`);
+          clearTimeout(timeout);
+          resolve(true); // Process responded, it's alive
+        }
+      });
+
+      // Send a heartbeat message here
+      try {
+        process.send({ command: 'heartbeat' });
+      } catch (error) {
+        console.error('Error sending heartbeat:', error);
         clearTimeout(timeout);
-        resolve(true); // Process responded, it's alive
+        resolve(false); // Error occurred, process is not healthy
       }
-    });
+    } else {
+      console.log(`Process ${process.pid} doesn't exist !`);
+      resolve(false); // Process is not alive or not connected
+    }
   });
 }
+
 
 async function createDatabeeProcess({
   projectId,
@@ -84,13 +101,17 @@ async function createDatabeeProcess({
     });
 
     databeeProcess.on('exit', () => {
-      console.log(`Databee process (${databeeProcess.pid}) exited`);
       activeDatabeeProcesses.delete(databeeProcess.pid);
-      console.log(`Removed process ${databeeProcess.pid} from active processes.`);
+      console.log(` Exited & Removed process ${databeeProcess.pid} from active processes.`);
     });
 
     // Add the new process to the map
-    activeDatabeeProcesses.set(databeeProcess.pid, databeeProcess);
+    const processInfo = {
+      process: databeeProcess,
+      startTime: Date.now() // Current timestamp
+    };
+
+    activeDatabeeProcesses.set(databeeProcess.pid, processInfo);
 
     console.log("ACTIVE DATABEE PROCESS(ES)", activeDatabeeProcesses.size)
 
@@ -107,6 +128,7 @@ async function terminateProcess(process: ChildProcess): Promise<void> {
       process.kill();
       process.on('exit', () => {
         console.log(`Terminated process with PID: ${process.pid}`);
+        activeDatabeeProcesses.delete(process.pid);
         resolve();
       });
     } else {
@@ -191,24 +213,24 @@ export default {
             differentProcessForEachRun: differentProcessForEachRun
           });
         } else {
-          // Handle the case where differentProcessForEachRun is false
-          if (activeDatabeeProcess && !activeDatabeeProcess.killed) {
-            activeDatabeeProcess.send({ command: 'heartbeat' });
-            const isAlive = await checkProcessHealth(activeDatabeeProcess);
+          let activeProcess = null;
+          let latestProcessStartTime = 0;
 
-            if (!isAlive) {
-              await terminateProcess(activeDatabeeProcess);
-              activeDatabeeProcess = null;
+          for (let [processInfo] of activeDatabeeProcesses) {
+            const isAlive = await checkProcessHealth(processInfo.process);
+            if (isAlive && processInfo.startTime > latestProcessStartTime) {
+              activeProcess = processInfo.process;
+              latestProcessStartTime = processInfo.startTime;
             }
           }
 
-          if (!activeDatabeeProcess) {
-            const existingProcesses = await checkForExistingProcesses("Databee", null)
-            activeDatabeeProcess = await createDatabeeProcess({ projectId: projectId });
+          if (!activeProcess) {
+            //const existingProcesses = await checkForExistingProcesses("Databee", null)
+            activeProcess = await createDatabeeProcess({ projectId: projectId });
           }
 
           // Send a message to the databee process to start a new worker
-          activeDatabeeProcess.send({ command: 'startWorker', projectId }, (error) => {
+          activeProcess.send({ command: 'startWorker', projectId }, (error: any) => {
             if (error) {
               console.error('Error sending message to Databee process:', error);
             }
