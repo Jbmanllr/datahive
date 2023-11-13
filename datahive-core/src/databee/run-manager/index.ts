@@ -192,11 +192,11 @@ export class Run {
         },
       });
       this.data = response.data;
-      //logger.info("New run created successfully", {
-      //  runId: this.data?.id,
-      //  processId: process.pid,
-      //  processParentId: process.ppid
-      //});
+      console.log("New run created successfully", {
+        runId: this.data?.id,
+        processId: process.pid,
+        processParentId: process.ppid
+      });
     } catch (error) {
       handleError("Failed to create a new run:", error, true);
     }

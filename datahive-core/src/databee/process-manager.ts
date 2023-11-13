@@ -25,7 +25,7 @@ class ProcessManager {
     processPath
   }: CreateProcessOptions): Promise<ChildProcess> {
     try {
-      console.log("CREATING NUE PROCESS")
+      console.log("CREATING NUEL PROCESS")
       //@ts-ignore
       const databeeProcess = fork(processPath, [projectId, '--name=Databee'], {
         stdio: ['ignore', 'pipe', 'pipe', 'ipc'],
