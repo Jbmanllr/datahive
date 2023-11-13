@@ -262,7 +262,7 @@ export class Run {
       handleError("Failed to update the run:", error, true);
     }
   }
-
+  // @ts-ignore
   async end(status: string, runSession: RunSession): Promise<RunData | undefined> {
     if (!this.data) {
       console.error("Run not found or invalid response.");
@@ -346,7 +346,7 @@ class RunSession {
       handleError("Failed to update the run session:", error, true);
     }
   }
-
+  // @ts-ignore
   async end(status: string): Promise<RunSessionData | undefined> {
     if (!this.data) {
       console.error("Run session not found or invalid response.");

@@ -5,25 +5,26 @@ import { Mutex } from 'async-mutex';
 const processManager = new ProcessManager();
 const mutex = new Mutex();
 const differentProcessForEachRun = false;
+const processPath = 'datahive-core/dist/databee/process.js';
 
-async function startProcess(projectId: string) {
-  console.log('startProcess', projectId)
+async function startProcess(caller: string, projectId: string): Promise<void> {
+console.log("ORCHESTRATOR TEST UPDATEx")
+  if (!projectId || !caller) {
+    throw new Error('Both Project ID and caller name are required.');
+  }
+
   const release = await mutex.acquire();
   try {
     if (differentProcessForEachRun) {
       await processManager.createProcess({
         projectId,
-        //@ts-ignore
         runId: null,
-        differentProcessForEachRun
+        processPath: processPath
       });
     } else {
       let activeProcess = null;
       let latestProcessStartTime = 0;
-console.log('PROCESS AND WORKERS MODE')
-      //@ts-ignore
       for (let [pid, processInfo] of processManager.getActiveProcesses()) {
-        console.log('ACTIVE PROCESSES')
         const isAlive = await processManager.checkProcessHealth(processInfo.process);
         if (isAlive && processInfo.startTime > latestProcessStartTime) {
           activeProcess = processInfo.process;
@@ -34,9 +35,8 @@ console.log('PROCESS AND WORKERS MODE')
       if (!activeProcess) {
         activeProcess = await processManager.createProcess({
           projectId,
-          //@ts-ignore
           runId: null,
-          differentProcessForEachRun
+          processPath: processPath
         });
       }
 

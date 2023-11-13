@@ -1,6 +1,6 @@
 //process.ts
 import { isMainThread, parentPort } from 'worker_threads';
-import goGather from './main.js'; // Ensure this path is correct
+import goGather from './index.js'; // Ensure this path is correct
 import { fileURLToPath } from 'url';
 import WorkerManager from './worker-manager.js';
 
@@ -11,7 +11,7 @@ const differentProcessForEachRun = false;
 (async () => {
   process.title = 'Databee';
 
-  console.log("Process", process.title);
+  console.log("Processe Z go", process.title);
   if (differentProcessForEachRun) {
     const projectId = process.env.PROJECT_ID;
     const runId = process.env.RUN_ID;

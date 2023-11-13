@@ -2,17 +2,15 @@
 import { fork, ChildProcess } from 'child_process';
 import ps from 'ps-node';
 
-const databeeProcessPath = 'datahive-core/dist/databee/process.js';
-
 interface ProcessInfo {
   process: ChildProcess;
   startTime: number;
 }
 
 interface CreateProcessOptions {
-  projectId: string;
-  runId?: string;
-  differentProcessForEachRun: boolean;
+  projectId?: string | null | undefined;
+  runId?: string | null | undefined;
+  processPath: string;
 }
 
 class ProcessManager {
@@ -24,11 +22,12 @@ class ProcessManager {
   async createProcess({
     projectId,
     runId,
-    differentProcessForEachRun
+    processPath
   }: CreateProcessOptions): Promise<ChildProcess> {
     try {
       console.log("CREATING NUE PROCESS")
-      const databeeProcess = fork(databeeProcessPath, [projectId, '--name=Databee'], {
+      //@ts-ignore
+      const databeeProcess = fork(processPath, [projectId, '--name=Databee'], {
         stdio: ['ignore', 'pipe', 'pipe', 'ipc'],
         detached: false,
         env: {

@@ -4,7 +4,7 @@ import { startProcess } from 'datahive-core/dist/databee/orchestrator.js';
 export default {
   id: "datahive",
   handler: (router: any) => {
-    // Pollinator routes
+    // Pollinator routes 
 
     router.get("/pollinator/info/runs/:projectId", async (req: any, res: any) => {
       const message = `POLLINATOR GET RUNNING RUNS INFO - PROJECT ID: ${req.params.projectId}, Query: ${JSON.stringify(req.query)}`;
@@ -64,12 +64,15 @@ export default {
     });
 
     router.get("/databee/start/:projectId", async (req: any, res: any) => {
+      const projectId = req.params.projectId;
       try {
-        await startProcess(req.params.projectId);
-        res.send(`Databee process started for project ID: ${req.params.projectId}`);
-      } catch (error) {
-        console.error("Error in starting Databee process:", error);
-        res.status(500).send("Error in starting Databee process");
+        await startProcess("Databee", projectId);
+        res.send(`Databee process started for project ID: ${projectId}`);
+      } catch (error: any) {
+        res.status(500).json({
+          error: true,
+          message: `Error in starting run: ${error.message || error}`
+        });;
       }
     });
 
