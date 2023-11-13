@@ -61,7 +61,7 @@ class ProcessManager {
         };
 
         this.activeProcesses.set(databeeProcess.pid, processInfo);
-        console.log("activeProcesses", this.activeProcesses)
+        console.log("activeProcesses LOOOOL", this.activeProcesses)
       }
 
       return databeeProcess;

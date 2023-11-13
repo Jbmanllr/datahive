@@ -1,7 +1,4 @@
-import { testFC, runPollinator } from '../../../../datahive-core/dist/pollinator/index.js'
-import Orchestrator from '../../../../datahive-core/dist/databee/orchestrator.js';
-
-const orchestrator = new Orchestrator();
+import { testFC, runPollinator } from 'datahive-core/dist/pollinator/index.js'
 
 export default {
   id: "datahive",
@@ -68,8 +65,11 @@ export default {
     router.get("/databee/start/:projectId", async (req: any, res: any) => {
       const projectId = req.params.projectId;
       try {
-        await orchestrator.startProcess("Databee", projectId);
-        res.send(`Databee process started for project ID: ${projectId}`);
+        const orchestrator = await import('datahive-core/dist/databee/orchestrator.js');
+        console.log("ORCHESTRATOR,", orchestrator.default)
+
+        await orchestrator.default.startProcess("Databee", projectId);
+        res.send(`Databee process started for project ID TESTME AGAIN: ${projectId}`);
       } catch (error: any) {
         res.status(500).json({
           error: true,

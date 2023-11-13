@@ -8,8 +8,8 @@ const differentProcessForEachRun = false;
 const processPath = 'datahive-core/dist/databee/process.js';
 
 export default class Orchestrator {
-  async startProcess(caller: string, projectId: string): Promise<void> {
-    console.log("ORCHESTRATOR TEST UPDATE LOOOiL")
+  static async startProcess(caller: string, projectId: string): Promise<void> {
+    console.log("ORCHESTRATOR TEST UPDATE IS IT")
     if (!projectId || !caller) {
       throw new Error('Both Project ID and caller name are required.');
     }

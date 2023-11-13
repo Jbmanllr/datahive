@@ -43,6 +43,7 @@
 	},
 	"dependencies": {
 		"async-mutex": "^0.4.0",
+		"datahive-core": "file:../../datahive-core",
 		"ps-node": "^0.1.6",
 		"rollup-plugin-node-externals": "^6.1.1"
 	},
