@@ -11,7 +11,7 @@ const differentProcessForEachRun = false;
 (async () => {
   process.title = 'Databee';
 
-  console.log("Process gowxxxxxxx", process.title);
+  console.log("Process go okkkkked", process.title);
   if (differentProcessForEachRun) {
     const projectId = process.env.PROJECT_ID;
     const runId = process.env.RUN_ID;

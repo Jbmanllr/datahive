@@ -6,7 +6,6 @@
 			"DOM"
 		],
 		"moduleResolution": "node",
-		"module": "esnext",
 		"strict": true,
 		"noFallthroughCasesInSwitch": true,
 		"esModuleInterop": true,

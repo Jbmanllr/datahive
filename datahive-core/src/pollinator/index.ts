@@ -36,7 +36,7 @@ interface TransformedData {
 }
 
 export async function testFC(): Promise<void> {
-  console.log('TEST FC LOG INSIDE POLLINATOR MODULE')
+  console.log('TEST FC LOG INSIDE POLLINATOR MODULE TESTTTT')
 }
 
 export async function runPollinator(): Promise<void> {
