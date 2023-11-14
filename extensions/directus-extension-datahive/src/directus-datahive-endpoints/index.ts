@@ -1,7 +1,7 @@
 import { testFC, runPollinator } from '../../../../datahive-core/dist/pollinator/index.js'
 import Orchestrator from '../../../../datahive-core/dist/databee/orchestrator.js'
 
-//const orchestrator = new Orchestrator();
+const orchestrator = new Orchestrator();
 
 export default {
   id: "datahive",
@@ -74,7 +74,7 @@ export default {
         //  console.error(err);
         //});
         console.log('ENDPOINT DATABEE CALLED') 
-        await Orchestrator.startProcess("Databee", projectId); 
+        await orchestrator.startProcess("Databee", projectId); 
         res.send(`Databee process started for project ID TESTME AGAIN: ${projectId}`);
       } catch (error: any) {
         res.status(500).json({
