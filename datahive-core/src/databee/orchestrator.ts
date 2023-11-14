@@ -9,7 +9,7 @@ const processPath = 'datahive-core/dist/databee/process.js';
 
 export default class Orchestrator {
   static async startProcess(caller: string, projectId: string): Promise<void> {
-    console.log("ORCHESTRATOR TEST UPDATE I BEG")
+    console.log("ORCHESTRATOR TEST UPDATE Ixxxx")
 
     await this.testO()
 
