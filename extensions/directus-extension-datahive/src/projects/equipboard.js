@@ -28,11 +28,11 @@ const LABEL_NAMES = {
 const useLastRunEndDate = false;
 const defaultRawDataCollection = databee.config.raw_data_collection;
 
-export const handlers: { [key: string]: (context: any) => Promise<void> } = {
-  PRE_NAVIGATION_PREPARATION: async (context: any): Promise<void> => {
+export const handlers = {
+  PRE_NAVIGATION_PREPARATION: async (context) => {
     const { page, request, log, enqueueLinks, pushData } = context;
     // Intercept network requests
-    await page.route("**/*", (route: any) => {
+    await page.route("**/*", (route) => {
       const resourceType = route.request().resourceType();
 
       // List of resource types to block
@@ -47,7 +47,7 @@ export const handlers: { [key: string]: (context: any) => Promise<void> } = {
     await page.waitForTimeout(1000);
     await removeOverlays(page);
   },
-  LOGIN: async (context: any): Promise<void> => {
+  LOGIN: async (context) => {
     const { email, username, password } = databee.runManager.project.data;
     if ((email || username) && password) {
     } else {
@@ -78,10 +78,10 @@ export const handlers: { [key: string]: (context: any) => Promise<void> } = {
       await KeyValueStore.setValue("SESSION_COOKIES", cookies);
     }
   },
-  DEFAULT: async (context: any): Promise<void> => {
+  DEFAULT: async (context) => {
     console.log("RUNNING DEFAULT HANDLER");
   },
-  HOMEPAGE: async (context: any): Promise<void> => {
+  HOMEPAGE: async (context) => {
     const { page, request, log, enqueueLinks, pushData } = context;
     // Navigate to the desired URL that lists the gear
     await page.goto("https://equipboard.com/?filter=gear");
@@ -196,7 +196,7 @@ export const handlers: { [key: string]: (context: any) => Promise<void> } = {
       }
     }
   },
-  DETAILOCCURRENCES: async (context: any): Promise<void> => {
+  DETAILOCCURRENCES: async (context) => {
     const { page, request, log, enqueueLinks, pushData } = context;
     //await removeOverlays(page);
     //const { pathname: path } = new URL(request.loadedUrl);
@@ -264,7 +264,7 @@ export const handlers: { [key: string]: (context: any) => Promise<void> } = {
       }
     }
   },
-  DETAILPROS: async (context: any): Promise<void> => {
+  DETAILPROS: async (context) => {
     const { request, log, enqueueLinks, pushData, $ } = context;
     const path = new URL(request.loadedUrl).pathname;
 
@@ -521,7 +521,7 @@ export const handlers: { [key: string]: (context: any) => Promise<void> } = {
       });
     }
   },
-  DETAILPRODUCTS: async (context: any): Promise<void> => {
+  DETAILPRODUCTS: async (context) => {
     const { request, log, enqueueLinks, pushData, $ } = context;
     const path = new URL(request.loadedUrl).pathname;
     const errors = [];
@@ -987,7 +987,7 @@ export const handlers: { [key: string]: (context: any) => Promise<void> } = {
       });
     }
   },
-  DETAILBRANDS: async (context: any): Promise<void> => {
+  DETAILBRANDS: async (context) => {
     const { request, log, enqueueLinks, pushData, $ } = context;
     const errors = [];
     const path = new URL(request.loadedUrl).pathname;
