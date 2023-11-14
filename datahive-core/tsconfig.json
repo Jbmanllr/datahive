@@ -27,7 +27,7 @@
 		"outDir": "./dist",
 		"declaration": true,
 		"sourceMap": true,
-		"incremental": false,
+		"incremental": true,
 		"noEmitOnError": true,
 		"noUnusedLocals": false,
 		"noUnusedParameters": false
