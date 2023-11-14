@@ -18,7 +18,7 @@ export default class Orchestrator {
 
   // Method to start a process
   async startProcess(caller: string, projectId: string) {
-    console.log("ORCHESTRATOR TEST UPDATE I BEG YOUuuuuuuu");
+    console.log("ORCHESTRATOR TEST UPDATE I BEG YOUuuuuuuu"); 
 
     if (!projectId || !caller) {
       throw new Error('Both Project ID and caller name are required.');

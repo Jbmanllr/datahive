@@ -8,19 +8,15 @@ import nodeExternals from "rollup-plugin-node-externals";
 
 export default {
   plugins: [
-    nodeExternals({
-      include: [
-        //id => id.startsWith(datahiveCoreRealPath),
-        //externalId,
-        "datahive-core",
-        "playwright",
-        "crawlee",
-        "async-mutex",
-        "axios",
-        "p-limit",
-        "ps-node",
-        "winston",
-      ],
-    }),
+    nodeExternals(),
+    //copy({
+    //  targets: [
+    //    {
+    //      src: "../../datahive-core/src/projects",
+    //      dest: "../directus-extension-datahive/dist",
+    //      rename: "projects",
+    //    },
+    //  ],
+    //}),
   ],
 };
