@@ -384,5 +384,5 @@ function handleError(message: string, error: any = null, shouldExit: boolean = f
   if (shouldExit) process.exit(1);
 }
 
-const databee = new Databee();
+const databee = new Databee(); 
 export default databee;

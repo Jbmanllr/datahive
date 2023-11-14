@@ -1,24 +1,12 @@
-//import nodeResolve from "@rollup/plugin-node-resolve";
+//import { nodeResolve } from "@rollup/plugin-node-resolve";
+//import replaceDefault from '@rollup/plugin-replace';
+//import terserDefault from '@rollup/plugin-terser';
+//import virtualDefault from '@rollup/plugin-virtual';
+//import dynamicImportVars from "@rollup/plugin-dynamic-import-vars";
+//import commonjs from "@rollup/plugin-commonjs";
 import nodeExternals from "rollup-plugin-node-externals";
-import dynamicImportVars from '@rollup/plugin-dynamic-import-vars';
-//import path from "path";
-//import fs from "fs";
-
-//const externalId = path.resolve(__dirname, '../../datahive-core/src/orchestrator.js');
-//const datahiveCoreRealPath = fs.realpathSync(path.resolve(__dirname, '../../datahive-core'));
 
 export default {
-  plugins: [
-    nodeExternals(),
-    dynamicImportVars(),
-    //copy({
-    //  targets: [
-    //    {
-    //      src: "../../datahive-core/src/projects",
-    //      dest: "../directus-extension-datahive/dist",
-    //      rename: "projects",
-    //    },
-    //  ],
-    //}),
-  ],
+  plugins: [nodeExternals()],
+  //preserveEntrySignatures: "exports-only",
 };

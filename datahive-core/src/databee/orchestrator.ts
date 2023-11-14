@@ -12,19 +12,18 @@ export default class Orchestrator {
   workerManager = new WorkerManager();
   mutex = new Mutex();
   differentProcessForEachRun = false;
-  
-  currentFilePath = fileURLToPath(import.meta.url);
+
+  currentFilePath = '/directus/extensions/directus-extension-datahive/dist/api.js';
   processPath = this.currentFilePath;
 
   // Method to start a process
   async startProcess(caller: string, projectId: string) {
-    console.log("ORCHESTRATOR TEST UPDATE I BEG YOUuuuuuuu"); 
-
     if (!projectId || !caller) {
       throw new Error('Both Project ID and caller name are required.');
     }
-
     const release = await this.mutex.acquire();
+    console.log(`Starting new ${caller} run for project ID ${projectId}`);
+
     try {
       if (this.differentProcessForEachRun) {
         await this.processManager.createProcess({
@@ -50,9 +49,8 @@ export default class Orchestrator {
             processPath: this.processPath
           });
         }
-
         activeProcess.send({ command: 'startWorker', projectId });
-      }
+      } 
     } catch (error) {
       console.error('Error in starting Databee process:', error);
       throw error;

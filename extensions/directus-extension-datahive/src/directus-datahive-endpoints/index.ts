@@ -1,5 +1,5 @@
-import { testFC, runPollinator } from '../../../../datahive-core/dist/pollinator/index.js'
-import Orchestrator from '../../../../datahive-core/dist/databee/orchestrator.js'
+import { testFC } from '../../../../datahive-core/src/pollinator/index'
+import Orchestrator from '../../../../datahive-core/src/databee/orchestrator'
 
 const orchestrator = new Orchestrator();
 
@@ -58,12 +58,12 @@ export default {
       console.log(message);
       res.send(message);
     });
-
+ 
     router.get("/databee/info/run/:runId", async (req: any, res: any) => {
       const message = `DATABEE GET RUN INFO - RUN ID: ${req.params.runId}, Query: ${JSON.stringify(req.query)}`;
       console.log(message);
       res.send(message);
-    });
+    });  
 
     router.get("/databee/start/:projectId", async (req: any, res: any) => {
       const projectId = req.params.projectId;
@@ -72,7 +72,7 @@ export default {
         //  module.default.startProcess("Databee", projectId);
         //}).catch(err => {
         //  console.error(err);
-        //}); 
+        //});  
         console.log('ENDPOINT DATABEE CALLED') 
         await orchestrator.startProcess("Databee", projectId); 
         res.send(`Databee process started for project ID TESTME AGAIN: ${projectId}`);

@@ -114,3 +114,6 @@ process.on("unhandledRejection", async (reason, promise) => {
   await runManager.run.end(runManager.run, runManager.runSession, "aborted");
   process.exit(1);
 });*/
+
+export { apiRequest } from './connectors/index.js';
+export * from './run-manager/index.js'; 

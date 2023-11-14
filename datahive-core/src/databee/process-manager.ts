@@ -24,47 +24,49 @@ class ProcessManager {
     runId,
     processPath
   }: CreateProcessOptions): Promise<ChildProcess> {
+    if (!projectId && !runId) {
+      throw new Error("Project ID or Run ID are required");
+    }
     try {
-      console.log("CREATING NUEL PROCESS")
+      const ID = projectId ? projectId : runId; 
       //@ts-ignore
-      const databeeProcess = fork(processPath, [projectId, '--name=Databee'], {
+      const newProcess = fork(processPath, [ID, '--name=Databee'], {
         stdio: ['ignore', 'pipe', 'pipe', 'ipc'],
         detached: false,
         env: {
           ...process.env,
           PROJECT_ID: projectId,
           RUN_ID: runId,
-          PROCESS_NAME: 'Databee',
-          //DPFER: differentProcessForEachRun
+          PROCESS_NAME: 'Databee'
         }
       });
 
-      databeeProcess.stdout?.on('data', (data) => {
-        logWithPrefix(`[Databee (${databeeProcess.pid})]: `, data.toString());
+      newProcess.stdout?.on('data', (data) => {
+        logWithPrefix(`[Databee (${newProcess.pid})]: `, data.toString());
       });
 
-      databeeProcess.stderr?.on('data', (data) => {
-        logWithPrefix(`[Databee (${databeeProcess.pid})]: `, data.toString());
+      newProcess.stderr?.on('data', (data) => {
+        logWithPrefix(`[Databee (${newProcess.pid})]: `, data.toString());
       });
 
-      databeeProcess.on('exit', () => {
-        if (databeeProcess.pid !== undefined) {
-          this.activeProcesses.delete(databeeProcess.pid);
-          console.log(`Exited & Removed process ${databeeProcess.pid} from active processes.`);
+      newProcess.on('exit', () => {
+        if (newProcess.pid !== undefined) {
+          this.activeProcesses.delete(newProcess.pid);
+          console.log(`Exited & Removed process ${newProcess.pid} from active processes.`);
         }
       });
 
-      if (databeeProcess.pid !== undefined) {
+      if (newProcess.pid !== undefined) {
         const processInfo = {
-          process: databeeProcess,
+          process: newProcess,
           startTime: Date.now()
         };
 
-        this.activeProcesses.set(databeeProcess.pid, processInfo);
-        console.log("activeProcesses test IS IT OKKKKK", this.activeProcesses)
+        this.activeProcesses.set(newProcess.pid, processInfo);
+        console.log("Active Databee Processes", this.activeProcesses.size)
       }
 
-      return databeeProcess;
+      return newProcess;
     } catch (error) {
       console.error('Error creating Databee process:', error);
       throw error;
