@@ -1,14 +1,88 @@
 // equipboard.js (handlers)
-// @ts-nocheck
-import {
-  getApproxPublishDate,
-  prepareLink,
-  getPathFromUrl,
-} from "../utils/index.js";
 import { RequestQueue, KeyValueStore } from "crawlee";
-import { EXTRACT_FREQUENCY_MINUTES } from "../constants.js";
 import { apiRequest } from "../dist/api.js";
 import { databee } from "../dist/api.js";
+
+export const EXTRACT_FREQUENCY_MINUTES = 20;
+
+export async function getApproxPublishDate(timeText) {
+  // Parse the timeText to get the number and time unit
+  const timeRegex = /(?:about )?(\d+) (minute|hour|day|week|month|year)/;
+
+  const match = timeText.match(timeRegex);
+  let datePublished = null;
+
+  if (match) {
+    const number = parseInt(match[1]);
+    const unit = match[2];
+
+    switch (unit) {
+      case "minute":
+      case "minutes":
+        datePublished = new Date(Date.now() - number * 60 * 1000);
+        break;
+      case "hour":
+      case "hours":
+        datePublished = new Date(Date.now() - number * 60 * 60 * 1000);
+        break;
+      case "day":
+      case "days":
+        datePublished = new Date(Date.now() - number * 24 * 60 * 60 * 1000);
+        break;
+      // Add cases for week, month, year, etc. if needed
+      default:
+        console.log(`Unknown time unit: ${unit}`);
+    }
+
+    console.log(
+      `Approximate publish date for card: ${datePublished} with ${timeText}`
+    );
+  } else {
+    console.log("Failed to parse time text:", timeText);
+  }
+
+  return datePublished;
+}
+
+function prepareLink(rawLink) {
+  let preparedLink = rawLink;
+  let rootDomain = "https://equipboard.com";
+
+  // Check if the link contains "https://", "http://"
+  const substrings = ["https://", "http://"];
+  const containsSubstring = substrings.some((sub) => rawLink?.includes(sub));
+  preparedLink = !containsSubstring ? rootDomain + rawLink : rawLink;
+  return preparedLink;
+}
+
+function getPathFromUrl(inputUrl) {
+  const parsedUrl = new URL(inputUrl);
+  return parsedUrl.pathname;
+}
+
+async function calculateTimeSpent(dateStart, dateEnd) {
+  const startDate = new Date(dateStart);
+  const endDate = new Date(dateEnd);
+
+  let timeSpent = endDate - startDate; // difference in milliseconds
+
+  if (timeSpent < 0) {
+    return "End date is before start date";
+  }
+
+  let seconds = Math.floor(timeSpent / 1000);
+  let minutes = Math.floor(seconds / 60);
+  seconds = seconds % 60;
+  const hours = Math.floor(minutes / 60);
+  minutes = minutes % 60;
+
+  let result = [];
+  if (hours > 0) result.push(`${hours} hours`);
+  if (minutes > 0) result.push(`${minutes} minutes`);
+  if (seconds > 0 || result.length === 0) result.push(`${seconds} seconds`);
+
+  return result.join(", ").replace(/, ([^,]*)$/, " and $1");
+}
 
 const LABEL_NAMES = {
   HOMEPAGE: "HOMEPAGE",
