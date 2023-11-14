@@ -1,5 +1,6 @@
 //import nodeResolve from "@rollup/plugin-node-resolve";
 import nodeExternals from "rollup-plugin-node-externals";
+import dynamicImportVars from '@rollup/plugin-dynamic-import-vars';
 //import path from "path";
 //import fs from "fs";
 
@@ -9,6 +10,7 @@ import nodeExternals from "rollup-plugin-node-externals";
 export default {
   plugins: [
     nodeExternals(),
+    dynamicImportVars(),
     //copy({
     //  targets: [
     //    {

@@ -7,8 +7,8 @@ import {
 } from "../utils/index.js";
 import { RequestQueue, KeyValueStore } from "crawlee";
 import { EXTRACT_FREQUENCY_MINUTES } from "../constants.js";
-import { apiRequest } from "../connectors/index.js";
-import databee from "../run-manager/index.js";
+import { apiRequest } from "../dist/api.js";
+import { databee } from "../dist/api.js";
 
 const LABEL_NAMES = {
   HOMEPAGE: "HOMEPAGE",
