@@ -1,15 +1,5 @@
-import axios, { AxiosRequestConfig, Method } from "axios";
-
-interface ApiRequestOptions {
-  method: Method;
-  collection: string;
-  data?: any;
-  params?: any;
-  id?: string | number;
-  isErrorReport?: boolean;
-  run?: { data: { id: string | number } };
-  fields?: string;
-}
+import axios, { AxiosRequestConfig } from "axios";
+import { ApiRequestOptions } from "../types"
 
 export async function apiRequest({
   method,

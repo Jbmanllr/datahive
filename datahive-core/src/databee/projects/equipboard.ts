@@ -4,11 +4,11 @@ import {
   getApproxPublishDate,
   prepareLink,
   getPathFromUrl,
-} from "../utils/index.js";
+} from "../utils/index";
 import { RequestQueue, KeyValueStore } from "crawlee";
-import { EXTRACT_FREQUENCY_MINUTES } from "../constants.js";
-import { apiRequest } from "../connectors/index.js";
-import databee from "../run-manager/index.js";
+import { EXTRACT_FREQUENCY_MINUTES } from "../constants";
+import { apiRequest } from "../../connectors/index";
+import databee from "../../run-manager";
 
 const LABEL_NAMES = {
   HOMEPAGE: "HOMEPAGE",

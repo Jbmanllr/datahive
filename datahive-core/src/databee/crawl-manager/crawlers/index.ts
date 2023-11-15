@@ -1,4 +1,9 @@
-import { CheerioCrawler, PlaywrightCrawler, CheerioCrawlerOptions, PlaywrightCrawlerOptions } from "crawlee";
+import {
+  CheerioCrawler,
+  PlaywrightCrawler,
+  CheerioCrawlerOptions,
+  PlaywrightCrawlerOptions
+} from "crawlee";
 
 type CrawlerType = 'playwright' | 'cheerio';
 

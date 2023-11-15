@@ -12,7 +12,7 @@ class WorkerManager {
     this.workers.set(worker.threadId, worker);
 
     worker.on('exit', () => {
-      console.log(`Worker ${worker.threadId} exitedxxxx`);
+      console.log(`Worker ${worker.threadId} exited`);
       this.workers.delete(worker.threadId);
     });
 

@@ -8,6 +8,7 @@ interface ProcessInfo {
 }
 
 interface CreateProcessOptions {
+  caller: string;
   projectId?: string | null | undefined;
   runId?: string | null | undefined;
   processPath: string;
@@ -20,6 +21,7 @@ class ProcessManager {
   }
 
   async createProcess({
+    caller,
     projectId,
     runId,
     processPath
@@ -37,7 +39,8 @@ class ProcessManager {
           ...process.env,
           PROJECT_ID: projectId,
           RUN_ID: runId,
-          PROCESS_NAME: 'Databee'
+          IS_CHILD_PROCESS: 'true',
+          PROCESS_NAME: caller
         }
       });
 
@@ -73,12 +76,12 @@ class ProcessManager {
     }
   }
 
-  async terminateProcess(process: ChildProcess): Promise<void> {
-    //@ts-ignore
+  async terminateProcess(process: any): Promise<void> {
     return new Promise((resolve, reject) => {
       const pid = process.pid;
+      console.log(`PIDzz: ${pid}`);
       if (process && !process.killed && pid !== undefined) {
-        process.kill();
+        process.kill(pid);
         process.on('exit', () => {
           console.log(`Terminated process with PID: ${pid}`);
           this.activeProcesses.delete(pid);
