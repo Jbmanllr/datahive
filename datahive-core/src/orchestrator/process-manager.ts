@@ -1,6 +1,13 @@
-// process-manager.ts
+// Orchestrator>process-manager.ts
 import { fork, ChildProcess } from 'child_process';
 import ps from 'ps-node';
+
+export interface IProcessManager {
+  createProcess(options: any): Promise<any>;
+  getActiveProcesses(): Map<number, any>;
+  checkProcessHealth(process: any): Promise<boolean>;
+  terminateProcess(process: any): void;
+}
 
 interface ProcessInfo {
   process: ChildProcess;
@@ -14,8 +21,8 @@ interface CreateProcessOptions {
   processPath: string;
 }
 
-class ProcessManager {
-  public activeProcesses: Map<number, ProcessInfo>;
+class ProcessManager implements IProcessManager {
+  private activeProcesses: Map<number, ProcessInfo>;
   constructor() {
     this.activeProcesses = new Map();
   }
@@ -76,6 +83,30 @@ class ProcessManager {
     }
   }
 
+  async getOrCreateActiveProcess(caller: string, projectId: string, processPath: string): Promise<ChildProcess> {
+    let latestProcessStartTime = 0;
+    let activeProcess = null;
+
+    for (let [pid, processInfo] of this.getActiveProcesses()) {
+      const isAlive = await this.checkProcessHealth(processInfo.process);
+      if (isAlive && processInfo.startTime > latestProcessStartTime) {
+        activeProcess = processInfo.process;
+        latestProcessStartTime = processInfo.startTime;
+      }
+    }
+
+    if (!activeProcess) {
+      activeProcess = await this.createProcess({
+        caller,
+        projectId,
+        runId: null,
+        processPath
+      });
+    }
+
+    return activeProcess;
+  }
+
   async terminateProcess(process: any): Promise<void> {
     return new Promise((resolve, reject) => {
       const pid = process.pid;
@@ -118,14 +149,14 @@ class ProcessManager {
   }
 
 
-  async checkProcessHealth(process: ChildProcess): Promise<boolean> {
+  async checkProcessHealth(process: any): Promise<boolean> {
     return new Promise((resolve) => {
       if (process && !process.killed && process.connected) {
         const timeout = setTimeout(() => {
           resolve(false);
         }, 5000);
 
-        process.once('message', (message) => {
+        process.once('message', (message : string) => {
           if (message === 'alive') {
             clearTimeout(timeout);
             resolve(true);
@@ -145,7 +176,7 @@ class ProcessManager {
     });
   }
 
-  getActiveProcesses(): Map<number, ProcessInfo> {
+  getActiveProcesses(): Map<number, any> {
     return this.activeProcesses;
   }
 }

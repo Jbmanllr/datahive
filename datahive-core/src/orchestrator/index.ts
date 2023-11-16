@@ -1,33 +1,52 @@
-// Import necessary modules and functions
+// Orchestrator>index.js
 import { isMainThread, parentPort } from 'worker_threads';
-import ProcessManager from './process-manager';
-import WorkerManager from './worker-manager';
+import ProcessManager, { IProcessManager } from './process-manager';
+import WorkerManager, { IWorkerManager } from './worker-manager';
 import { Mutex } from 'async-mutex';
 import goGather from '../databee/index'; // Ensure this path is correct
+
 //import { fileURLToPath } from 'url';
 
-const MULTIPROCESS = true;
+const MULTIPROCESS: boolean = true;
 
 class Orchestrator {
-  processManager = new ProcessManager();
-  workerManager = new WorkerManager();
-  mutex = new Mutex();
-  multiprocess = MULTIPROCESS;
-  currentFilePath = '/directus/extensions/directus-extension-datahive/dist/api.js';
-  processPath = this.currentFilePath;
+  private processManager: ProcessManager;
+  private workerManager: WorkerManager;
+  private mutex: Mutex;
+  private multiprocess: boolean;
+  private currentFilePath: string;
+  private processPath: string;
 
-  // Method to start a process
-  async startProcess(caller: string, projectId: string) {
+  private static instance: Orchestrator;
+
+  private constructor() {
+    this.processManager = new ProcessManager();
+    this.workerManager = new WorkerManager();
+    this.mutex = new Mutex();
+    this.multiprocess = MULTIPROCESS;
+    this.currentFilePath = '/directus/extensions/directus-extension-datahive/dist/api.js';
+    this.processPath = this.currentFilePath;
+  }
+
+  public static getInstance(): Orchestrator {
+    if (!Orchestrator.instance) {
+      Orchestrator.instance = new Orchestrator();
+    }
+    return Orchestrator.instance;
+  }
+
+  public async start(caller: string, projectId: string): Promise<void> {
 
     if (!projectId || !caller) {
       throw new Error('Both Project ID and caller name are required.');
     }
-    const release = await this.mutex.acquire();
-    console.log(`Starting new ${caller} run for project ID ${projectId}`);
-    let activeProcess = null;
-    try {
-      if (this.multiprocess) {
 
+    const release = await this.mutex.acquire();
+
+    try {
+      let activeProcess = null;
+
+      if (this.multiprocess) {
         activeProcess = await this.processManager.createProcess({
           caller,
           projectId,
@@ -35,31 +54,14 @@ class Orchestrator {
           processPath: this.processPath
         });
         activeProcess.send({ command: 'start', projectId });
-        console.log('ORCHESTRATOR STATUS', orchestrator);
       } else {
-
-        let latestProcessStartTime = 0;
-        for (let [pid, processInfo] of this.processManager.getActiveProcesses()) {
-          const isAlive = await this.processManager.checkProcessHealth(processInfo.process);
-          if (isAlive && processInfo.startTime > latestProcessStartTime) {
-            activeProcess = processInfo.process;
-            latestProcessStartTime = processInfo.startTime;
-          }
-        }
-
-        if (!activeProcess) {
-          activeProcess = await this.processManager.createProcess({
-            caller,
-            projectId,
-            runId: null,
-            processPath: this.processPath
-          });
-        }
+        activeProcess = await this.processManager.getOrCreateActiveProcess(caller, projectId, this.processPath);
         activeProcess.send({ command: 'startWorker', projectId });
-        console.log('ORCHESTRATOR STATUS', orchestrator);
       }
+
+      console.log('ORCHESTRATOR STATUS', Orchestrator.getInstance());
     } catch (error) {
-      console.error('Error in starting Databee process:', error);
+      console.error('Error in starting process:', error);
       throw error;
     } finally {
       release();
@@ -67,7 +69,7 @@ class Orchestrator {
   }
 
   // Method to manage worker threads
-  async manageThreads() {
+  public async manageThreads(): Promise<void> {
     if (isMainThread) {
       this.handleMainThreadMessages();
     } else {
@@ -76,7 +78,7 @@ class Orchestrator {
   }
 
   // Handle main thread messages
-  private async handleMainThreadMessages() {
+  private async handleMainThreadMessages(): Promise<void> {
     console.log('handleMainThreadMessages', process.pid, process.ppid)
 
     process.on('message', async (message: any) => {
@@ -120,7 +122,7 @@ class Orchestrator {
   }
 
   // Handle worker thread logic
-  private handleWorkerThreadLogic() {
+  private handleWorkerThreadLogic(): void {
     console.log('handleWorkerThreadLogic ')
     if (parentPort) {
       parentPort.on('message', async (message) => {
@@ -147,9 +149,8 @@ class Orchestrator {
   }
 }
 
-const orchestrator = new Orchestrator();
-
 (async () => {
+  const orchestrator = Orchestrator.getInstance();
   if (process.env.IS_CHILD_PROCESS) {
     const processName = process.env.PROCESS_NAME
     process.title = processName ? processName : "Datahive";
@@ -159,8 +160,9 @@ const orchestrator = new Orchestrator();
 })();
 
 export async function relay(caller: string, type: string, projectId: string) {
+  const orchestrator = Orchestrator.getInstance();
   if (type === 'start') {
-    orchestrator.startProcess(caller, projectId);
+    orchestrator.start(caller, projectId);
   }
   if (type === 'pause') {
     console.log("PAUSE NOT IMPLEMENTED");

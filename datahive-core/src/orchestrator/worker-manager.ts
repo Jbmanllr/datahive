@@ -1,6 +1,13 @@
+// Orchestrator>worker-manager
 import { Worker } from 'worker_threads';
 
-class WorkerManager {
+export interface IWorkerManager {
+  createWorker(scriptPath: string, options?: any): Promise<any>;
+  terminateWorker(workerId: number): Promise<void>;
+}
+
+
+class WorkerManager implements IWorkerManager {
   private workers: Map<number, Worker>;
 
   constructor() {
