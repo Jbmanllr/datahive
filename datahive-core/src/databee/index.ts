@@ -11,7 +11,7 @@ import { Logger } from "../logger"
 import { DatabeeProjectData, DatabeeConfig } from "./types";
 dotenv.config();
 
-class Databee {
+export class Databee {
   config: DatabeeConfig | null;
   project: DatabeeProject;
   run: Run;

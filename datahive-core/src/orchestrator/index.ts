@@ -4,26 +4,29 @@ import ProcessManager, { IProcessManager } from './process-manager';
 import WorkerManager, { IWorkerManager } from './worker-manager';
 import { Mutex } from 'async-mutex';
 import goGather from '../databee/index'; // Ensure this path is correct
-
+import { Databee } from '../databee/index';
 //import { fileURLToPath } from 'url';
 
 const MULTIPROCESS: boolean = true;
 
 class Orchestrator {
+  private static instance: Orchestrator;
+
+  //private activeRuns: Map<string, Run>;
   private processManager: ProcessManager;
   private workerManager: WorkerManager;
   private mutex: Mutex;
   private multiprocess: boolean;
+  private multithread: boolean;
   private currentFilePath: string;
   private processPath: string;
-
-  private static instance: Orchestrator;
 
   private constructor() {
     this.processManager = new ProcessManager();
     this.workerManager = new WorkerManager();
     this.mutex = new Mutex();
     this.multiprocess = MULTIPROCESS;
+    this.multithread = true;
     this.currentFilePath = '/directus/extensions/directus-extension-datahive/dist/api.js';
     this.processPath = this.currentFilePath;
   }
@@ -43,6 +46,19 @@ class Orchestrator {
 
     const release = await this.mutex.acquire();
 
+    if (caller === 'databee') {
+      const databee = new Databee();
+      const instance = await databee.init(projectId, null); // Assuming null for runId for simplicity
+      //this.processManager.addProcessProperty(caller, databee); // Method to add a process property
+      //const DatabeeObj = {
+      //  process: newProcess,
+      //  startTime: Date.now()
+      //};
+
+      //this.activeRuns.set(instance.run.data.id, instance);
+
+    }
+
     try {
       let activeProcess = null;
 
@@ -51,7 +67,7 @@ class Orchestrator {
           caller,
           projectId,
           runId: null,
-          processPath: this.processPath
+          processPath: this.processPath,
         });
         activeProcess.send({ command: 'start', projectId });
       } else {
@@ -84,6 +100,7 @@ class Orchestrator {
     process.on('message', async (message: any) => {
       if (message.command === 'start') {
         try {
+          //console.log('DATABEE LOG 2', instance);
           const result = await goGather(message.projectId, null);
           console.log(`goGather completed for project ID: ${message.projectId}`, result);
           this.processManager.terminateProcess(process)
@@ -138,6 +155,7 @@ class Orchestrator {
         console.error = (...args) => originalConsoleError(`[W-${workerId}]`, ...args);
 
         try {
+          //console.log('DATABEE LOG 3', instance);
           const result = await goGather(message.projectId, null);
           parentPort?.postMessage({ status: 'completed', result });
         } catch (error) {

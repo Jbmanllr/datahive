@@ -1,5 +1,5 @@
 # Start from the Directus base image
-FROM directus-node18:10.7.2
+FROM directus-node18:10.8.0
 
 # Set the working directory in the container
 WORKDIR /directus
@@ -21,7 +21,8 @@ RUN pnpm install directus-extension-wpslug-interface@latest \
     directus-extension-tags-m2m-interface@latest \
     directus-extension-field-actions@latest \
     directus-extension-computed-interface@latest \
-    directus-extension-group-tabs-interface@latest
+    directus-extension-group-tabs-interface@latest \
+    directus-extension-admin-panels
 
 USER root
 
@@ -48,8 +49,8 @@ RUN chown -R node:node ./extensions/directus-extension-datahive && chmod -R 755 
 #RUN chown -R node:node ./datahive-core && chmod -R 755 ./datahive-core
 
 # Copy the .env file into the container and change its permissions
-COPY .env ./
-RUN chmod 644 .env
+#COPY .env ./
+#RUN chmod 644 .env
 
 # Create the storage directory and set permissions
 # RUN mkdir -p ./storage && chown -R node:node ./storage && chmod -R 755 ./storage

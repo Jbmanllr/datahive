@@ -23,6 +23,7 @@ interface CreateProcessOptions {
 
 class ProcessManager implements IProcessManager {
   private activeProcesses: Map<number, ProcessInfo>;
+  
   constructor() {
     this.activeProcesses = new Map();
   }
