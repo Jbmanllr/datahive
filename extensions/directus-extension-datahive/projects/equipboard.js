@@ -121,6 +121,7 @@ export const handlers = {
     await removeOverlays(page);
   },
   LOGIN: async (context, databee, apiRequest) => {
+    console.log("LOGIN CHECK DATABEE:", databee);
     const { email, username, password } = databee.project.data;
     if ((email || username) && password) {
     } else {

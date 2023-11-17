@@ -27,3 +27,4 @@ services:
       DIRECTUS_API_BASE_URL: "http://0.0.0.0:8055"
       DIRECTUS_API_TOKEN: "mYYPJypxN5ecLk2bxz-kztKpL_8oinXT"
       EXTENSIONS_AUTO_RELOAD: "true"
+      CRAWLEE_STORAGE_DIR: "./directus/extensions/directus-extension-datahive/datahive-core/databee/storage"

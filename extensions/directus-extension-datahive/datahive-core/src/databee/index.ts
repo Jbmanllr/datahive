@@ -9,6 +9,8 @@ import { loadProjectHandlers } from "./crawl-manager/index";
 import { apiRequest } from "../connectors/index";
 import { Logger } from "../logger";
 import { DatabeeProjectData, DatabeeConfig } from "./types";
+import { Configuration } from "crawlee";
+
 dotenv.config();
 
 export class Databee {
@@ -87,6 +89,11 @@ export default async function GoGather(
   console.log("config", config);
   //let Actor: any;
   //if (process.env.APIFY_IS_AT_HOME) { await loadApify();}
+
+  const crawleeconfig = Configuration.getGlobalConfig();
+  crawleeconfig.set("persistStateIntervalMillis", 66_666);
+
+  console.log("crawleeconfig", crawleeconfig, process.env.CRAWLEE_STORAGE_DIR);
 
   const databee = new Databee();
   const routerFactory = new RouterFactory();
