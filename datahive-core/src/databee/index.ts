@@ -7,7 +7,7 @@ import RouterFactory from "./crawl-manager/routers/index";
 import CrawlerFactory from "./crawl-manager/crawlers/index";
 import { loadProjectHandlers } from "./crawl-manager/index";
 import { apiRequest } from "../connectors/index";
-import { Logger } from "../logger"
+import { Logger } from "../logger";
 import { DatabeeProjectData, DatabeeConfig } from "./types";
 dotenv.config();
 
@@ -30,25 +30,30 @@ export class Databee {
         id: "config",
       });
       return response.data;
-    } catch (error :any) {
+    } catch (error: any) {
       // Handle error
       handleError("Failed to fetch Databee configuration: ", error, true);
       throw new Error("Failed to fetch config: " + error.message);
     }
   }
 
-  async init(projectId: any, runId: any, config: DatabeeConfig): Promise<Databee> {
+  async init(
+    projectId: any,
+    runId: any,
+    config: DatabeeConfig
+  ): Promise<Databee> {
     try {
       this.config = config;
-      //if (!this.config) {
-      //   this.config = await this.getConfig();
-      // }
+      if (!this.config) {
+        console.log("No config found, fecthing config from databee");
+        this.config = await Databee.getConfig();
+      }
       this.project = await this.project.init(projectId, this.config);
       this.run = await this.run.create(projectId, runId, this.config);
     } catch (error) {
       handleError("Failed to initialize Databee:", error, true);
     } finally {
-      return this
+      return this;
     }
   }
 }
@@ -78,8 +83,15 @@ export class DatabeeProject {
 }
 
 //@ts-ignore
-export default async function GoGather(projectId, runId, config): Promise<void> {
-
+export default async function GoGather(
+  //@ts-ignore
+  projectId,
+  //@ts-ignore
+  runId,
+  //@ts-ignore
+  config
+): Promise<void> {
+  console.log("config", config);
   //let Actor: any;
   //if (process.env.APIFY_IS_AT_HOME) { await loadApify();}
 
@@ -124,7 +136,7 @@ export default async function GoGather(projectId, runId, config): Promise<void> 
 
   //if (process.env.APIFY_IS_AT_HOME && Actor) { await Actor.exit(); }
   //@ts-ignore
-  return "Run ended successsss"
+  return "Run ended successsss";
 }
 
 // Handle process exit signals
@@ -147,9 +159,13 @@ process.on("unhandledRejection", async (reason, promise) => {
 });*/
 
 //export { apiRequest } from './connectors/index.js';
-//export * from './run-manager/index.js'; 
+//export * from './run-manager/index.js';
 
-function handleError(message: string, error: any = null, shouldExit: boolean = false): void {
+function handleError(
+  message: string,
+  error: any = null,
+  shouldExit: boolean = false
+): void {
   Logger.error(message);
   if (error) Logger.error(error);
   if (shouldExit) process.exit(1);

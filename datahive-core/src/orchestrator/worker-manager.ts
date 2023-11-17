@@ -1,11 +1,10 @@
 // Orchestrator>worker-manager
-import { Worker } from 'worker_threads';
+import { Worker } from "worker_threads";
 
 export interface IWorkerManager {
   createWorker(scriptPath: string, options?: any): Promise<any>;
   terminateWorker(workerId: number): Promise<void>;
 }
-
 
 class WorkerManager implements IWorkerManager {
   private activeWorkers: Map<number, Worker>;
@@ -14,11 +13,14 @@ class WorkerManager implements IWorkerManager {
     this.activeWorkers = new Map();
   }
 
-  async createWorker(workerPath: string, workerData: any = {}): Promise<Worker> {
+  async createWorker(
+    workerPath: string,
+    workerData: any = {}
+  ): Promise<Worker> {
     const worker = new Worker(workerPath, { workerData });
     this.activeWorkers.set(worker.threadId, worker);
 
-    worker.on('exit', () => {
+    worker.on("exit", () => {
       console.log(`Worker ${worker.threadId} exited`);
       this.activeWorkers.delete(worker.threadId);
     });
@@ -35,7 +37,7 @@ class WorkerManager implements IWorkerManager {
 
       // Check if there are no more active workers
       if (this.activeWorkers.size === 0) {
-        console.log('No active workers left. Terminating the process.');
+        console.log("No active workers left. Terminating the process.");
         process.exit(0); // or use a different exit code if needed
       }
     } else {
