@@ -22,7 +22,7 @@ export class Databee {
     this.run = new Run();
   }
 
-  async init(projectId: any, runId: any): Promise<Databee> {
+  async getConfig(): Promise<DatabeeConfig | null> {
     try {
       const response = await apiRequest({
         method: "GET",
@@ -30,11 +30,23 @@ export class Databee {
         id: "config",
       });
       this.config = response.data;
-      this.project = await this.project.init(projectId, this.config);
-      this.run = await this.run.create(projectId, runId, this.config);
 
     } catch (error) {
-      handleError("Failed to fetch project:", error, true);
+      handleError("Failed to fetch Databee configuration: ", error, true);
+    } finally {
+      return this.config
+    }
+  }
+
+  async init(projectId: any, runId: any): Promise<Databee> {
+    try {
+      //if (!this.config) {
+      //   this.config = await this.getConfig();
+      // }
+      this.project = await this.project.init(projectId, this.config);
+      this.run = await this.run.create(projectId, runId, this.config);
+    } catch (error) {
+      handleError("Failed to initialize Databee:", error, true);
     } finally {
       return this
     }
