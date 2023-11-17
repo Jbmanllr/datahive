@@ -1,4 +1,4 @@
-// Orchestrator>process-manager.ts
+// Datahive>process-manager.ts
 import { fork, ChildProcess } from "child_process";
 import ps from "ps-node";
 

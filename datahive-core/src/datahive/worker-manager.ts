@@ -1,4 +1,4 @@
-// Orchestrator>worker-manager
+// Datahive>worker-manager
 import { Worker } from "worker_threads";
 
 export interface IWorkerManager {

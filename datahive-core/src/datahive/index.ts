@@ -1,4 +1,4 @@
-// Orchestrator>index.js
+// Datahive>index.js
 import { isMainThread, parentPort } from "worker_threads";
 import ProcessManager, { IProcessManager } from "./process-manager";
 import WorkerManager, { IWorkerManager } from "./worker-manager";
@@ -9,16 +9,40 @@ import { Databee } from "../databee/index";
 
 const MULTIPROCESS: boolean = true;
 
-class Orchestrator {
-  private static instance: Orchestrator;
+const defaultConfig: any = {
+  workerManager: {
+    type: "process",
+    options: {
+      maxWorkers: 10,
+      maxQueueSize: 1000,
+      maxConcurrentWorkers: 10,
+      maxConcurrentQueueSize: 1000,
+    },
+  },
+  processManager: {
+    type: "process",
+    options: {
+      maxWorkers: 10,
+      maxQueueSize: 1000,
+      maxConcurrentWorkers: 10,
+      maxConcurrentQueueSize: 1000,
+    },
+  },
+};
+
+const defaultModuleConfig: any = {
+  multiprocess: true,
+  multithread: true,
+  child_process_type: "fork",
+};
+
+class Datahive {
+  private static instance: Datahive;
 
   //private activeRuns: Map<string, Run>;
   private processManager: ProcessManager;
   private workerManager: WorkerManager;
   private mutex: Mutex;
-  private multiprocess: boolean;
-  private multithread: boolean;
-  private child_process_type: "fork" | "spawn";
   private currentFilePath: string;
   private processPath: string;
 
@@ -26,19 +50,16 @@ class Orchestrator {
     this.processManager = new ProcessManager();
     this.workerManager = new WorkerManager();
     this.mutex = new Mutex();
-    this.multiprocess = true;
-    this.multithread = true;
-    this.child_process_type = "fork";
     this.currentFilePath =
       "/directus/extensions/directus-extension-datahive/dist/api.js";
     this.processPath = this.currentFilePath;
   }
 
-  public static getInstance(): Orchestrator {
-    if (!Orchestrator.instance) {
-      Orchestrator.instance = new Orchestrator();
+  public static getInstance(): Datahive {
+    if (!Datahive.instance) {
+      Datahive.instance = new Datahive();
     }
-    return Orchestrator.instance;
+    return Datahive.instance;
   }
 
   public async start(caller: string, projectId: string): Promise<void> {
@@ -53,16 +74,15 @@ class Orchestrator {
       config = await Databee.getConfig();
     }
 
-    this.multiprocess = config ? config.multiprocess : this.multiprocess;
-    this.multithread = config ? config.multithread : this.multithread;
-    this.child_process_type = config
-      ? config.child_process_type
-      : this.child_process_type;
+    let multiprocess = config?.multiprocess || defaultModuleConfig.multiprocess;
+    let multithread = config?.multithread || defaultModuleConfig.multithread;
+    let child_process_type =
+      config?.child_process_type || defaultModuleConfig.child_process_type;
 
     try {
       let activeProcess = null;
 
-      if (this.multiprocess) {
+      if (multiprocess) {
         activeProcess = await this.processManager.createProcess({
           caller,
           projectId,
@@ -80,7 +100,7 @@ class Orchestrator {
         activeProcess.send({ command: "startWorker", projectId, config });
       }
 
-      console.log("ORCHESTRATOR STATUS", Orchestrator.getInstance());
+      console.log("Datahive STATUS", Datahive.getInstance());
     } catch (error) {
       console.error("Error in starting process:", error);
       throw error;
@@ -105,7 +125,6 @@ class Orchestrator {
     process.on("message", async (message: any) => {
       if (message.command === "start") {
         try {
-          //console.log('DATABEE LOG 2', instance);
           const result = await goGather(
             message.projectId,
             null,
@@ -182,7 +201,6 @@ class Orchestrator {
           originalConsoleError(`[W-${workerId}]`, ...args);
 
         try {
-          //console.log('DATABEE LOG 3', instance);
           const result = await goGather(
             message.projectId,
             null,
@@ -199,19 +217,19 @@ class Orchestrator {
 }
 
 (async () => {
-  const orchestrator = Orchestrator.getInstance();
+  const datahive = Datahive.getInstance();
   if (process.env.IS_CHILD_PROCESS) {
     const processName = process.env.PROCESS_NAME;
     process.title = processName ? processName : "Datahive";
   }
 
-  await orchestrator.manageThreads();
+  await datahive.manageThreads();
 })();
 
 export async function relay(caller: string, type: string, projectId: string) {
-  const orchestrator = Orchestrator.getInstance();
+  const datahive = Datahive.getInstance();
   if (type === "start") {
-    orchestrator.start(caller, projectId);
+    datahive.start(caller, projectId);
   }
   if (type === "pause") {
     console.log("PAUSE NOT IMPLEMENTED");

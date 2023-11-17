@@ -1,4 +1,4 @@
-import { relay } from '../../../../datahive-core/src/orchestrator'
+import { relay } from '../../../../datahive-core/src/datahive'
 import { capitalizeFirstLetter } from '../utils'
 
 const moduleName = "honeycomb"
