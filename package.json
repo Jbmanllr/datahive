@@ -6,7 +6,8 @@
   "scripts": {
     "start": "docker compose up",
     "dev": "docker-compose up & cd ./extensions/directus-extension-datahive && npm run dev",
-    "test": "test"
+    "test": "test",
+    "update": "git add . && git commit -m 'update - $(date)' && git push"
   },
   "repository": {
     "type": "git",

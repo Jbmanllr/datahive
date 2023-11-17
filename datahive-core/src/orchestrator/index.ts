@@ -57,7 +57,7 @@ class Orchestrator {
     this.multithread = config ? config.multithread : this.multithread;
     this.child_process_type = config
       ? config.child_process_type
-      : this.child_process_type;
+      : this.child_process_type; 
 
     try {
       let activeProcess = null;
