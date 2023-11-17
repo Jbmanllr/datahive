@@ -18,6 +18,7 @@ class Orchestrator {
   private mutex: Mutex;
   private multiprocess: boolean;
   private multithread: boolean;
+  private child_process_type: "fork" | "spawn";
   private currentFilePath: string;
   private processPath: string;
 
@@ -25,8 +26,9 @@ class Orchestrator {
     this.processManager = new ProcessManager();
     this.workerManager = new WorkerManager();
     this.mutex = new Mutex();
-    this.multiprocess = MULTIPROCESS;
+    this.multiprocess = true;
     this.multithread = true;
+    this.child_process_type = "fork";
     this.currentFilePath = '/directus/extensions/directus-extension-datahive/dist/api.js';
     this.processPath = this.currentFilePath;
   }
@@ -46,18 +48,21 @@ class Orchestrator {
 
     const release = await this.mutex.acquire();
 
+    let config;
     if (caller === 'databee') {
-      const databee = new Databee();
-      const instance = await databee.init(projectId, null); // Assuming null for runId for simplicity
-      //this.processManager.addProcessProperty(caller, databee); // Method to add a process property
-      //const DatabeeObj = {
-      //  process: newProcess,
-      //  startTime: Date.now()
-      //};
-
-      //this.activeRuns.set(instance.run.data.id, instance);
-
+      config = await Databee.getConfig()
     }
+
+    this.multiprocess = config ? config.multiprocess : this.multiprocess;
+    this.multithread = config ? config.multithread : this.multithread;
+    this.child_process_type = config ? config.child_process_type : this.child_process_type;
+
+    console.log(
+      "multiprocess", this.multiprocess,
+      "multithread", this.multithread,
+      "child_process_type", this.child_process_type,
+      "config", config
+    );
 
     try {
       let activeProcess = null;
@@ -68,6 +73,7 @@ class Orchestrator {
           projectId,
           runId: null,
           processPath: this.processPath,
+          config
         });
         activeProcess.send({ command: 'start', projectId });
       } else {
@@ -101,7 +107,7 @@ class Orchestrator {
       if (message.command === 'start') {
         try {
           //console.log('DATABEE LOG 2', instance);
-          const result = await goGather(message.projectId, null);
+          const result = await goGather(message.projectId, null, config);
           console.log(`goGather completed for project ID: ${message.projectId}`, result);
           this.processManager.terminateProcess(process)
           //parentPort?.postMessage({ status: 'completed', result });
@@ -156,7 +162,7 @@ class Orchestrator {
 
         try {
           //console.log('DATABEE LOG 3', instance);
-          const result = await goGather(message.projectId, null);
+          const result = await goGather(message.projectId, null, config);
           parentPort?.postMessage({ status: 'completed', result });
         } catch (error) {
           console.error(`Error in worker:`, error);

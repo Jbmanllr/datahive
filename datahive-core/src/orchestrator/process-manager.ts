@@ -1,6 +1,6 @@
 // Orchestrator>process-manager.ts
-import { fork, ChildProcess } from 'child_process';
-import ps from 'ps-node';
+import { fork, ChildProcess } from "child_process";
+import ps from "ps-node";
 
 export interface IProcessManager {
   createProcess(options: any): Promise<any>;
@@ -19,11 +19,12 @@ interface CreateProcessOptions {
   projectId?: string | null | undefined;
   runId?: string | null | undefined;
   processPath: string;
+  config: any;
 }
 
 class ProcessManager implements IProcessManager {
   private activeProcesses: Map<number, ProcessInfo>;
-  
+
   constructor() {
     this.activeProcesses = new Map();
   }
@@ -32,59 +33,65 @@ class ProcessManager implements IProcessManager {
     caller,
     projectId,
     runId,
-    processPath
+    processPath,
   }: CreateProcessOptions): Promise<ChildProcess> {
     if (!projectId && !runId) {
       throw new Error("Project ID or Run ID are required");
     }
     try {
-      const ID = projectId ? projectId : runId; 
+      const ID = projectId ? projectId : runId;
       //@ts-ignore
-      const newProcess = fork(processPath, [ID, '--name=Databee'], {
-        stdio: ['ignore', 'pipe', 'pipe', 'ipc'],
+      const newProcess = fork(processPath, [ID, "--name=Databee"], {
+        stdio: ["ignore", "pipe", "pipe", "ipc"],
         detached: false,
         env: {
           ...process.env,
           PROJECT_ID: projectId,
           RUN_ID: runId,
-          IS_CHILD_PROCESS: 'true',
-          PROCESS_NAME: caller
-        }
+          IS_CHILD_PROCESS: "true",
+          PROCESS_NAME: caller,
+        },
       });
 
-      newProcess.stdout?.on('data', (data) => {
+      newProcess.stdout?.on("data", (data) => {
         logWithPrefix(`[Databee (${newProcess.pid})]: `, data.toString());
       });
 
-      newProcess.stderr?.on('data', (data) => {
+      newProcess.stderr?.on("data", (data) => {
         logWithPrefix(`[Databee (${newProcess.pid})]: `, data.toString());
       });
 
-      newProcess.on('exit', () => {
+      newProcess.on("exit", () => {
         if (newProcess.pid !== undefined) {
           this.activeProcesses.delete(newProcess.pid);
-          console.log(`Exited & Removed process ${newProcess.pid} from active processes.`);
+          console.log(
+            `Exited & Removed process ${newProcess.pid} from active processes.`
+          );
         }
       });
 
       if (newProcess.pid !== undefined) {
         const processInfo = {
           process: newProcess,
-          startTime: Date.now()
+          startTime: Date.now(),
         };
 
         this.activeProcesses.set(newProcess.pid, processInfo);
-        console.log("Active Databee Processes", this.activeProcesses.size)
+        console.log("Active Databee Processes", this.activeProcesses.size);
       }
 
       return newProcess;
     } catch (error) {
-      console.error('Error creating Databee process:', error);
+      console.error("Error creating Databee process:", error);
       throw error;
     }
   }
 
-  async getOrCreateActiveProcess(caller: string, projectId: string, processPath: string): Promise<ChildProcess> {
+  async getOrCreateActiveProcess(
+    caller: string,
+    projectId: string,
+    processPath: string
+  ): Promise<ChildProcess> {
     let latestProcessStartTime = 0;
     let activeProcess = null;
 
@@ -101,7 +108,8 @@ class ProcessManager implements IProcessManager {
         caller,
         projectId,
         runId: null,
-        processPath
+        processPath,
+        config: {},
       });
     }
 
@@ -114,7 +122,7 @@ class ProcessManager implements IProcessManager {
       console.log(`PIDzz: ${pid}`);
       if (process && !process.killed && pid !== undefined) {
         process.kill(pid);
-        process.on('exit', () => {
+        process.on("exit", () => {
           console.log(`Terminated process with PID: ${pid}`);
           this.activeProcesses.delete(pid);
           resolve();
@@ -125,30 +133,33 @@ class ProcessManager implements IProcessManager {
     });
   }
 
-
   async checkForExistingProcesses(
     title: string,
     args: string[]
   ): Promise<any[]> {
     return new Promise((resolve, reject) => {
-      ps.lookup({
-        command: title,
-        //@ts-ignore
-        arguments: args,
-        psargs: 'ux'
-      }, (err: Error | null, resultList: any[]) => {
-        if (err) {
-          console.error('Error checking for existing processes:', err);
-          reject(err);
-          return;
-        }
+      ps.lookup(
+        {
+          command: title,
+          //@ts-ignore
+          arguments: args,
+          psargs: "ux",
+        },
+        (err: Error | null, resultList: any[]) => {
+          if (err) {
+            console.error("Error checking for existing processes:", err);
+            reject(err);
+            return;
+          }
 
-        const foundProcesses = resultList.filter(p => p.command.includes(title));
-        resolve(foundProcesses);
-      });
+          const foundProcesses = resultList.filter((p) =>
+            p.command.includes(title)
+          );
+          resolve(foundProcesses);
+        }
+      );
     });
   }
-
 
   async checkProcessHealth(process: any): Promise<boolean> {
     return new Promise((resolve) => {
@@ -157,17 +168,17 @@ class ProcessManager implements IProcessManager {
           resolve(false);
         }, 5000);
 
-        process.once('message', (message : string) => {
-          if (message === 'alive') {
+        process.once("message", (message: string) => {
+          if (message === "alive") {
             clearTimeout(timeout);
             resolve(true);
           }
         });
 
         try {
-          process.send({ command: 'heartbeat' });
+          process.send({ command: "heartbeat" });
         } catch (error) {
-          console.error('Error sending heartbeat:', error);
+          console.error("Error sending heartbeat:", error);
           clearTimeout(timeout);
           resolve(false);
         }
@@ -183,8 +194,8 @@ class ProcessManager implements IProcessManager {
 }
 
 function logWithPrefix(prefix: any, message: any) {
-  const yellow = '\x1b[33m';
-  const reset = '\x1b[0m';
+  const yellow = "\x1b[33m";
+  const reset = "\x1b[0m";
   console.log(`${yellow}${prefix} ${message}${reset}`);
 }
 

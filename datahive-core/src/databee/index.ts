@@ -22,24 +22,24 @@ export class Databee {
     this.run = new Run();
   }
 
-  async getConfig(): Promise<DatabeeConfig | null> {
+  static async getConfig(): Promise<DatabeeConfig> {
     try {
       const response = await apiRequest({
         method: "GET",
         collection: "databee",
         id: "config",
       });
-      this.config = response.data;
-
-    } catch (error) {
+      return response.data;
+    } catch (error :any) {
+      // Handle error
       handleError("Failed to fetch Databee configuration: ", error, true);
-    } finally {
-      return this.config
+      throw new Error("Failed to fetch config: " + error.message);
     }
   }
 
-  async init(projectId: any, runId: any): Promise<Databee> {
+  async init(projectId: any, runId: any, config: DatabeeConfig): Promise<Databee> {
     try {
+      this.config = config;
       //if (!this.config) {
       //   this.config = await this.getConfig();
       // }
@@ -78,7 +78,7 @@ export class DatabeeProject {
 }
 
 //@ts-ignore
-export default async function GoGather(projectId, runId): Promise<void> {
+export default async function GoGather(projectId, runId, config): Promise<void> {
 
   //let Actor: any;
   //if (process.env.APIFY_IS_AT_HOME) { await loadApify();}
@@ -90,7 +90,7 @@ export default async function GoGather(projectId, runId): Promise<void> {
   let project: any, run: IRun, isNewRun: boolean;
 
   // START RUN
-  await databee.init(projectId, runId);
+  await databee.init(projectId, runId, config);
 
   console.log("Databee", databee);
 

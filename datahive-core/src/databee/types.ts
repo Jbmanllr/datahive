@@ -5,6 +5,9 @@ export interface DatabeeConfig extends BaseProperties {
   run_sessions_collection: string;
   project_collection: string;
   raw_data_collection: string;
+  multiprocess: boolean;
+  multithread: boolean;
+  child_process_type: "fork" | "spawn";
 }
 
 export interface DatabeeProjectData extends BaseProperties {
