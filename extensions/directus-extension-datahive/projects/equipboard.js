@@ -1,9 +1,9 @@
 // equipboard.js (handlers)
 import { RequestQueue, KeyValueStore } from "crawlee";
-import { apiRequest } from "../dist/api.js";
-import { databee } from "../dist/api.js";
+//import { apiRequest } from "../dist/api.js";
+//import { databee } from "../dist/api.js";
 
-export const EXTRACT_FREQUENCY_MINUTES = 20;
+export const EXTRACT_FREQUENCY_MINUTES = 200;
 
 export async function getApproxPublishDate(timeText) {
   // Parse the timeText to get the number and time unit
@@ -100,10 +100,9 @@ const LABEL_NAMES = {
 };
 
 const useLastRunEndDate = false;
-const defaultRawDataCollection = databee.config.raw_data_collection;
 
 export const handlers = {
-  PRE_NAVIGATION_PREPARATION: async (context) => {
+  PRE_NAVIGATION_PREPARATION: async (context, databee, apiRequest) => {
     const { page, request, log, enqueueLinks, pushData } = context;
     // Intercept network requests
     await page.route("**/*", (route) => {
@@ -121,8 +120,8 @@ export const handlers = {
     await page.waitForTimeout(1000);
     await removeOverlays(page);
   },
-  LOGIN: async (context) => {
-    const { email, username, password } = databee.runManager.project.data;
+  LOGIN: async (context, databee, apiRequest) => {
+    const { email, username, password } = databee.project.data;
     if ((email || username) && password) {
     } else {
       console.log(
@@ -152,16 +151,16 @@ export const handlers = {
       await KeyValueStore.setValue("SESSION_COOKIES", cookies);
     }
   },
-  DEFAULT: async (context) => {
+  DEFAULT: async (context, databee, apiRequest) => {
     console.log("RUNNING DEFAULT HANDLER");
   },
-  HOMEPAGE: async (context) => {
+  HOMEPAGE: async (context, databee, apiRequest) => {
     const { page, request, log, enqueueLinks, pushData } = context;
     // Navigate to the desired URL that lists the gear
     await page.goto("https://equipboard.com/?filter=gear");
     await page.waitForTimeout(1000);
 
-    const latest_run = databee.runManager.project.data.databee_runs[0];
+    const latest_run = databee.project.data.databee_runs[0];
 
     // Calculate the date threshold. Items older than this date will not be processed
     let thresholdDate;
@@ -230,7 +229,7 @@ export const handlers = {
                 userData: {
                   pro: proLink,
                   approx_date_published: approxDatePublished,
-                  run_id: databee.runManager.run.data.id,
+                  run_id: databee.run.data.id,
                 },
               });
               //console.log(`Details enqueued for ${label}`);
@@ -270,7 +269,7 @@ export const handlers = {
       }
     }
   },
-  DETAILOCCURRENCES: async (context) => {
+  DETAILOCCURRENCES: async (context, databee, apiRequest) => {
     const { page, request, log, enqueueLinks, pushData } = context;
     //await removeOverlays(page);
     //const { pathname: path } = new URL(request.loadedUrl);
@@ -310,15 +309,15 @@ export const handlers = {
         if (true) {
           await apiRequest({
             method: "POST",
-            collection: defaultRawDataCollection,
+            collection: databee.config.raw_data_collection,
             data: {
               data: preparedData,
               entity_type: request.label,
-              source: databee.runManager.project.data.key,
-              project_id: databee.runManager.project.data.id,
-              run_id: databee.runManager.run.data.id,
-              run_session_id: databee.runManager.runSession.data.id,
-              label: "updater"
+              source: databee.project.data.key,
+              project_id: databee.project.data.id,
+              run_id: databee.run.data.id,
+              run_session_id: databee.run.runSession.data.id,
+              label: "updater",
             },
           });
         }
@@ -338,7 +337,7 @@ export const handlers = {
       }
     }
   },
-  DETAILPROS: async (context) => {
+  DETAILPROS: async (context, databee, apiRequest) => {
     const { request, log, enqueueLinks, pushData, $ } = context;
     const path = new URL(request.loadedUrl).pathname;
 
@@ -501,9 +500,7 @@ export const handlers = {
     // ENQUEU LINKS TO BANDS DETAILS
     if (groups.length > 0) {
       try {
-        const urls = groups.map(
-          (i) => databee.runManager.project.data.base_url + i.url
-        );
+        const urls = groups.map((i) => databee.project.data.base_url + i.url);
 
         const bandRequestQueue = await RequestQueue.open(
           LABEL_NAMES.DETAIL_BANDS
@@ -574,7 +571,7 @@ export const handlers = {
       groups: groups,
       social_links: socialData,
       crawl_errors: errors,
-      run_id: databee.runManager.run.data.id,
+      run_id: databee.run.data.id,
     };
     if (true) {
       await pushData(preparedData);
@@ -582,20 +579,20 @@ export const handlers = {
     if (true) {
       await apiRequest({
         method: "POST",
-        collection: defaultRawDataCollection,
+        collection: databee.config.raw_data_collection,
         data: {
           data: preparedData,
           entity_type: request.label,
-          source: databee.runManager.project.data.key,
-          project_id: databee.runManager.project.data.id,
-          run_id: databee.runManager.run.data.id,
-          run_session_id: databee.runManager.runSession.data.id,
-          label: "updater"
+          source: databee.project.data.key,
+          project_id: databee.project.data.id,
+          run_id: databee.run.data.id,
+          run_session_id: databee.run.runSession.data.id,
+          label: "updater",
         },
       });
     }
   },
-  DETAILPRODUCTS: async (context) => {
+  DETAILPRODUCTS: async (context, databee, apiRequest) => {
     const { request, log, enqueueLinks, pushData, $ } = context;
     const path = new URL(request.loadedUrl).pathname;
     const errors = [];
@@ -882,15 +879,15 @@ export const handlers = {
     if (true) {
       await apiRequest({
         method: "POST",
-        collection: defaultRawDataCollection,
+        collection: databee.config.raw_data_collection,
         data: {
           data: preparedData,
           entity_type: request.label,
-          source: databee.runManager.project.data.key,
-          project_id: databee.runManager.project.data.id,
-          run_id: databee.runManager.run.data.id,
-          run_session_id: databee.runManager.runSession.data.id,
-          label: "updater"
+          source: databee.project.data.key,
+          project_id: databee.project.data.id,
+          run_id: databee.run.data.id,
+          run_session_id: databee.run.runSession.data.id,
+          label: "updater",
         },
       });
     }
@@ -905,7 +902,7 @@ export const handlers = {
       requestQueue: requestQueueBrandDetail,
     });
   },
-  DETAILBANDS: async (context) => {
+  DETAILBANDS: async (context, databee, apiRequest) => {
     const { request, log, enqueueLinks, pushData, $ } = context;
     const path = new URL(request.loadedUrl).pathname;
     const errors = [];
@@ -1048,20 +1045,20 @@ export const handlers = {
     if (true) {
       await apiRequest({
         method: "POST",
-        collection: defaultRawDataCollection,
+        collection: databee.config.raw_data_collection,
         data: {
           data: preparedData,
           entity_type: request.label,
-          source: databee.runManager.project.data.key,
-          project_id: databee.runManager.project.data.id,
-          run_id: databee.runManager.run.data.id,
-          run_session_id: databee.runManager.runSession.data.id,
-          label: "updater"
+          source: databee.project.data.key,
+          project_id: databee.project.data.id,
+          run_id: databee.run.data.id,
+          run_session_id: databee.run.runSession.data.id,
+          label: "updater",
         },
       });
     }
   },
-  DETAILBRANDS: async (context) => {
+  DETAILBRANDS: async (context, databee, apiRequest) => {
     const { request, log, enqueueLinks, pushData, $ } = context;
     const errors = [];
     const path = new URL(request.loadedUrl).pathname;
@@ -1115,15 +1112,15 @@ export const handlers = {
     if (true) {
       await apiRequest({
         method: "POST",
-        collection: defaultRawDataCollection,
+        collection: databee.config.raw_data_collection,
         data: {
           data: preparedData,
           entity_type: request.label,
-          source: databee.runManager.project.data.key,
-          project_id: databee.runManager.project.data.id,
-          run_id: databee.runManager.run.data.id,
-          run_session_id: databee.runManager.runSession.data.id,
-          label: "updater"
+          source: databee.project.data.key,
+          project_id: databee.project.data.id,
+          run_id: databee.run.data.id,
+          run_session_id: databee.run.runSession.data.id,
+          label: "updater",
         },
       });
     }
@@ -1323,8 +1320,8 @@ function prepareDataForPush(data, request, proPath, submissionId) {
     occurrence_id: submissionId,
     occurrence_path: `/submissions/${submissionId}`,
     occurrence_nice_path: `${proPath}/${itemSlug}`,
-    occurrence_url: `${databee.runManager.project.data.base_url}/submissions/${submissionId}`,
-    occurrence_nice_url: `${databee.runManager.project.data.base_url}${proPath}/${itemSlug}`,
+    occurrence_url: `${databee.project.data.base_url}/submissions/${submissionId}`,
+    occurrence_nice_url: `${databee.project.data.base_url}${proPath}/${itemSlug}`,
     status: data.badgeText.status,
     supported_via: data.badgeText.supported_via,
     upvotes: data.upvoteCount,
@@ -1335,6 +1332,6 @@ function prepareDataForPush(data, request, proPath, submissionId) {
     comment_nb: data.numberOfComments,
     crawl_errors: data.errors,
     approx_date_published: request.userData.approx_date_published,
-    run_id: databee.runManager.run.data.id,
+    run_id: databee.run.data.id,
   };
 }

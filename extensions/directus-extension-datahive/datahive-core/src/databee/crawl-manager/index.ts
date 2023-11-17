@@ -32,17 +32,19 @@ class CrawlerRunner {
       return;
     }
 
-    this.handlers = await this.handlerLoader.load(this.databee.project.key);
+    this.handlers = await this.handlerLoader.load(
+      this.databee.project.data.key
+    );
 
     if (
-      !this.databee.project.databee_orchestrations ||
-      this.databee.project.databee_orchestrations.length === 0
+      !this.databee.project.data.databee_orchestrations ||
+      this.databee.project.data.databee_orchestrations.length === 0
     ) {
       console.log("No orchestrations found for the project.");
       return;
     }
 
-    for (const sequence of this.databee.project.databee_orchestrations) {
+    for (const sequence of this.databee.project.data.databee_orchestrations) {
       if (sequence.isActive) {
         await this.runHandler(sequence);
       }
@@ -81,7 +83,13 @@ class CrawlerRunner {
   ): Promise<void> {
     //console.log(`RUNNING ${params.requestQueueLabel} CRAWLER WITH ${sequence.crawler_type.toUpperCase()}`);
 
-    this.routerFactory.addHandler(sequence, handlerFunction, router);
+    this.routerFactory.addHandler(
+      sequence,
+      handlerFunction,
+      router,
+      this.databee.project.data,
+      this.databee.run.data
+    );
 
     const queueName =
       params.requestQueueLabel + (timestampRQ ? `-${Date.now()}` : "");

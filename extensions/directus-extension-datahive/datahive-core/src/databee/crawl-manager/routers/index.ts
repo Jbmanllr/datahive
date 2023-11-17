@@ -3,7 +3,7 @@ import {
   createPlaywrightRouter,
   createPuppeteerRouter,
 } from "crawlee";
-
+import { apiRequest } from "../../../connectors";
 class RouterFactory {
   private playwrightRouter: any;
   private cheerioRouter: any;
@@ -28,11 +28,26 @@ class RouterFactory {
     }
   }
 
-  addHandler(sequence: any, handlerFunction: any, router: any): void {
+  addHandler(
+    sequence: any,
+    handlerFunction: any,
+    router: any,
+    project: any,
+    run: any
+  ): void {
+    const databee = {
+      project,
+      run,
+    };
+    //console.log("ADD HANDLER", databee);
     if (handlerFunction.name === "DEFAULT") {
-      router.addDefaultHandler(async (context: any) => handlerFunction(context));
+      router.addDefaultHandler(async (context: any) =>
+        handlerFunction(context, databee, apiRequest)
+      );
     } else {
-      router.addHandler(sequence.handler_label, async (context: any) => handlerFunction(context));
+      router.addHandler(sequence.handler_label, async (context: any) =>
+        handlerFunction(context, databee, apiRequest)
+      );
     }
   }
 }

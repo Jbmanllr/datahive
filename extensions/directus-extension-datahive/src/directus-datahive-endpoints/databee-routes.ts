@@ -1,4 +1,4 @@
-import { relay } from "../../../../datahive-core/src/index";
+import { relay } from "../../datahive-core/src/index";
 import { capitalizeFirstLetter } from "../utils";
 
 const moduleName = "databee";

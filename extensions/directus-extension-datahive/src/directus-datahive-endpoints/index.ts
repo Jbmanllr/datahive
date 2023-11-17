@@ -6,7 +6,7 @@ export default {
   id: "datahive",
   handler: (router: any) => {
       databeeRoutes(router),
-      pollinatorRoutes(router),
+      pollinatorRoutes(router), 
       honeycombRoutes(router)
   }
 };
