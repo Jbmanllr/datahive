@@ -5,6 +5,8 @@ import WorkerManager, { IWorkerManager } from "./worker-manager";
 import { Mutex } from "async-mutex";
 import goGather from "./databee/index"; // Ensure this path is correct
 import { Databee } from "./databee/index";
+import { DatabeeProjectData, DatabeeConfig } from "./databee/types";
+import { apiRequest } from "./connectors/index";
 //import { fileURLToPath } from 'url';
 
 const defaultConfig: any = {
@@ -34,6 +36,21 @@ const defaultModuleConfig: any = {
   child_process_type: "fork",
 };
 
+export class ConfigService {
+  static async fetchConfig(caller: string): Promise<DatabeeConfig> {
+    try {
+      const response = await apiRequest({
+        method: "GET",
+        collection: caller,
+        id: "config",
+      });
+      return response.data;
+    } catch (error: any) {
+      throw new Error("Failed to fetch config: " + error.message);
+    }
+  }
+}
+
 class Datahive {
   private static instance: Datahive;
 
@@ -60,22 +77,23 @@ class Datahive {
     return Datahive.instance;
   }
 
-  public async start(caller: string, projectId: string): Promise<void> {
+  public async start(
+    caller: string,
+    projectId: string,
+    runId: string
+  ): Promise<void> {
     if (!projectId || !caller) {
       throw new Error("Both Project ID and caller name are required.");
     }
 
     const release = await this.mutex.acquire();
+    let config = await ConfigService.fetchConfig(caller);
 
-    let config;
-    if (caller === "databee") {
-      config = await Databee.getConfig();
-    }
+    config ? config : defaultModuleConfig;
 
-    let multiprocess = config?.multiprocess || defaultModuleConfig.multiprocess;
-    let multithread = config?.multithread || defaultModuleConfig.multithread;
-    let child_process_type =
-      config?.child_process_type || defaultModuleConfig.child_process_type;
+    let multiprocess = config.multiprocess;
+    let multithread = config.multithread;
+    let child_process_type = config.child_process_type;
 
     try {
       let activeProcess = null;
@@ -84,7 +102,7 @@ class Datahive {
         activeProcess = await this.processManager.createProcess({
           caller,
           projectId,
-          runId: null,
+          runId,
           processPath: this.processPath,
           config,
         });
@@ -93,7 +111,9 @@ class Datahive {
         activeProcess = await this.processManager.getOrCreateActiveProcess(
           caller,
           projectId,
-          this.processPath
+          runId,
+          this.processPath,
+          config
         );
         activeProcess.send({ command: "startWorker", projectId, config });
       }
@@ -214,10 +234,16 @@ class Datahive {
   }
 }
 
-export async function relay(caller: string, type: string, projectId: string) {
-  const datahive = Datahive.getInstance();
+const datahive = Datahive.getInstance();
+
+export async function relay(
+  caller: string,
+  type: string,
+  projectId: string,
+  runId: string
+): Promise<void> {
   if (type === "start") {
-    datahive.start(caller, projectId);
+    datahive.start(caller, projectId, runId);
   }
   if (type === "pause") {
     console.log("PAUSE NOT IMPLEMENTED");
@@ -228,7 +254,6 @@ export async function relay(caller: string, type: string, projectId: string) {
 }
 
 (async () => {
-  const datahive = Datahive.getInstance();
   if (process.env.IS_CHILD_PROCESS) {
     const processName = process.env.PROCESS_NAME;
     process.title = processName ? processName : "Datahive";

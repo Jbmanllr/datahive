@@ -90,7 +90,9 @@ class ProcessManager implements IProcessManager {
   async getOrCreateActiveProcess(
     caller: string,
     projectId: string,
-    processPath: string
+    runId: string,
+    processPath: string,
+    config: any
   ): Promise<ChildProcess> {
     let latestProcessStartTime = 0;
     let activeProcess = null;
@@ -109,7 +111,7 @@ class ProcessManager implements IProcessManager {
         projectId,
         runId: null,
         processPath,
-        config: {},
+        config,
       });
     }
 

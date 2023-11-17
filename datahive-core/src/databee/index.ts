@@ -22,21 +22,6 @@ export class Databee {
     this.run = new Run();
   }
 
-  static async getConfig(): Promise<DatabeeConfig> {
-    try {
-      const response = await apiRequest({
-        method: "GET",
-        collection: "databee",
-        id: "config",
-      });
-      return response.data;
-    } catch (error: any) {
-      // Handle error
-      handleError("Failed to fetch Databee configuration: ", error, true);
-      throw new Error("Failed to fetch config: " + error.message);
-    }
-  }
-
   async init(
     projectId: any,
     runId: any,
@@ -44,10 +29,6 @@ export class Databee {
   ): Promise<Databee> {
     try {
       this.config = config;
-      if (!this.config) {
-        console.log("No config found, fecthing config from databee");
-        this.config = await Databee.getConfig();
-      }
       this.project = await this.project.init(projectId, this.config);
       this.run = await this.run.create(projectId, runId, this.config);
     } catch (error) {
@@ -105,6 +86,23 @@ export default async function GoGather(
   await databee.init(projectId, runId, config);
 
   console.log("Databee", databee);
+  function timeout(ms: any) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  // Async function that waits for a specified time
+  async function waitForSeconds(seconds: any) {
+    console.log("Waiting...");
+
+    // Wait for the specified number of seconds
+    await timeout(seconds * 1000);
+
+    // Continue with the rest of the function
+    console.log(`${seconds} seconds have passed!`);
+  }
+
+  // Example usage
+  await waitForSeconds(40); // Waits for 3 seconds
 
   project = databee.project.data;
   //@ts-ignore
