@@ -28,6 +28,7 @@ export class Databee {
     config: DatabeeConfig
   ): Promise<Databee> {
     try {
+      this.validateConfig(config);
       this.config = config;
       this.project = await this.project.init(projectId, this.config);
       this.run = await this.run.create(projectId, runId, this.config);
@@ -35,6 +36,17 @@ export class Databee {
       handleError("Failed to initialize Databee:", error, true);
     } finally {
       return this;
+    }
+  }
+
+  private validateConfig(config: DatabeeConfig): void {
+    if (
+      !config.runs_collection ||
+      !config.run_sessions_collection ||
+      !config.project_collection ||
+      !config.raw_data_collection
+    ) {
+      throw new Error("Invalid configuration: Missing required fields.");
     }
   }
 }
@@ -117,7 +129,7 @@ export default async function GoGather(
 
   if (project) {
     const runner = new CrawlerRunner(
-      project,
+      databee,
       routerFactory,
       crawlerFactory,
       handlerLoader
