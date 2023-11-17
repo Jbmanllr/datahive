@@ -143,6 +143,8 @@ class RunSession {
           status: RUN_STATUS_RUNNING,
           run_id: runId,
           time_elapsed: 0,
+          config : config,
+          env : process.env
         },
       });
       this.data = response.data;

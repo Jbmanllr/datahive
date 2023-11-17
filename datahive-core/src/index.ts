@@ -3,11 +3,9 @@ import { isMainThread, parentPort } from "worker_threads";
 import ProcessManager, { IProcessManager } from "./process-manager";
 import WorkerManager, { IWorkerManager } from "./worker-manager";
 import { Mutex } from "async-mutex";
-import goGather from "../databee/index"; // Ensure this path is correct
-import { Databee } from "../databee/index";
+import goGather from "./databee/index"; // Ensure this path is correct
+import { Databee } from "./databee/index";
 //import { fileURLToPath } from 'url';
-
-const MULTIPROCESS: boolean = true;
 
 const defaultConfig: any = {
   workerManager: {
@@ -216,16 +214,6 @@ class Datahive {
   }
 }
 
-(async () => {
-  const datahive = Datahive.getInstance();
-  if (process.env.IS_CHILD_PROCESS) {
-    const processName = process.env.PROCESS_NAME;
-    process.title = processName ? processName : "Datahive";
-  }
-
-  await datahive.manageThreads();
-})();
-
 export async function relay(caller: string, type: string, projectId: string) {
   const datahive = Datahive.getInstance();
   if (type === "start") {
@@ -238,3 +226,13 @@ export async function relay(caller: string, type: string, projectId: string) {
     console.log("RESUME NOT IMPLEMENTED");
   }
 }
+
+(async () => {
+  const datahive = Datahive.getInstance();
+  if (process.env.IS_CHILD_PROCESS) {
+    const processName = process.env.PROCESS_NAME;
+    process.title = processName ? processName : "Datahive";
+  }
+
+  await datahive.manageThreads();
+})();
