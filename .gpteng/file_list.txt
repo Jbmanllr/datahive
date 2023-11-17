@@ -81,4 +81,4 @@
 /project/testit/src/index.ts
 /project/testit/src/module.vue
 /project/testit/src/shims.d.ts
-/project/testit/tsconfig.json
+/project/testit/tsconfig.json 
