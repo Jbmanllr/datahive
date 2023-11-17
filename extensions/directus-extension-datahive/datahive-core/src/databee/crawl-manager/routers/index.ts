@@ -39,7 +39,7 @@ class RouterFactory {
       project,
       run,
     };
-    //console.log("ADD HANDLER", databee);
+    console.log("ADD HANDLER", databee);
     if (handlerFunction.name === "DEFAULT") {
       router.addDefaultHandler(async (context: any) =>
         handlerFunction(context, databee, apiRequest)

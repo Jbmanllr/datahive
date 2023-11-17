@@ -129,7 +129,7 @@ export default async function GoGather(
   //@ts-ignore
   isNewRun = databee.run.isNewRun;
 
-  if (isNewRun) {
+  if (true) {
     await dropQueues(project);
     // await dropData(LABEL_NAMES);
   }

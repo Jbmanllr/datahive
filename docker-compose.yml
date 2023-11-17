@@ -8,9 +8,6 @@ services:
       - ./uploads:/directus/uploads
       - ./extensions:/directus/extensions
       - ./snapshots:/directus/snapshots
-    #  - ./datahive-core:/directus/datahive-core
-    #  - ./datahive-core:/directus/extensions/directus-extension-datahive/node_modules/datahive-core
-    #  - ./datahive-core:/directus/node_modules/datahive-core
     # - ./database:/directus/database
     environment:
       KEY: "6288b48a-35cf-483d-8ebd-13c09118566e"
@@ -27,4 +24,4 @@ services:
       DIRECTUS_API_BASE_URL: "http://0.0.0.0:8055"
       DIRECTUS_API_TOKEN: "mYYPJypxN5ecLk2bxz-kztKpL_8oinXT"
       EXTENSIONS_AUTO_RELOAD: "true"
-      CRAWLEE_STORAGE_DIR: "./directus/extensions/directus-extension-datahive/datahive-core/databee/storage"
+      CRAWLEE_STORAGE_DIR: "./extensions/directus-extension-datahive/dist/storage"
