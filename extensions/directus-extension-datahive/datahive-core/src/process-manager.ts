@@ -34,6 +34,7 @@ class ProcessManager implements IProcessManager {
     projectId,
     runId,
     processPath,
+    config
   }: CreateProcessOptions): Promise<ChildProcess> {
     if (!projectId && !runId) {
       throw new Error("Project ID or Run ID are required");

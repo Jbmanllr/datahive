@@ -77,29 +77,22 @@ export class DatabeeProject {
   }
 }
 
-//@ts-ignore
 export default async function GoGather(
-  //@ts-ignore
-  projectId,
-  //@ts-ignore
-  runId,
-  //@ts-ignore
-  config
+  projectId: string | null,
+  runId: string | null,
+  config: DatabeeConfig
 ): Promise<void> {
   console.log("config", config);
-  //let Actor: any;
-  //if (process.env.APIFY_IS_AT_HOME) { await loadApify();}
 
   const crawleeconfig = Configuration.getGlobalConfig();
-  crawleeconfig.set("persistStateIntervalMillis", 66_666);
 
-  console.log("crawleeconfig", crawleeconfig, process.env.CRAWLEE_STORAGE_DIR);
+  console.log("Crawlee Config", crawleeconfig, process.env.CRAWLEE_STORAGE_DIR);
 
   const databee = new Databee();
   const routerFactory = new RouterFactory();
   const crawlerFactory = new CrawlerFactory();
   const handlerLoader = { load: loadProjectHandlers };
-  let project: any, run: IRun, isNewRun: boolean;
+  let project: any, run: Run, isNewRun: boolean;
 
   // START RUN
   await databee.init(projectId, runId, config);
@@ -124,7 +117,6 @@ export default async function GoGather(
   //await waitForSeconds(5); // Waits for 3 seconds
 
   project = databee.project.data;
-  //@ts-ignore
   run = databee.run;
   //@ts-ignore
   isNewRun = databee.run.isNewRun;
@@ -151,7 +143,33 @@ export default async function GoGather(
     console.error("RunManager or Run is not initialized.");
   }
 
-  //if (process.env.APIFY_IS_AT_HOME && Actor) { await Actor.exit(); }
+  process.on("uncaughtException", async (error) => {
+    console.error("Uncaught exception:", error);
+    // @ts-ignore
+    await databee.run.end("aborted", databee.run.data.id, databee.config);
+  });
+
+  process.on("unhandledRejection", async (reason, promise) => {
+    console.error("Unhandled rejection at:", promise, "reason:", reason);
+    // @ts-ignore
+    await databee.run.end("aborted", databee.run.data.id, databee.config);
+  });
+
+  //process.on("SIGINT", async () => {
+  //  console.log("Received SIGINT. Shutting down gracefully.");
+  //  await databee.run.end("terminated", databee.run.data.id, databee.config);
+  //});
+
+  //process.on("SIGTERM", async () => {
+  //  console.log("Received SIGTERM. Shutting down gracefully.");
+  //  await databee.run.end("terminated", databee.run.data.id, databee.config);
+  //});
+
+  //process.on("exit", (code) => {
+  //  console.log(`About to exit with code: ${code}`);
+  // Note: It's not safe to call async functions within the 'exit' event listener.
+  // });
+
   //@ts-ignore
   return "Run ended successsss";
 }
@@ -165,18 +183,13 @@ export default async function GoGather(
 
 process.on("uncaughtException", async (error) => {
   console.error("Uncaught exception:", error);
-  await runManager.run.end(runManager.run, runManager.runSession, "aborted");
-  process.exit(1);
+  await databee.run.end("aborted", databee.run.data?.id, databee.config);
 });
 
 process.on("unhandledRejection", async (reason, promise) => {
   console.error("Unhandled rejection at:", promise, "reason:", reason);
-  await runManager.run.end(runManager.run, runManager.runSession, "aborted");
-  process.exit(1);
+   await databee.run.end("aborted", databee.run.data?.id, databee.config);
 });*/
-
-//export { apiRequest } from './connectors/index.js';
-//export * from './run-manager/index.js';
 
 function handleError(
   message: string,

@@ -4,7 +4,6 @@ import ProcessManager, { IProcessManager } from "./process-manager";
 import WorkerManager, { IWorkerManager } from "./worker-manager";
 import { Mutex } from "async-mutex";
 import goGather from "./databee/index"; // Ensure this path is correct
-import { Databee } from "./databee/index";
 import { DatabeeProjectData, DatabeeConfig } from "./databee/types";
 import { apiRequest } from "./connectors/index";
 //import { fileURLToPath } from 'url';
