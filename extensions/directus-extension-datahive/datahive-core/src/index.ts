@@ -172,6 +172,7 @@ class Datahive {
         console.log(`Worker created with ID !!: ${workerId}`);
 
         worker.on("message", async (message) => {
+          console.log("RECEIVED MESSAGE???")
           if (message.status === "completed" || message.status === "error") {
             console.log(
               `Worker ${workerId} ${

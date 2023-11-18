@@ -20,21 +20,17 @@ class WorkerManager implements IWorkerManager {
     const worker = new Worker(workerPath, { workerData });
     this.activeWorkers.set(worker.threadId, worker);
 
-    worker.on("exit", () => {
-      console.log(`Worker ${worker.threadId} exited`);
-      this.activeWorkers.delete(worker.threadId);
-    });
-
     return worker;
   }
 
   async terminateWorker(threadId: number): Promise<void> {
+    console.log("ACTIVE WORKERS", this.activeWorkers.size);
     const worker = this.activeWorkers.get(threadId);
     if (worker) {
       await worker.terminate();
       console.log(`Terminated worker with Thread ID: ${threadId}`);
       this.activeWorkers.delete(threadId);
-
+      console.log("ACTIVE WORKERS again?", this.activeWorkers.size);
       // Check if there are no more active workers
       if (this.activeWorkers.size === 0) {
         console.log("No active workers left. Terminating the process.");

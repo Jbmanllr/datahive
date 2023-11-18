@@ -82,7 +82,7 @@ export default async function GoGather(
   runId: string | null,
   config: DatabeeConfig
 ): Promise<void> {
-  console.log("config", config);
+  console.log("configur", config);
 
   const crawleeconfig = Configuration.getGlobalConfig();
 
