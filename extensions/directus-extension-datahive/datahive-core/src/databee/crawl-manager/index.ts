@@ -87,8 +87,7 @@ class CrawlerRunner {
       sequence,
       handlerFunction,
       router,
-      this.databee.project.data,
-      this.databee.run.data
+      this.databee
     );
 
     const queueName =
@@ -100,7 +99,8 @@ class CrawlerRunner {
       sequence.crawler_type,
       commonCrawlerOptions,
       params,
-      this.handlers
+      this.handlers,
+      this.databee
     );
 
     if (!crawler) {

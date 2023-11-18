@@ -121,7 +121,7 @@ export default async function GoGather(
   }
 
   // Example usage
-  await waitForSeconds(5); // Waits for 3 seconds
+  //await waitForSeconds(5); // Waits for 3 seconds
 
   project = databee.project.data;
   //@ts-ignore

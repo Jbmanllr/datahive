@@ -2,10 +2,10 @@ import {
   CheerioCrawler,
   PlaywrightCrawler,
   CheerioCrawlerOptions,
-  PlaywrightCrawlerOptions
+  PlaywrightCrawlerOptions,
 } from "crawlee";
 
-type CrawlerType = 'playwright' | 'cheerio';
+type CrawlerType = "playwright" | "cheerio";
 
 interface CrawlerParams {
   requestQueueLabel: string;
@@ -28,7 +28,8 @@ class CrawlerFactory {
     crawlerType: CrawlerType,
     commonCrawlerOptions: CheerioCrawlerOptions | PlaywrightCrawlerOptions,
     params: CrawlerParams,
-    handlers: Handlers
+    handlers: Handlers,
+    databee: any
   ): CheerioCrawler | PlaywrightCrawler {
     // Check if the crawler is already created and cached
     const cacheKey = `${crawlerType}-${params.requestQueueLabel}`;
@@ -40,7 +41,7 @@ class CrawlerFactory {
     switch (crawlerType) {
       case "playwright":
         crawler = new PlaywrightCrawler({
-          ...commonCrawlerOptions as PlaywrightCrawlerOptions,
+          ...(commonCrawlerOptions as PlaywrightCrawlerOptions),
           headless: true,
           requestHandlerTimeoutSecs: 800,
           minConcurrency: 1,
@@ -48,16 +49,20 @@ class CrawlerFactory {
           retryOnBlocked: true,
           keepAlive: false,
           preNavigationHooks: [
-            async (context) => handlers.PRE_NAVIGATION_PREPARATION(context),
+            async (context) =>
+              //@ts-ignore
+              handlers.PRE_NAVIGATION_PREPARATION(context, databee),
             async (context) => {
-              if (params.login && handlers.LOGIN) await handlers.LOGIN(context);
+              if (params.login && handlers.LOGIN)
+                //@ts-ignore
+                await handlers.LOGIN(context, databee);
             },
           ],
         });
         break;
       case "cheerio":
         crawler = new CheerioCrawler({
-          ...commonCrawlerOptions as CheerioCrawlerOptions,
+          ...(commonCrawlerOptions as CheerioCrawlerOptions),
           minConcurrency: 4,
           maxConcurrency: 8,
           preNavigationHooks: [],

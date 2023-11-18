@@ -115,7 +115,6 @@ export class Run {
         }, config);
 
         this.data = updatedRun
-        console.log("UPDATED RUN", this.data)
         //Logger.info(`Run ${status}. Total time elapsed: ${newRunElapsedTime}ms`);
       }
     } catch (error) {

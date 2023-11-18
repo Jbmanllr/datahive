@@ -118,21 +118,40 @@ class ProcessManager implements IProcessManager {
     return activeProcess;
   }
 
-  async terminateProcess(process: any): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const pid = process.pid;
-      console.log(`PIDzz: ${pid}`);
-      if (process && !process.killed && pid !== undefined) {
-        process.kill(pid);
-        process.on("exit", () => {
-          console.log(`Terminated process with PID: ${pid}`);
-          this.activeProcesses.delete(pid);
-          resolve();
-        });
-      } else {
-        resolve();
+  async terminateProcess(process: any, attempts = 3) {
+    if (!process || process.killed || typeof process.pid !== "number") {
+      console.log(`Process is already terminated or invalid.`);
+      return;
+    }
+    const signals = ["SIGINT", "SIGTERM", "SIGQUIT"];
+    let waitTime = 2000;
+    const pid = process.pid;
+
+    for (const signal of signals) {
+      for (let i = 0; i < attempts; i++) {
+        if (!process.killed) {
+          console.log(`Terminating process ${pid} with ${signal}`);
+          process.kill(pid, signal);
+          await waitFor(waitTime);
+          waitTime *= 2; // Double the wait time for the next attempt
+        } else {
+          return;
+        }
       }
-    });
+    }
+
+    // If process is still running, use SIGKILL
+    if (!process.killed) {
+      console.log("Forcefully terminating process with SIGKILL");
+      process.kill(pid, "SIGKILL");
+      await waitFor(waitTime);
+    }
+
+    // Final fallback
+    if (!process.killed) {
+      console.log("Using process.exit() as a last resort");
+      process.exit(0);
+    }
   }
 
   async checkForExistingProcesses(
@@ -199,6 +218,10 @@ function logWithPrefix(prefix: any, message: any) {
   const yellow = "\x1b[33m";
   const reset = "\x1b[0m";
   console.log(`${yellow}${prefix} ${message}${reset}`);
+}
+
+function waitFor(ms: any) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 export default ProcessManager;

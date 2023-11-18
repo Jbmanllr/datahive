@@ -32,14 +32,8 @@ class RouterFactory {
     sequence: any,
     handlerFunction: any,
     router: any,
-    project: any,
-    run: any
+    databee: any
   ): void {
-    const databee = {
-      project,
-      run,
-    };
-    console.log("ADD HANDLER", databee);
     if (handlerFunction.name === "DEFAULT") {
       router.addDefaultHandler(async (context: any) =>
         handlerFunction(context, databee, apiRequest)

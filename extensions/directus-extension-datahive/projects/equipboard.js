@@ -1,88 +1,8 @@
 // equipboard.js (handlers)
 import { RequestQueue, KeyValueStore } from "crawlee";
-//import { apiRequest } from "../dist/api.js";
-//import { databee } from "../dist/api.js";
 
-export const EXTRACT_FREQUENCY_MINUTES = 200;
-
-export async function getApproxPublishDate(timeText) {
-  // Parse the timeText to get the number and time unit
-  const timeRegex = /(?:about )?(\d+) (minute|hour|day|week|month|year)/;
-
-  const match = timeText.match(timeRegex);
-  let datePublished = null;
-
-  if (match) {
-    const number = parseInt(match[1]);
-    const unit = match[2];
-
-    switch (unit) {
-      case "minute":
-      case "minutes":
-        datePublished = new Date(Date.now() - number * 60 * 1000);
-        break;
-      case "hour":
-      case "hours":
-        datePublished = new Date(Date.now() - number * 60 * 60 * 1000);
-        break;
-      case "day":
-      case "days":
-        datePublished = new Date(Date.now() - number * 24 * 60 * 60 * 1000);
-        break;
-      // Add cases for week, month, year, etc. if needed
-      default:
-        console.log(`Unknown time unit: ${unit}`);
-    }
-
-    console.log(
-      `Approximate publish date for card: ${datePublished} with ${timeText}`
-    );
-  } else {
-    console.log("Failed to parse time text:", timeText);
-  }
-
-  return datePublished;
-}
-
-function prepareLink(rawLink) {
-  let preparedLink = rawLink;
-  let rootDomain = "https://equipboard.com";
-
-  // Check if the link contains "https://", "http://"
-  const substrings = ["https://", "http://"];
-  const containsSubstring = substrings.some((sub) => rawLink?.includes(sub));
-  preparedLink = !containsSubstring ? rootDomain + rawLink : rawLink;
-  return preparedLink;
-}
-
-function getPathFromUrl(inputUrl) {
-  const parsedUrl = new URL(inputUrl);
-  return parsedUrl.pathname;
-}
-
-async function calculateTimeSpent(dateStart, dateEnd) {
-  const startDate = new Date(dateStart);
-  const endDate = new Date(dateEnd);
-
-  let timeSpent = endDate - startDate; // difference in milliseconds
-
-  if (timeSpent < 0) {
-    return "End date is before start date";
-  }
-
-  let seconds = Math.floor(timeSpent / 1000);
-  let minutes = Math.floor(seconds / 60);
-  seconds = seconds % 60;
-  const hours = Math.floor(minutes / 60);
-  minutes = minutes % 60;
-
-  let result = [];
-  if (hours > 0) result.push(`${hours} hours`);
-  if (minutes > 0) result.push(`${minutes} minutes`);
-  if (seconds > 0 || result.length === 0) result.push(`${seconds} seconds`);
-
-  return result.join(", ").replace(/, ([^,]*)$/, " and $1");
-}
+export const EXTRACT_FREQUENCY_MINUTES = 1;
+const useLastRunEndDate = false;
 
 const LABEL_NAMES = {
   HOMEPAGE: "HOMEPAGE",
@@ -98,8 +18,6 @@ const LABEL_NAMES = {
   PICTURES_OCCURRENCES: "PICTURESOCCURRENCES",
   LISTING_OCCURRENCES: "LISTINGOCCURRENCES",
 };
-
-const useLastRunEndDate = false;
 
 export const handlers = {
   PRE_NAVIGATION_PREPARATION: async (context, databee, apiRequest) => {
@@ -121,7 +39,6 @@ export const handlers = {
     await removeOverlays(page);
   },
   LOGIN: async (context, databee, apiRequest) => {
-    console.log("LOGIN CHECK DATABEE:", databee);
     const { email, username, password } = databee.project.data;
     if ((email || username) && password) {
     } else {
@@ -181,15 +98,10 @@ export const handlers = {
     let continueScraping = true;
 
     while (continueScraping) {
-      console.log("Processing a new page of items");
-
       // Retrieve all the gear cards from the current page
       const cards = await page.$$("div.eb-home-feed__container div.card");
-      console.log(`Found ${cards.length} items on the current page`);
 
       for (const card of cards) {
-        console.log("Processing an item");
-
         // Extract the links to the pro, item, and occurrence details
         const [proLink, itemLink, occurrenceLink] = await Promise.all([
           card.$eval("h3[class='h5 mt-0 mb-0'] a", (el) =>
@@ -302,7 +214,8 @@ export const handlers = {
           data,
           request,
           proPath,
-          submissionId
+          submissionId,
+          databee
         );
         if (true) {
           await pushData(preparedData);
@@ -660,10 +573,10 @@ export const handlers = {
             });
           }
         } catch (err) {
-          console.error(
-            `Error parsing JSON-LD script tag for ${jsonData["@type"]}: `,
-            err.message
-          );
+          //console.error(
+          //  `Error parsing JSON-LD script tag for ${jsonData["@type"]}: `,
+          //  err.message
+          //);
           errors.push({
             categories: `${err.message} for ${jsonData["@type"]}`,
           });
@@ -1145,7 +1058,7 @@ function extractSubmissionId(url) {
   return match ? match[1] : null;
 }
 
-async function extractData(page, submissionId) {
+async function extractData(page, submissionId, databee) {
   return await page.evaluate((submissionId) => {
     const errors = [];
     const element = document.querySelector(
@@ -1310,7 +1223,7 @@ async function handleImage(data, submissionId) {
   }
 }
 
-function prepareDataForPush(data, request, proPath, submissionId) {
+function prepareDataForPush(data, request, proPath, submissionId, databee) {
   const itemURLParts = data.itemPath?.split("/");
   const itemSlug = itemURLParts[itemURLParts?.length - 1];
 
@@ -1335,4 +1248,83 @@ function prepareDataForPush(data, request, proPath, submissionId) {
     approx_date_published: request.userData.approx_date_published,
     run_id: databee.run.data.id,
   };
+}
+
+export async function getApproxPublishDate(timeText) {
+  // Parse the timeText to get the number and time unit
+  const timeRegex = /(?:about )?(\d+) (minute|hour|day|week|month|year)/;
+
+  const match = timeText.match(timeRegex);
+  let datePublished = null;
+
+  if (match) {
+    const number = parseInt(match[1]);
+    const unit = match[2];
+
+    switch (unit) {
+      case "minute":
+      case "minutes":
+        datePublished = new Date(Date.now() - number * 60 * 1000);
+        break;
+      case "hour":
+      case "hours":
+        datePublished = new Date(Date.now() - number * 60 * 60 * 1000);
+        break;
+      case "day":
+      case "days":
+        datePublished = new Date(Date.now() - number * 24 * 60 * 60 * 1000);
+        break;
+      // Add cases for week, month, year, etc. if needed
+      default:
+        console.log(`Unknown time unit: ${unit}`);
+    }
+
+    console.log(
+      `Approximate publish date for card: ${datePublished} with ${timeText}`
+    );
+  } else {
+    console.log("Failed to parse time text:", timeText);
+  }
+
+  return datePublished;
+}
+
+function prepareLink(rawLink) {
+  let preparedLink = rawLink;
+  let rootDomain = "https://equipboard.com";
+
+  // Check if the link contains "https://", "http://"
+  const substrings = ["https://", "http://"];
+  const containsSubstring = substrings.some((sub) => rawLink?.includes(sub));
+  preparedLink = !containsSubstring ? rootDomain + rawLink : rawLink;
+  return preparedLink;
+}
+
+function getPathFromUrl(inputUrl) {
+  const parsedUrl = new URL(inputUrl);
+  return parsedUrl.pathname;
+}
+
+async function calculateTimeSpent(dateStart, dateEnd) {
+  const startDate = new Date(dateStart);
+  const endDate = new Date(dateEnd);
+
+  let timeSpent = endDate - startDate; // difference in milliseconds
+
+  if (timeSpent < 0) {
+    return "End date is before start date";
+  }
+
+  let seconds = Math.floor(timeSpent / 1000);
+  let minutes = Math.floor(seconds / 60);
+  seconds = seconds % 60;
+  const hours = Math.floor(minutes / 60);
+  minutes = minutes % 60;
+
+  let result = [];
+  if (hours > 0) result.push(`${hours} hours`);
+  if (minutes > 0) result.push(`${minutes} minutes`);
+  if (seconds > 0 || result.length === 0) result.push(`${seconds} seconds`);
+
+  return result.join(", ").replace(/, ([^,]*)$/, " and $1");
 }
