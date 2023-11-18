@@ -17,6 +17,7 @@ class WorkerManager implements IWorkerManager {
     workerPath: string,
     workerData: any = {}
   ): Promise<Worker> {
+    console.log("Creating worker", workerData);
     const worker = new Worker(workerPath, { workerData });
     this.activeWorkers.set(worker.threadId, worker);
 

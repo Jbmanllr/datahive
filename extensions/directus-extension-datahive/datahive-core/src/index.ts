@@ -165,14 +165,14 @@ class Datahive {
       if (message.command === "startWorker") {
         const worker = await this.workerManager.createWorker(
           this.currentFilePath,
-          { projectId: message.projectId }
+          { projectId: message.projectId, config: message.config }
         );
         const workerId = worker.threadId;
 
         console.log(`Worker created with ID !!: ${workerId}`);
 
         worker.on("message", async (message) => {
-          console.log("RECEIVED MESSAGE???")
+          console.log("RECEIVED MESSAGE???");
           if (message.status === "completed" || message.status === "error") {
             console.log(
               `Worker ${workerId} ${
@@ -190,7 +190,11 @@ class Datahive {
           await this.workerManager.terminateWorker(workerId);
         });
 
-        worker.postMessage({ projectId: message.projectId, workerId });
+        worker.postMessage({
+          projectId: message.projectId,
+          workerId,
+          config: message.config,
+        });
       } else if (message.command === "heartbeat") {
         if (typeof process.send === "function") {
           process.send("alive");
@@ -205,7 +209,7 @@ class Datahive {
     if (parentPort) {
       parentPort.on("message", async (message) => {
         const workerId = message.workerId;
-
+        console.log("message", message, message.status);
         // Override console functions
         const originalConsoleLog = console.log;
         const originalConsoleWarn = console.warn;

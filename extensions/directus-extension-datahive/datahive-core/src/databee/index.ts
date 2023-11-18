@@ -29,6 +29,9 @@ export class Databee {
     runId: any,
     config: DatabeeConfig
   ): Promise<Databee> {
+    if (!config) {
+      throw new Error("Databee config is not initialized");
+    }
     try {
       this.validateConfig(config);
       this.config = config;
@@ -82,11 +85,11 @@ export default async function GoGather(
   runId: string | null,
   config: DatabeeConfig
 ): Promise<void> {
-  console.log("configur", config);
+  //console.log("configur", config);
 
   const crawleeconfig = Configuration.getGlobalConfig();
 
-  console.log("Crawlee Config", crawleeconfig, process.env.CRAWLEE_STORAGE_DIR);
+  //console.log("Crawlee Config", crawleeconfig, process.env.CRAWLEE_STORAGE_DIR);
 
   const databee = new Databee();
   const routerFactory = new RouterFactory();
