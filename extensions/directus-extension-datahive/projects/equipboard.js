@@ -1,7 +1,7 @@
 // equipboard.js (handlers)
-import { RequestQueue, KeyValueStore } from "crawlee";
+import { RequestQueue, KeyValueStore, Dataset } from "crawlee";
 
-export const EXTRACT_FREQUENCY_MINUTES = 1;
+export const EXTRACT_FREQUENCY_MINUTES = 100;
 const useLastRunEndDate = false;
 
 const LABEL_NAMES = {
@@ -72,6 +72,24 @@ export const handlers = {
   DEFAULT: async (context, databee, apiRequest) => {
     console.log("RUNNING DEFAULT HANDLER");
   },
+  FAILED: async ({ request }, context, databee, apiRequest) => {
+    // This function is called when the crawling of a request failed too many times
+    console.log("RUNNING FAILED HANDLER");
+    await Dataset.pushData({
+      url: request.url,
+      succeeded: false,
+      errors: request.errorMessages,
+    });
+  },
+  async failedRequestHandler({ request }, context, databee, apiRequest) {
+    // This function is called when the crawling of a request failed too many times
+    console.log("RUNNING FAILED HANDLER");
+    await Dataset.pushData({
+      url: request.url,
+      succeeded: false,
+      errors: request.errorMessages,
+    });
+  },
   HOMEPAGE: async (context, databee, apiRequest) => {
     const { page, request, log, enqueueLinks, pushData } = context;
     // Navigate to the desired URL that lists the gear
@@ -82,7 +100,7 @@ export const handlers = {
 
     // Calculate the date threshold. Items older than this date will not be processed
     let thresholdDate;
-    if (latest_run && latest_run.length > 0 && useLastRunEndDate) {
+    if (useLastRunEndDate && latest_run && latest_run.length > 0) {
       thresholdDate = new Date(latest_run.date_end);
     } else {
       thresholdDate = new Date(
@@ -131,11 +149,25 @@ export const handlers = {
         const approxDatePublished = await getApproxPublishDate(timeText);
         console.log("Approximate date published:", approxDatePublished);
 
+        console.log(
+          "REQUETS QUEUE NAME",
+          generateRequestQueueName(
+            databee.project.data.id,
+            databee.run.data.id,
+            "label"
+          )
+        );
         if (approxDatePublished >= thresholdDate) {
           // Enqueue details for further processing
           const enqueueDetails = async (label, url) => {
             try {
-              const requestQueue = await RequestQueue.open(label);
+              const requestQueue = await RequestQueue.open(
+                generateRequestQueueName(
+                  databee.project.data.id,
+                  databee.run.data.id,
+                  label
+                )
+              );
               await requestQueue.addRequest({
                 url: prepareLink(url),
                 label,
@@ -209,7 +241,7 @@ export const handlers = {
 
         const data = await extractData(page, submissionId);
 
-        await handleImage(data, submissionId);
+        await handleImage(data, submissionId, databee);
         const preparedData = prepareDataForPush(
           data,
           request,
@@ -218,7 +250,10 @@ export const handlers = {
           databee
         );
         if (true) {
-          await pushData(preparedData);
+          const dataset = await Dataset.open(
+            `${databee.project.data.id}__${databee.run.data.id}`
+          );
+          await dataset.pushData(preparedData);
         }
         if (true) {
           await apiRequest({
@@ -294,7 +329,11 @@ export const handlers = {
     // ENQUEU LINKS TO ELIGIBLE PRO/OCCURRENCE LISTING
     if (nb_occurrences > 0) {
       const requestQueueListingOccurrences = await RequestQueue.open(
-        LABEL_NAMES.LISTING_OCCURRENCES
+        generateRequestQueueName(
+          databee.project.data.id,
+          databee.run.data.id,
+          LABEL_NAMES.LISTING_OCCURRENCES
+        )
       );
 
       const occ_list_link = request.loadedUrl.includes("?")
@@ -417,8 +456,13 @@ export const handlers = {
         const urls = groups.map((i) => databee.project.data.base_url + i.url);
 
         const bandRequestQueue = await RequestQueue.open(
-          LABEL_NAMES.DETAIL_BANDS
+          generateRequestQueueName(
+            databee.project.data.id,
+            databee.run.data.id,
+            LABEL_NAMES.DETAIL_BANDS
+          )
         );
+
         await enqueueLinks({
           urls: urls,
           label: LABEL_NAMES.DETAIL_BANDS,
@@ -453,8 +497,13 @@ export const handlers = {
     if (img_src && containsSubstring) {
       try {
         const proPictureRequestQueue = await RequestQueue.open(
-          LABEL_NAMES.PICTURES_PROS
+          generateRequestQueueName(
+            databee.project.data.id,
+            databee.run.data.id,
+            LABEL_NAMES.PICTURES_PROS
+          )
         );
+
         await proPictureRequestQueue.addRequest({
           url: img_src,
           label: LABEL_NAMES.PICTURES_PROS,
@@ -488,7 +537,10 @@ export const handlers = {
       run_id: databee.run.data.id,
     };
     if (true) {
-      await pushData(preparedData);
+      const dataset = await Dataset.open(
+        `${databee.project.data.id}__${databee.run.data.id}`
+      );
+      await dataset.pushData(preparedData);
     }
     if (true) {
       await apiRequest({
@@ -751,8 +803,13 @@ export const handlers = {
     if (mainPictureLink && containsSubstring) {
       try {
         const productPictureRequestQueue = await RequestQueue.open(
-          LABEL_NAMES.PICTURES_PRODUCTS
+          generateRequestQueueName(
+            databee.project.data.id,
+            databee.run.data.id,
+            LABEL_NAMES.PICTURES_PRODUCTS
+          )
         );
+
         await productPictureRequestQueue.addRequest({
           url: mainPictureLink,
           label: LABEL_NAMES.PICTURES_PRODUCTS,
@@ -788,7 +845,10 @@ export const handlers = {
       crawl_errors: errors,
     };
     if (true) {
-      await pushData(preparedData);
+      const dataset = await Dataset.open(
+        `${databee.project.data.id}__${databee.run.data.id}`
+      );
+      await dataset.pushData(preparedData);
     }
     if (true) {
       await apiRequest({
@@ -808,8 +868,13 @@ export const handlers = {
 
     // ENQUEUE LINKS TO BRAND DETAIL
     const requestQueueBrandDetail = await RequestQueue.open(
-      LABEL_NAMES.DETAIL_BRANDS
+      generateRequestQueueName(
+        databee.project.data.id,
+        databee.run.data.id,
+        LABEL_NAMES.DETAIL_BRANDS
+      )
     );
+
     await enqueueLinks({
       selector: "h1.d-none.d-md-block.mb-4.mt-1 a",
       label: LABEL_NAMES.DETAIL_BRANDS,
@@ -927,8 +992,13 @@ export const handlers = {
     if (img_src && containsSubstring) {
       try {
         const proPictureRequestQueue = await RequestQueue.open(
-          LABEL_NAMES.PICTURES_BANDS
+          generateRequestQueueName(
+            databee.project.data.id,
+            databee.run.data.id,
+            LABEL_NAMES.PICTURES_BANDS
+          )
         );
+
         await proPictureRequestQueue.addRequest({
           url: img_src,
           label: LABEL_NAMES.PICTURES_BANDS,
@@ -954,7 +1024,10 @@ export const handlers = {
       similar: similarBands,
     };
     if (true) {
-      await pushData(preparedData);
+      const dataset = await Dataset.open(
+        `${databee.project.data.id}__${databee.run.data.id}`
+      );
+      await dataset.pushData(preparedData);
     }
     if (true) {
       await apiRequest({
@@ -996,8 +1069,13 @@ export const handlers = {
     if (img_src && containsSubstring) {
       try {
         const brandPictureRequestQueue = await RequestQueue.open(
-          LABEL_NAMES.PICTURES_BRANDS
+          generateRequestQueueName(
+            databee.project.data.id,
+            databee.run.data.id,
+            LABEL_NAMES.PICTURES_BRANDS
+          )
         );
+
         await brandPictureRequestQueue.addRequest({
           url: img_src,
           label: LABEL_NAMES.PICTURES_BRANDS,
@@ -1021,7 +1099,10 @@ export const handlers = {
       crawl_errors: errors,
     };
     if (true) {
-      await pushData(preparedData);
+      const dataset = await Dataset.open(
+        `${databee.project.data.id}__${databee.run.data.id}`
+      );
+      await dataset.pushData(preparedData);
     }
     if (true) {
       await apiRequest({
@@ -1058,7 +1139,7 @@ function extractSubmissionId(url) {
   return match ? match[1] : null;
 }
 
-async function extractData(page, submissionId, databee) {
+async function extractData(page, submissionId) {
   return await page.evaluate((submissionId) => {
     const errors = [];
     const element = document.querySelector(
@@ -1205,12 +1286,17 @@ async function extractData(page, submissionId, databee) {
   }, submissionId);
 }
 
-async function handleImage(data, submissionId) {
+async function handleImage(data, submissionId, databee) {
   if (data.sourceIMG) {
     try {
       const proPictureRequestQueue = await RequestQueue.open(
-        LABEL_NAMES.PICTURES_OCCURRENCES
+        generateRequestQueueName(
+          databee.project.data.id,
+          databee.run.data.id,
+          LABEL_NAMES.PICTURES_OCCURRENCES
+        )
       );
+
       await proPictureRequestQueue.addRequest({
         url: data.sourceIMG,
         label: LABEL_NAMES.PICTURES_OCCURRENCES,
@@ -1327,4 +1413,8 @@ async function calculateTimeSpent(dateStart, dateEnd) {
   if (seconds > 0 || result.length === 0) result.push(`${seconds} seconds`);
 
   return result.join(", ").replace(/, ([^,]*)$/, " and $1");
+}
+
+function generateRequestQueueName(projectId, runId, label) {
+  return `${projectId}__${runId}/${label}`;
 }

@@ -5,7 +5,7 @@ const moduleName = "databee";
 const capModuleName = capitalizeFirstLetter(moduleName);
 
 export default function (router: any) {
-  router.get(`/${moduleName}/start/:projectId`, async (req: any, res: any) => {
+  router.post(`/${moduleName}/start/:projectId`, async (req: any, res: any) => {
     const projectId = req.params.projectId;
     const runId = "";
     try {

@@ -1,7 +1,5 @@
 import { RequestQueue } from "crawlee";
 
-const timestampRQ = false;
-
 class CrawlerRunner {
   private databee: any;
   private routerFactory: any;
@@ -23,6 +21,7 @@ class CrawlerRunner {
   }
 
   async run(): Promise<void> {
+    console.log("RUN INSTANCE CRAWLER HANDLER", this.databee);
     if (!this.databee) {
       console.log("No Databee provided.");
       return;
@@ -90,9 +89,13 @@ class CrawlerRunner {
       this.databee
     );
 
-    const queueName =
-      params.requestQueueLabel + (timestampRQ ? `-${Date.now()}` : "");
-    const requestQueue = await RequestQueue.open(queueName);
+    const queueName = generateRequestQueueName(
+      this.databee.project.data.id,
+      this.databee.data.id,
+      params.requestQueueLabel
+    );
+    //params.requestQueueLabel + (timestampRQ ? `-${Date.now()}` : "");
+    const requestQueue = await RequestQueue.open(`${queueName}`);
 
     const commonCrawlerOptions = { requestHandler: router, requestQueue };
     const crawler = this.crawlerFactory.createCrawler(
@@ -120,6 +123,14 @@ class CrawlerRunner {
 }
 
 export default CrawlerRunner;
+
+function generateRequestQueueName(
+  projectId: string,
+  runId: string,
+  label: string
+) {
+  return `${projectId}__${runId}/${label}`;
+}
 
 export async function loadProjectHandlers(projectName: string): Promise<any> {
   try {

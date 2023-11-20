@@ -9,3 +9,4 @@ export const CRAWLER_TYPES = {
 };
 
 export const DEFAULT_HANDLER = "default";
+export const DEFAULT_FAILED_HANDLER = "failed";

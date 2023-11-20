@@ -7,7 +7,8 @@
     "start": "docker compose up",
     "dev": "docker-compose up & cd ./extensions/directus-extension-datahive && npm run dev",
     "test": "test",
-    "update": "./update.sh"
+    "update": "./update.sh",
+    "mail": "node ./extensions/directus-extension-datahive/fleetcast/temp-mail-creator.js"
   },
   "repository": {
     "type": "git",

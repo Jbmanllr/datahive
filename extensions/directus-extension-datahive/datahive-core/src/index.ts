@@ -6,6 +6,7 @@ import { Mutex } from "async-mutex";
 import goGather from "./databee/index"; // Ensure this path is correct
 import { DatabeeProjectData, DatabeeConfig } from "./databee/types";
 import { apiRequest } from "./connectors/index";
+import { Run } from "./run-manager";
 //import { fileURLToPath } from 'url';
 
 const defaultConfig: any = {
@@ -35,25 +36,11 @@ const defaultModuleConfig: any = {
   child_process_type: "fork",
 };
 
-export class ConfigService {
-  static async fetchConfig(caller: string): Promise<DatabeeConfig> {
-    try {
-      const response = await apiRequest({
-        method: "GET",
-        collection: caller,
-        id: "config",
-      });
-      return response.data;
-    } catch (error: any) {
-      throw new Error("Failed to fetch config: " + error.message);
-    }
-  }
-}
-
 class Datahive {
   private static instance: Datahive;
+  public activeRuns: Map<number, any>;
 
-  //private activeRuns: Map<string, Run>;
+  public run: Run;
   private processManager: ProcessManager;
   private workerManager: WorkerManager;
   private mutex: Mutex;
@@ -61,6 +48,8 @@ class Datahive {
   private processPath: string;
 
   private constructor() {
+    this.run = new Run();
+    this.activeRuns = new Map();
     this.processManager = new ProcessManager();
     this.workerManager = new WorkerManager();
     this.mutex = new Mutex();
@@ -86,7 +75,16 @@ class Datahive {
     }
 
     const release = await this.mutex.acquire();
-    let config = await ConfigService.fetchConfig(caller);
+
+    //let run = new Run();
+    this.run = await this.run.init(projectId, runId, caller);
+    //@ts-ignore
+    this.activeRuns.set(this.run.data.id, this.run);
+
+    let config = this.run.config;
+
+    console.log("FRESHLY CREATED Run", this.run);
+    console.log("Active Run", this.activeRuns);
 
     config ? config : defaultModuleConfig;
 
@@ -105,7 +103,7 @@ class Datahive {
           processPath: this.processPath,
           config,
         });
-        activeProcess.send({ command: "start", projectId, config });
+        activeProcess.send({ command: "start", run: this.run });
       } else {
         activeProcess = await this.processManager.getOrCreateActiveProcess(
           caller,
@@ -114,7 +112,7 @@ class Datahive {
           this.processPath,
           config
         );
-        activeProcess.send({ command: "startWorker", projectId, config });
+        activeProcess.send({ command: "startWorker", run: this.run });
       }
 
       console.log("Datahive STATUS", Datahive.getInstance());
@@ -123,6 +121,21 @@ class Datahive {
       throw error;
     } finally {
       release();
+    }
+  }
+
+  public async endRun(
+    runId: number,
+    status: string = "aborted"
+  ): Promise<void> {
+    const run = this.activeRuns.get(runId);
+    console.log("DATAHIVE END RUN", run, this.activeRuns);
+    if (run) {
+      await run.end(status, runId, run.config); // Assuming end method is async
+      this.activeRuns.delete(runId); // Remove the run from active runs
+      console.log(`Run ${runId} ended with status: ${status}`);
+    } else {
+      console.error(`Run ${runId} not found.`);
     }
   }
 
@@ -137,25 +150,21 @@ class Datahive {
 
   // Handle main thread messages
   private async handleMainThreadMessages(): Promise<void> {
-    console.log("handleMainThreadMessages", process.pid, process.ppid);
+    console.log("handle Main ThreadMessages", process.pid, process.ppid);
 
     process.on("message", async (message: any) => {
       if (message.command === "start") {
         try {
-          const result = await goGather(
-            message.projectId,
-            null,
-            message.config
-          );
+          const result = await goGather(message.run);
           console.log(
-            `goGather completed for project ID: ${message.projectId}`,
+            `goGather completed for project ID: ${message.run.project.id}`,
             result
           );
           this.processManager.terminateProcess(process);
           //parentPort?.postMessage({ status: 'completed', result });
         } catch (error) {
           console.error(
-            `Error in goGather for project ID: ${message.projectId}:`,
+            `Error in goGather for project ID: ${message.run.project.id}:`,
             error
           );
           this.processManager.terminateProcess(process);
@@ -165,7 +174,7 @@ class Datahive {
       if (message.command === "startWorker") {
         const worker = await this.workerManager.createWorker(
           this.currentFilePath,
-          { projectId: message.projectId, config: message.config }
+          { projectId: message.projectId }
         );
         const workerId = worker.threadId;
 
@@ -205,11 +214,11 @@ class Datahive {
 
   // Handle worker thread logic
   private handleWorkerThreadLogic(): void {
-    console.log("handleWorkerThreadLogic ");
+    console.log("Handling worker thread logic");
     if (parentPort) {
       parentPort.on("message", async (message) => {
         const workerId = message.workerId;
-        console.log("message", message, message.status);
+        console.log("message", message);
         // Override console functions
         const originalConsoleLog = console.log;
         const originalConsoleWarn = console.warn;
@@ -223,11 +232,7 @@ class Datahive {
           originalConsoleError(`[W-${workerId}]`, ...args);
 
         try {
-          const result = await goGather(
-            message.projectId,
-            null,
-            message.config
-          );
+          const result = await goGather(message.run);
           parentPort?.postMessage({ status: "completed", result });
         } catch (error) {
           console.error(`Error in worker:`, error);
@@ -247,7 +252,8 @@ export async function relay(
   runId: string
 ): Promise<void> {
   if (type === "start") {
-    datahive.start(caller, projectId, runId);
+    await datahive.start(caller, projectId, runId);
+    await datahive.endRun(30, "finished");
   }
   if (type === "pause") {
     console.log("PAUSE NOT IMPLEMENTED");

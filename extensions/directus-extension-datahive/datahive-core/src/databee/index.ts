@@ -1,6 +1,6 @@
 //databee index.js
 import dotenv from "dotenv";
-import { dropQueues } from "./utils/index";
+import { generateStorageName, cleanRunStorage } from "./utils";
 import { Run } from "../run-manager";
 import CrawlerRunner from "./crawl-manager/index";
 import RouterFactory from "./crawl-manager/routers/index";
@@ -9,129 +9,33 @@ import { loadProjectHandlers } from "./crawl-manager/index";
 import { apiRequest } from "../connectors/index";
 import { Logger } from "../logger";
 import { DatabeeProjectData, DatabeeConfig } from "./types";
-import { Configuration } from "crawlee";
+import { Configuration, KeyValueStore } from "crawlee";
 
 dotenv.config();
 
-export class Databee {
-  config: DatabeeConfig | null;
-  project: DatabeeProject;
-  run: Run;
-
-  constructor() {
-    this.config = null;
-    this.project = new DatabeeProject();
-    this.run = new Run();
-  }
-
-  async init(
-    projectId: any,
-    runId: any,
-    config: DatabeeConfig
-  ): Promise<Databee> {
-    if (!config) {
-      throw new Error("Databee config is not initialized");
-    }
-    try {
-      this.validateConfig(config);
-      this.config = config;
-      this.project = await this.project.init(projectId, this.config);
-      this.run = await this.run.create(projectId, runId, this.config);
-    } catch (error) {
-      handleError("Failed to initialize Databee:", error, true);
-    } finally {
-      return this;
-    }
-  }
-
-  private validateConfig(config: DatabeeConfig): void {
-    if (
-      !config.runs_collection ||
-      !config.run_sessions_collection ||
-      !config.project_collection ||
-      !config.raw_data_collection
-    ) {
-      throw new Error("Invalid configuration: Missing required fields.");
-    }
-  }
-}
-export class DatabeeProject {
-  data: DatabeeProjectData | null;
-  constructor() {
-    this.data = null;
-  }
-
-  async init(projectId: string, config: any): Promise<DatabeeProject> {
-    try {
-      const response = await apiRequest({
-        method: "GET",
-        collection: config.project_collection,
-        id: projectId,
-        fields:
-          "/?fields=*,databee_orchestrations.*,databee_runs.*&deep[databee_orchestrations][_sort]=sort&deep[databee_runs][_filter][status][_neq]=running&deep[databee_runs][_filter][date_end][_nnull]=true&deep[databee_runs][_filter][isTestRun][_eq]=false&deep[databee_runs][_limit]=1&deep[databee_runs][_sort]=-date_end",
-      });
-      this.data = response.data;
-      //Logger.info("Project fetched successfully", { name: this.data?.name });
-    } catch (error) {
-      handleError("Failed to fetch project:", error, true);
-    } finally {
-      return this;
-    }
-  }
-}
-
-export default async function GoGather(
-  projectId: string | null,
-  runId: string | null,
-  config: DatabeeConfig
-): Promise<void> {
-  //console.log("configur", config);
-
-  const crawleeconfig = Configuration.getGlobalConfig();
-
-  //console.log("Crawlee Config", crawleeconfig, process.env.CRAWLEE_STORAGE_DIR);
-
-  const databee = new Databee();
+export default async function GoGather(runInstance: any): Promise<void> {
   const routerFactory = new RouterFactory();
   const crawlerFactory = new CrawlerFactory();
   const handlerLoader = { load: loadProjectHandlers };
-  let project: any, run: Run, isNewRun: boolean;
 
   // START RUN
-  await databee.init(projectId, runId, config);
 
-  console.log("Databee", databee);
-  function timeout(ms: any) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
+  console.log("Run GGATHER", runInstance);
 
-  // Async function that waits for a specified time
-  async function waitForSeconds(seconds: any) {
-    console.log("Waiting...");
+  const project: any = runInstance.project;
+  const run: any = runInstance;
+  const runSession: any = runInstance.runSession;
+  const storageName: any = runInstance.storageName;
 
-    // Wait for the specified number of seconds
-    await timeout(seconds * 1000);
+  process.env.CRAWLEE_DEFAULT_KEY_VALUE_STORE_ID = storageName;
+  await KeyValueStore.setValue("databee_data", {
+    databee: runInstance,
+    current_run_session_id: runSession.data.id,
+  });
 
-    // Continue with the rest of the function
-    console.log(`${seconds} seconds have passed!`);
-  }
-
-  // Example usage
-  //await waitForSeconds(5); // Waits for 3 seconds
-
-  project = databee.project.data;
-  run = databee.run;
-  //@ts-ignore
-  isNewRun = databee.run.isNewRun;
-
-  if (true) {
-    await dropQueues(project);
-    // await dropData(LABEL_NAMES);
-  }
-
-  if (project) {
+  if (false) {
     const runner = new CrawlerRunner(
-      databee,
+      runInstance,
       routerFactory,
       crawlerFactory,
       handlerLoader
@@ -139,23 +43,15 @@ export default async function GoGather(
     await runner.run().catch(console.error);
   }
 
-  // END RUN
-  if (databee && databee.run && databee.run.data) {
-    await databee.run.end("finished", databee.run.data?.id, databee.config);
-  } else {
-    console.error("RunManager or Run is not initialized.");
-  }
-
   process.on("uncaughtException", async (error) => {
     console.error("Uncaught exception:", error);
-    // @ts-ignore
-    await databee.run.end("aborted", databee.run.data.id, databee.config);
+
+    await run.end("aborted", run.data.id, runInstance.config);
   });
 
   process.on("unhandledRejection", async (reason, promise) => {
     console.error("Unhandled rejection at:", promise, "reason:", reason);
-    // @ts-ignore
-    await databee.run.end("aborted", databee.run.data.id, databee.config);
+    await run.end("aborted", run.data.id, runInstance.config);
   });
 
   //process.on("SIGINT", async () => {
