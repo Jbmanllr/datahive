@@ -62,6 +62,16 @@ export class ProjectInstance {
     return this;
   }
 }
+
+export class RunManager {
+  protected LOLILOL: Map<string, RunInstance>;
+  //private mutex: Mutex;
+
+  constructor() {
+    this.LOLILOL = new Map();
+    //this.mutex = new Mutex();
+  }
+}
 export class RunInstance {
   data: Run | null | undefined;
   runSession: RunSessionInstance;
@@ -79,20 +89,19 @@ export class RunInstance {
     this.process_id = null;
   }
 
-  public static async getRunById(runId: string, config: any): Promise<Run> {
-    let run;
+  private async fetch(runId: string, config: any): Promise<void> {
     try {
-      run = await apiRequest({
+      const run = await apiRequest({
         method: "GET",
         collection: config.runs_collection,
         id: runId,
         fields: "/?fields=*",
         //,databee_run_sessions.*
       });
+      this.data = run.data;
     } catch (error: any) {
       throw new Error("Failed to fetch run: " + error.message);
     }
-    return run;
   }
 
   async resume(runId: any, caller: any): Promise<RunInstance> {
@@ -100,15 +109,14 @@ export class RunInstance {
     this.config = config;
 
     try {
-      const run = await RunInstance.getRunById(runId, config);
+      await this.fetch(runId, config);
 
-      if (run)
-        if (run.status === "completed") {
+      if (this.data)
+        if (this.data.status === "completed") {
           throw new Error("Run already completed");
         }
 
       await this.update(
-        runId,
         {
           status: RUN_STATUS_RUNNING,
           date_end: null,
@@ -136,7 +144,7 @@ export class RunInstance {
     }
   }
 
-  async initNew(projectId: any, caller: any): Promise<RunInstance> {
+  async startNew(projectId: any, caller: any): Promise<RunInstance> {
     let config = await Module.fetchConfig(caller);
     this.config = config;
 
@@ -178,12 +186,12 @@ export class RunInstance {
     }
   }
 
-  async update(runId: string, data: Partial<Run>, config: any): Promise<void> {
+  async update(data: Partial<Run>, config: any): Promise<void> {
     try {
       const response = await apiRequest({
         method: "PATCH",
         collection: config.runs_collection,
-        id: runId,
+        id: this.data!.id,
         data,
       });
       this.data = response.data;
@@ -192,17 +200,9 @@ export class RunInstance {
     }
   }
 
-  async end(
-    status: string = "aborted",
-    runId: string,
-    config: any
-  ): Promise<Run | undefined> {
+  async end(status: string = "aborted", config: any): Promise<Run | undefined> {
     if (!this.data) {
       console.error("Run not found or invalid response.");
-      return;
-    }
-    if (!runId) {
-      console.error("You must specify a run ID to end.");
       return;
     }
 
@@ -210,7 +210,6 @@ export class RunInstance {
     try {
       if (this.runSession && this.runSession.data) {
         endedRunSession = await this.runSession.end(
-          this.runSession.data.id,
           status,
           config
         );
@@ -232,7 +231,6 @@ export class RunInstance {
 
         const currentDate = new Date();
         await this.update(
-          runId,
           {
             status,
             date_end: currentDate,
@@ -276,44 +274,37 @@ class RunSessionInstance {
     }
   }
 
-  async update(
-    runSessionId: string,
-    data: Partial<RunSession>,
-    config: any
-  ): Promise<void> {
+  async update(data: Partial<RunSession>, config: any): Promise<void> {
+    if (!this.data) {
+      throw new Error("Run session data is not defined.");
+    }
     try {
-      const response = await apiRequest({
+      const runSession = await apiRequest({
         method: "PATCH",
         collection: config.run_sessions_collection,
-        id: runSessionId,
+        id: this.data.id,
         data,
       });
-      this.data = response.data;
+      this.data = runSession.data;
     } catch (error) {
-      throw new Error("Failed to update the run session:" + error);
+      throw new Error("Failed to update run session :" + error);
     }
   }
 
   async end(
-    runSessionId: string,
     status: string,
     config: any
   ): Promise<RunSession | undefined | null> {
     if (!this.data) {
-      throw new Error("Run session not found or invalid response.");
+      throw new Error("Run session data is not defined.");
     }
 
-    if (!runSessionId) {
-      throw new Error(" y ou must specify a run session ID to end.");
-    }
+    const startDate = new Date(this.data.date_start);
+    const currentDate = new Date();
+    const elapsedTime = currentDate.getTime() - startDate.getTime();
 
     try {
-      const startDate = new Date(this.data.date_start);
-      const currentDate = new Date();
-      const elapsedTime = currentDate.getTime() - startDate.getTime();
-
       await this.update(
-        runSessionId,
         {
           status,
           date_end: currentDate,

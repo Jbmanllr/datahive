@@ -141,7 +141,7 @@ class Datahive {
       run = new RunInstance();
 
       if (operation === "start") {
-        run = await run.initNew(projectId!, caller);
+        run = await run.startNew(projectId!, caller);
       } else {
         run = await run.resume(runId!, caller);
       }
@@ -165,16 +165,12 @@ class Datahive {
     runId: string,
     status: string = "aborted"
   ): Promise<void> {
-    console.log("ACTIVES RUNES WHEN END", this.activeRuns);
-    //@ts-ignore
     const run = this.activeRuns.get(runId);
 
     if (run) {
-      await run.end(status, runId, run.config);
+      await run.end(status, run.config);
       this.processManager.terminateProcess(run.process_id);
-      //@ts-ignore
       this.activeRuns.delete(runId);
-      console.log("DATAHIVE END RUN", runId, this.activeRuns);
       console.log(`Run ${runId} ended with status: ${status}`);
     } else {
       console.error(`Run ${runId} not found.`);
