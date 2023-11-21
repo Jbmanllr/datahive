@@ -1,14 +1,10 @@
 //databee index.js
 import dotenv from "dotenv";
-import { generateStorageName, cleanRunStorage } from "./utils";
-import { Run } from "../run-manager";
 import CrawlerRunner from "./crawl-manager/index";
 import RouterFactory from "./crawl-manager/routers/index";
 import CrawlerFactory from "./crawl-manager/crawlers/index";
 import { loadProjectHandlers } from "./crawl-manager/index";
-import { apiRequest } from "../connectors/index";
 import { Logger } from "../logger";
-import { DatabeeProjectData, DatabeeConfig } from "./types";
 import { Configuration, KeyValueStore } from "crawlee";
 
 dotenv.config();
@@ -33,6 +29,18 @@ export default async function GoGather(runInstance: any): Promise<void> {
     current_run_session_id: runSession.data.id,
   });
 
+  function delay(milliseconds: any) {
+    return new Promise((resolve) => setTimeout(resolve, milliseconds));
+  }
+
+  async function time() {
+    console.log("Start of delay");
+    await delay(60000); // Delay for 5000 milliseconds (5 seconds)
+    console.log("End of delay");
+  }
+
+  await time();
+
   if (false) {
     const runner = new CrawlerRunner(
       runInstance,
@@ -42,17 +50,21 @@ export default async function GoGather(runInstance: any): Promise<void> {
     );
     await runner.run().catch(console.error);
   }
+  //@ts-ignore
+  process.send({ command: "completed" });
 
+  /*
   process.on("uncaughtException", async (error) => {
     console.error("Uncaught exception:", error);
-
-    await run.end("aborted", run.data.id, runInstance.config);
+    //@ts-ignore
+    process.send({ command: "aborted" });
   });
 
   process.on("unhandledRejection", async (reason, promise) => {
     console.error("Unhandled rejection at:", promise, "reason:", reason);
-    await run.end("aborted", run.data.id, runInstance.config);
-  });
+    //@ts-ignore
+    process.send({ command: "aborted" });
+  });*/
 
   //process.on("SIGINT", async () => {
   //  console.log("Received SIGINT. Shutting down gracefully.");
@@ -70,13 +82,13 @@ export default async function GoGather(runInstance: any): Promise<void> {
   // });
 
   //@ts-ignore
-  return "Run ended successsss";
+  return "Run Completed Succesfully";
 }
 
 // Handle process exit signals
 /*process.on("SIGINT", async () => {
   console.log("Caught interrupt signal. Cleaning up...");
-  await runManager.run.end(runManager.run, runManager.runSession, "paused");
+  await runManager.run.end(runManager.run, runManager.runSession, "stopped");
   process.exit(0);
 });
 

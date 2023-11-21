@@ -11,7 +11,7 @@ export interface BaseProperties {
   date_updated: string | Date | null;
 }
 
-export interface RunData extends BaseProperties {
+export interface Run extends BaseProperties {
   date_end: string | Date | null;
   date_start: string | Date;
   id: string;
@@ -22,7 +22,7 @@ export interface RunData extends BaseProperties {
   env?: any
 }
 
-export interface RunSessionData extends BaseProperties {
+export interface RunSession extends BaseProperties {
   date_end: string | Date | null;
   date_start: string | Date;
   run_id: string;

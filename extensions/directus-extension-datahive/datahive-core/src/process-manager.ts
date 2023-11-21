@@ -34,7 +34,7 @@ class ProcessManager implements IProcessManager {
     projectId,
     runId,
     processPath,
-    config
+    config,
   }: CreateProcessOptions): Promise<ChildProcess> {
     if (!projectId && !runId) {
       throw new Error("Project ID or Run ID are required");
@@ -119,7 +119,11 @@ class ProcessManager implements IProcessManager {
     return activeProcess;
   }
 
-  async terminateProcess(process: any, attempts = 3) {
+  async terminateProcess(processId: any, attempts = 3) {
+    const processInfos = this.activeProcesses.get(processId);
+    const process = processInfos?.process;
+
+    console.log(`GET PROCESS WITH ID: ${processId}`);
     if (!process || process.killed || typeof process.pid !== "number") {
       console.log(`Process is already terminated or invalid.`);
       return;
@@ -132,7 +136,8 @@ class ProcessManager implements IProcessManager {
       for (let i = 0; i < attempts; i++) {
         if (!process.killed) {
           console.log(`Terminating process ${pid} with ${signal}`);
-          process.kill(pid, signal);
+          //@ts-ignore
+          process.kill(signal);
           await waitFor(waitTime);
           waitTime *= 2; // Double the wait time for the next attempt
         } else {
@@ -144,13 +149,15 @@ class ProcessManager implements IProcessManager {
     // If process is still running, use SIGKILL
     if (!process.killed) {
       console.log("Forcefully terminating process with SIGKILL");
-      process.kill(pid, "SIGKILL");
+      //@ts-ignore
+      process.kill("SIGKILL");
       await waitFor(waitTime);
     }
 
     // Final fallback
     if (!process.killed) {
       console.log("Using process.exit() as a last resort");
+      //@ts-ignore
       process.exit(0);
     }
   }

@@ -1,12 +1,10 @@
 // Datahive>index.js
 import { isMainThread, parentPort } from "worker_threads";
-import ProcessManager, { IProcessManager } from "./process-manager";
-import WorkerManager, { IWorkerManager } from "./worker-manager";
+import ProcessManager from "./process-manager";
+import WorkerManager from "./worker-manager";
 import { Mutex } from "async-mutex";
 import goGather from "./databee/index"; // Ensure this path is correct
-import { DatabeeProjectData, DatabeeConfig } from "./databee/types";
-import { apiRequest } from "./connectors/index";
-import { Run } from "./run-manager";
+import { RunInstance } from "./run-manager";
 //import { fileURLToPath } from 'url';
 
 const defaultConfig: any = {
@@ -38,24 +36,20 @@ const defaultModuleConfig: any = {
 
 class Datahive {
   private static instance: Datahive;
-  public activeRuns: Map<number, any>;
+  public activeRuns: Map<string, RunInstance>;
 
-  public run: Run;
   private processManager: ProcessManager;
   private workerManager: WorkerManager;
-  private mutex: Mutex;
-  private currentFilePath: string;
   private processPath: string;
+  private mutex: Mutex;
 
   private constructor() {
-    this.run = new Run();
     this.activeRuns = new Map();
     this.processManager = new ProcessManager();
     this.workerManager = new WorkerManager();
-    this.mutex = new Mutex();
-    this.currentFilePath =
+    this.processPath =
       "/directus/extensions/directus-extension-datahive/dist/api.js";
-    this.processPath = this.currentFilePath;
+    this.mutex = new Mutex();
   }
 
   public static getInstance(): Datahive {
@@ -65,26 +59,8 @@ class Datahive {
     return Datahive.instance;
   }
 
-  public async start(
-    caller: string,
-    projectId: string,
-    runId: string
-  ): Promise<void> {
-    if (!projectId || !caller) {
-      throw new Error("Both Project ID and caller name are required.");
-    }
-
-    const release = await this.mutex.acquire();
-
-    //let run = new Run();
-    this.run = await this.run.init(projectId, runId, caller);
-    //@ts-ignore
-    this.activeRuns.set(this.run.data.id, this.run);
-
-    let config = this.run.config;
-
-    console.log("FRESHLY CREATED Run", this.run);
-    console.log("Active Run", this.activeRuns);
+  public async startProcess(caller: string, run: RunInstance): Promise<void> {
+    let config = run.config;
 
     config ? config : defaultModuleConfig;
 
@@ -98,41 +74,107 @@ class Datahive {
       if (multiprocess) {
         activeProcess = await this.processManager.createProcess({
           caller,
-          projectId,
-          runId,
+          projectId: run.project.data.id,
+          runId: run.data?.id,
           processPath: this.processPath,
           config,
         });
-        activeProcess.send({ command: "start", run: this.run });
+        run.process_id = activeProcess.pid;
+        activeProcess.send({ command: "start", run });
+        activeProcess.on("message", (message) => {
+          console.log("Message from child:", message);
+          if (
+            //@ts-ignore
+            message.command === "completed" ||
+            //@ts-ignore
+            message.command === "aborted" ||
+            //@ts-ignore
+            message.command === "stopped"
+          ) {
+            //@ts-ignore
+            const status = message.command;
+            //@ts-ignore
+            this.endRun(caller, run.data.id, status);
+          }
+        });
       } else {
         activeProcess = await this.processManager.getOrCreateActiveProcess(
           caller,
-          projectId,
-          runId,
+          run.project.data.id,
+          run.data!.id,
           this.processPath,
           config
         );
-        activeProcess.send({ command: "startWorker", run: this.run });
+        activeProcess.send({ command: "startWorker", run });
       }
 
-      console.log("Datahive STATUS", Datahive.getInstance());
+      console.log("Datahive Instance", Datahive.getInstance());
     } catch (error) {
       console.error("Error in starting process:", error);
+      throw error;
+    }
+  }
+
+  public async initRun(
+    caller: string,
+    projectId: string | null,
+    runId: string | null,
+    operation: "start" | "resume"
+  ): Promise<RunInstance> {
+    if (!caller) {
+      throw new Error("Caller name is required.");
+    }
+
+    if (
+      (operation === "start" && !projectId) ||
+      (operation === "resume" && !runId)
+    ) {
+      throw new Error(
+        `Both Project ID and Run ID are required for ${operation}.`
+      );
+    }
+
+    let run: RunInstance;
+    const release = await this.mutex.acquire();
+
+    try {
+      run = new RunInstance();
+
+      if (operation === "start") {
+        run = await run.initNew(projectId!, caller);
+      } else {
+        run = await run.resume(runId!, caller);
+      }
+
+      if (run && run.data) {
+        this.activeRuns.set(run.data.id, run);
+      }
+    } catch (error) {
       throw error;
     } finally {
       release();
     }
+
+    console.log("Active Runs", this.activeRuns);
+    await this.startProcess(caller, run);
+    return run;
   }
 
   public async endRun(
-    runId: number,
+    caller: string,
+    runId: string,
     status: string = "aborted"
   ): Promise<void> {
+    console.log("ACTIVES RUNES WHEN END", this.activeRuns);
+    //@ts-ignore
     const run = this.activeRuns.get(runId);
-    console.log("DATAHIVE END RUN", run, this.activeRuns);
+
     if (run) {
-      await run.end(status, runId, run.config); // Assuming end method is async
-      this.activeRuns.delete(runId); // Remove the run from active runs
+      await run.end(status, runId, run.config);
+      this.processManager.terminateProcess(run.process_id);
+      //@ts-ignore
+      this.activeRuns.delete(runId);
+      console.log("DATAHIVE END RUN", runId, this.activeRuns);
       console.log(`Run ${runId} ended with status: ${status}`);
     } else {
       console.error(`Run ${runId} not found.`);
@@ -160,22 +202,21 @@ class Datahive {
             `goGather completed for project ID: ${message.run.project.id}`,
             result
           );
-          this.processManager.terminateProcess(process);
+          //this.processManager.terminateProcess(process);
           //parentPort?.postMessage({ status: 'completed', result });
         } catch (error) {
           console.error(
             `Error in goGather for project ID: ${message.run.project.id}:`,
             error
           );
-          this.processManager.terminateProcess(process);
+          //this.processManager.terminateProcess(process);
           //parentPort?.postMessage({ status: 'error', error });
         }
       }
       if (message.command === "startWorker") {
-        const worker = await this.workerManager.createWorker(
-          this.currentFilePath,
-          { projectId: message.projectId }
-        );
+        const worker = await this.workerManager.createWorker(this.processPath, {
+          projectId: message.projectId,
+        });
         const workerId = worker.threadId;
 
         console.log(`Worker created with ID !!: ${workerId}`);
@@ -248,18 +289,24 @@ const datahive = Datahive.getInstance();
 export async function relay(
   caller: string,
   type: string,
-  projectId: string,
-  runId: string
-): Promise<void> {
-  if (type === "start") {
-    await datahive.start(caller, projectId, runId);
-    await datahive.endRun(30, "finished");
-  }
-  if (type === "pause") {
-    console.log("PAUSE NOT IMPLEMENTED");
-  }
-  if (type === "resume") {
-    console.log("RESUME NOT IMPLEMENTED");
+  projectId: string | undefined,
+  runId: string | undefined
+): Promise<RunInstance> {
+  let response;
+  try {
+    if (type === "start" && projectId) {
+      response = datahive.initRun(caller, projectId, null, "start");
+    }
+    if (type === "stop" && runId) {
+      response = datahive.endRun(caller, runId, "stopped");
+    }
+    if (type === "resume" && runId) {
+      response = datahive.initRun(caller, null, runId, "resume");
+    }
+    //@ts-ignore
+    return response;
+  } catch (error: any) {
+    throw new Error("GNEGNEGNEG" + error);
   }
 }
 

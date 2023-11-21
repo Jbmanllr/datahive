@@ -23,7 +23,7 @@ export default function (router: any) {
     const runId = req.params.runId;
     try {
       console.log(`Pausing ${capModuleName} run ID ${runId}...`);
-      res.send(`${capitalizeFirstLetter(moduleName)} run paused successfully.`);
+      res.send(`${capitalizeFirstLetter(moduleName)} run stopped successfully.`);
     } catch (error: any) {
       res.status(500).json({
         error: true,
@@ -53,7 +53,7 @@ export default function (router: any) {
     const runId = req.params.runId;
     try {
       console.log(`Finishing ${capModuleName} run ID ${runId}...`);
-      res.send(`${capModuleName} run finished successfully.`);
+      res.send(`${capModuleName} run completed successfully.`);
     } catch (error: any) {
       res.status(500).json({
         error: true,

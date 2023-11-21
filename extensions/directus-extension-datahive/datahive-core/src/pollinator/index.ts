@@ -111,7 +111,7 @@ export async function runPollinator(): Promise<void> {
       // @ts-ignore
       data: {
         date_end: new Date(),
-        status: 'finished',
+        status: 'completed',
       },
       isErrorReport: false,
     });
