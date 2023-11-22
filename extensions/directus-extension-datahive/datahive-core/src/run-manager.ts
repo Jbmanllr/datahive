@@ -2,6 +2,7 @@ import { apiRequest } from "./connectors/index";
 import { Logger } from "./logger";
 import { Run, RunSession } from "./types";
 import { generateStorageName, cleanRunStorage } from "./databee/utils";
+import { Mutex } from "async-mutex";
 
 const RUN_STATUS_RUNNING = "running";
 
@@ -64,14 +65,77 @@ export class ProjectInstance {
 }
 
 export class RunManager {
-  protected LOLILOL: Map<string, RunInstance>;
-  //private mutex: Mutex;
+  public activeRuns: Map<string, RunInstance>;
+  protected mutex: Mutex;
 
   constructor() {
-    this.LOLILOL = new Map();
-    //this.mutex = new Mutex();
+    this.activeRuns = new Map();
+    this.mutex = new Mutex();
   }
+
+  // Initialize a new or existing run
+  public async startRun(
+    caller: string,
+    projectId: string | null,
+    runId: string | null,
+    operation: "start" | "resume",
+  ): Promise<RunInstance> {
+    if (!caller) {
+      throw new Error("Caller name is required.");
+    }
+
+    if (
+      (operation === "start" && !projectId) ||
+      (operation === "resume" && !runId)
+    ) {
+      throw new Error(
+        `Both Project ID and Run ID are required for ${operation}.`
+      );
+    }
+
+    let run: RunInstance;
+    const release = await this.mutex.acquire();
+
+    try {
+      run = new RunInstance();
+
+      if (operation === "start") {
+        run = await run.startNew(projectId!, caller);
+      } else {
+        run = await run.resume(runId!, caller);
+      }
+
+      if (run && run.data) {
+        this.activeRuns.set(run.data.id, run);
+      }
+    } catch (error) {
+      throw error;
+    } finally {
+      release();
+    }
+
+    return run;
+  }
+
+  // End a specific run
+  public async endRun(
+    caller: string,
+    runId: string,
+    status: string = "aborted",
+  ): Promise<void> {
+    const run = this.activeRuns.get(runId);
+
+    if (run) {
+      await run.end(status);
+      this.activeRuns.delete(runId);
+    } else {
+      console.error(`Run ${runId} not found.`);
+    }
+  }
+
+  // Additional methods can be added here as needed...
 }
+
 export class RunInstance {
   data: Run | null | undefined;
   runSession: RunSessionInstance;
@@ -200,7 +264,7 @@ export class RunInstance {
     }
   }
 
-  async end(status: string = "aborted", config: any): Promise<Run | undefined> {
+  async end(status: string = "aborted"): Promise<Run | undefined> {
     if (!this.data) {
       console.error("Run not found or invalid response.");
       return;
@@ -209,10 +273,7 @@ export class RunInstance {
     let endedRunSession;
     try {
       if (this.runSession && this.runSession.data) {
-        endedRunSession = await this.runSession.end(
-          status,
-          config
-        );
+        endedRunSession = await this.runSession.end(status, this.config);
         if (!endedRunSession) {
           console.error("Failed to update the run session.");
           return;
@@ -236,7 +297,7 @@ export class RunInstance {
             date_end: currentDate,
             time_elapsed: newRunElapsedTime,
           },
-          config
+          this.config
         );
       }
       return this.data;

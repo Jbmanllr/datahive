@@ -4,7 +4,7 @@ import ProcessManager from "./process-manager";
 import WorkerManager from "./worker-manager";
 import { Mutex } from "async-mutex";
 import goGather from "./databee/index"; // Ensure this path is correct
-import { RunInstance } from "./run-manager";
+import { RunManager, RunInstance } from "./run-manager";
 //import { fileURLToPath } from 'url';
 
 const defaultConfig: any = {
@@ -37,6 +37,7 @@ const defaultModuleConfig: any = {
 class Datahive {
   private static instance: Datahive;
   public activeRuns: Map<string, RunInstance>;
+  private runManager: RunManager;
 
   private processManager: ProcessManager;
   private workerManager: WorkerManager;
@@ -45,6 +46,7 @@ class Datahive {
 
   private constructor() {
     this.activeRuns = new Map();
+    this.runManager = new RunManager();
     this.processManager = new ProcessManager();
     this.workerManager = new WorkerManager();
     this.processPath =
@@ -59,7 +61,18 @@ class Datahive {
     return Datahive.instance;
   }
 
-  public async startProcess(caller: string, run: RunInstance): Promise<void> {
+  public async startProcess(
+    caller: string,
+    projectId: string | null,
+    runId: string | null,
+    operation: "start" | "resume"
+  ): Promise<void> {
+    const run = await this.runManager.startRun(
+      caller,
+      projectId,
+      runId,
+      operation
+    );
     let config = run.config;
 
     config ? config : defaultModuleConfig;
@@ -93,8 +106,8 @@ class Datahive {
           ) {
             //@ts-ignore
             const status = message.command;
-            //@ts-ignore
-            this.endRun(caller, run.data.id, status);
+            this.processManager.terminateProcess(run.process_id);
+            this.runManager.endRun(caller, run.data!.id, status);
           }
         });
       } else {
@@ -156,7 +169,7 @@ class Datahive {
     }
 
     console.log("Active Runs", this.activeRuns);
-    await this.startProcess(caller, run);
+    //await this.startProcess(caller, run);
     return run;
   }
 
@@ -168,7 +181,7 @@ class Datahive {
     const run = this.activeRuns.get(runId);
 
     if (run) {
-      await run.end(status, run.config);
+      //await run.end(status, run.config);
       this.processManager.terminateProcess(run.process_id);
       this.activeRuns.delete(runId);
       console.log(`Run ${runId} ended with status: ${status}`);
@@ -291,13 +304,13 @@ export async function relay(
   let response;
   try {
     if (type === "start" && projectId) {
-      response = datahive.initRun(caller, projectId, null, "start");
+      response = datahive.startProcess(caller, projectId, null, "start");
     }
     if (type === "stop" && runId) {
       response = datahive.endRun(caller, runId, "stopped");
     }
     if (type === "resume" && runId) {
-      response = datahive.initRun(caller, null, runId, "resume");
+      response = datahive.startProcess(caller, null, runId, "resume");
     }
     //@ts-ignore
     return response;
