@@ -37,7 +37,7 @@ const defaultModuleConfig: any = {
 class Datahive {
   private static instance: Datahive;
   public activeRuns: Map<string, RunInstance>;
-  private runManager: RunManager;
+  public runManager: RunManager;
 
   private processManager: ProcessManager;
   private workerManager: WorkerManager;
@@ -182,6 +182,7 @@ class Datahive {
 
     if (run) {
       //await run.end(status, run.config);
+      this.runManager.endRun(caller, run.data!.id, status);
       this.processManager.terminateProcess(run.process_id);
       this.activeRuns.delete(runId);
       console.log(`Run ${runId} ended with status: ${status}`);
@@ -264,7 +265,7 @@ class Datahive {
 
   // Handle worker thread logic
   private handleWorkerThreadLogic(): void {
-    console.log("Handling worker thread logic");
+    console.log("Handling worker thread logic"); 
     if (parentPort) {
       parentPort.on("message", async (message) => {
         const workerId = message.workerId;
