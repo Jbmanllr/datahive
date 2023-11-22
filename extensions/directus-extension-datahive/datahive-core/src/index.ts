@@ -36,22 +36,18 @@ const defaultModuleConfig: any = {
 
 class Datahive {
   private static instance: Datahive;
-  public activeRuns: Map<string, RunInstance>;
   public runManager: RunManager;
 
   private processManager: ProcessManager;
   private workerManager: WorkerManager;
   private processPath: string;
-  private mutex: Mutex;
 
   private constructor() {
-    this.activeRuns = new Map();
     this.runManager = new RunManager();
     this.processManager = new ProcessManager();
     this.workerManager = new WorkerManager();
     this.processPath =
       "/directus/extensions/directus-extension-datahive/dist/api.js";
-    this.mutex = new Mutex();
   }
 
   public static getInstance(): Datahive {
@@ -66,7 +62,7 @@ class Datahive {
     projectId: string | null,
     runId: string | null,
     operation: "start" | "resume"
-  ): Promise<void> {
+  ): Promise<RunInstance> {
     const run = await this.runManager.startRun(
       caller,
       projectId,
@@ -96,18 +92,14 @@ class Datahive {
         activeProcess.send({ command: "start", run });
         activeProcess.on("message", (message) => {
           console.log("Message from child:", message);
-          if (
-            //@ts-ignore
-            message.command === "completed" ||
-            //@ts-ignore
-            message.command === "aborted" ||
-            //@ts-ignore
-            message.command === "stopped"
-          ) {
+          //@ts-ignore
+          if (["completed", "aborted", "stopped"].includes(message.command)) {
             //@ts-ignore
             const status = message.command;
             this.processManager.terminateProcess(run.process_id);
-            this.runManager.endRun(caller, run.data!.id, status);
+            if (run && run.data) {
+              this.runManager.endRun(caller, run.data.id, status);
+            }
           }
         });
       } else {
@@ -120,57 +112,11 @@ class Datahive {
         );
         activeProcess.send({ command: "startWorker", run });
       }
-
       console.log("Datahive Instance", Datahive.getInstance());
-    } catch (error) {
-      console.error("Error in starting process:", error);
-      throw error;
+      return run;
+    } catch (error: any) {
+      throw new Error("Error starting process: " + error.message);
     }
-  }
-
-  public async initRun(
-    caller: string,
-    projectId: string | null,
-    runId: string | null,
-    operation: "start" | "resume"
-  ): Promise<RunInstance> {
-    if (!caller) {
-      throw new Error("Caller name is required.");
-    }
-
-    if (
-      (operation === "start" && !projectId) ||
-      (operation === "resume" && !runId)
-    ) {
-      throw new Error(
-        `Both Project ID and Run ID are required for ${operation}.`
-      );
-    }
-
-    let run: RunInstance;
-    const release = await this.mutex.acquire();
-
-    try {
-      run = new RunInstance();
-
-      if (operation === "start") {
-        run = await run.startNew(projectId!, caller);
-      } else {
-        run = await run.resume(runId!, caller);
-      }
-
-      if (run && run.data) {
-        this.activeRuns.set(run.data.id, run);
-      }
-    } catch (error) {
-      throw error;
-    } finally {
-      release();
-    }
-
-    console.log("Active Runs", this.activeRuns);
-    //await this.startProcess(caller, run);
-    return run;
   }
 
   public async endRun(
@@ -178,13 +124,11 @@ class Datahive {
     runId: string,
     status: string = "aborted"
   ): Promise<void> {
-    const run = this.activeRuns.get(runId);
+    const run = this.runManager.activeRuns.get(runId);
 
     if (run) {
-      //await run.end(status, run.config);
       this.runManager.endRun(caller, run.data!.id, status);
       this.processManager.terminateProcess(run.process_id);
-      this.activeRuns.delete(runId);
       console.log(`Run ${runId} ended with status: ${status}`);
     } else {
       console.error(`Run ${runId} not found.`);
@@ -225,14 +169,14 @@ class Datahive {
       }
       if (message.command === "startWorker") {
         const worker = await this.workerManager.createWorker(this.processPath, {
-          projectId: message.projectId,
+          projectId: message.run.project.data.id,
         });
         const workerId = worker.threadId;
 
         console.log(`Worker created with ID !!: ${workerId}`);
 
         worker.on("message", async (message) => {
-          console.log("RECEIVED MESSAGE???");
+          console.log("RECEIVED MESSAGE???", message);
           if (message.status === "completed" || message.status === "error") {
             console.log(
               `Worker ${workerId} ${
@@ -249,12 +193,8 @@ class Datahive {
           console.log(`Worker ${workerId} stopped with exit code ${code}`);
           await this.workerManager.terminateWorker(workerId);
         });
-
-        worker.postMessage({
-          projectId: message.projectId,
-          workerId,
-          config: message.config,
-        });
+        console.log("test hereeee", message, message.run.project.data.id);
+        worker.postMessage({ run: message.run, workerId });
       } else if (message.command === "heartbeat") {
         if (typeof process.send === "function") {
           process.send("alive");
@@ -265,11 +205,11 @@ class Datahive {
 
   // Handle worker thread logic
   private handleWorkerThreadLogic(): void {
-    console.log("Handling worker thread logic"); 
+    console.log("Handling worker thread logic");
     if (parentPort) {
       parentPort.on("message", async (message) => {
         const workerId = message.workerId;
-        console.log("message", message);
+        console.log("message ooooo", message);
         // Override console functions
         const originalConsoleLog = console.log;
         const originalConsoleWarn = console.warn;

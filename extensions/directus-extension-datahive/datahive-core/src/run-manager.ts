@@ -78,7 +78,7 @@ export class RunManager {
     caller: string,
     projectId: string | null,
     runId: string | null,
-    operation: "start" | "resume",
+    operation: "start" | "resume"
   ): Promise<RunInstance> {
     if (!caller) {
       throw new Error("Caller name is required.");
@@ -100,9 +100,9 @@ export class RunManager {
       run = new RunInstance();
 
       if (operation === "start") {
-        run = await run.startNew(projectId!, caller);
+        run = await run.startNew(projectId, caller);
       } else {
-        run = await run.resume(runId!, caller);
+        run = await run.resume(runId, caller);
       }
 
       if (run && run.data) {
@@ -117,23 +117,24 @@ export class RunManager {
     return run;
   }
 
-  // End a specific run
   public async endRun(
     caller: string,
     runId: string,
-    status: string = "aborted",
-  ): Promise<void> {
+    status: string = "aborted"
+  ): Promise<RunInstance | undefined | null> {
+    if (!runId) {
+      throw new Error("Run ID is required.");
+    }
     const run = this.activeRuns.get(runId);
-
     if (run) {
       await run.end(status);
       this.activeRuns.delete(runId);
+      return run; // Return the run instance
     } else {
       console.error(`Run ${runId} not found.`);
+      return; // Return null if run is not found
     }
   }
-
-  // Additional methods can be added here as needed...
 }
 
 export class RunInstance {

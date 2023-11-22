@@ -9,7 +9,9 @@ export default function (router: any) {
     const projectId = req.params.projectId;
     try {
       const response = await relay(moduleName, "start", projectId, undefined);
+      delete response.runSession.data!.env;
       const resdata = {
+        error: false,
         message: `${capModuleName} run started successfully.`,
         response: response,
       };
@@ -45,11 +47,14 @@ export default function (router: any) {
     const runId = req.params.runId;
     try {
       const response = await relay(moduleName, "resume", undefined, runId);
+      delete response.runSession.data!.env;
+
       const resdata = {
         error: false,
         message: `${capModuleName} run resumed successfully.`,
-        data: response.data,
+        data: response,
       };
+
       res.send(resdata);
     } catch (error: any) {
       res.status(500).json({
