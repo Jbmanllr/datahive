@@ -6,6 +6,7 @@ import CrawlerFactory from "./crawl-manager/crawlers/index";
 import { loadProjectHandlers } from "./crawl-manager/index";
 import { Logger } from "../logger";
 import { Configuration, KeyValueStore } from "crawlee";
+import { parentPort } from "worker_threads";
 
 dotenv.config();
 
@@ -35,7 +36,7 @@ export default async function GoGather(runInstance: any): Promise<void> {
 
   async function time() {
     console.log("Start of delay");
-    await delay(60000); // Delay for 5000 milliseconds (5 seconds)
+    await delay(5000); // Delay for 5000 milliseconds (5 seconds)
     console.log("End of delay");
   }
 
@@ -50,8 +51,20 @@ export default async function GoGather(runInstance: any): Promise<void> {
     );
     await runner.run().catch(console.error);
   }
+
+  if (typeof process.send === "function") {
+    // Multi-Process Mode
+    process.send({ command: "completed" });
+  } else if (parentPort) {
+    // Worker Thread Mode
+    parentPort.postMessage({
+      caller: "databee",
+      status: "completed",
+      runId: run.data.id,
+    });
+  }
   //@ts-ignore
-  process.send({ command: "completed" });
+  //process.send({ command: "completed" });
 
   /*
   process.on("uncaughtException", async (error) => {

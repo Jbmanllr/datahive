@@ -173,6 +173,13 @@ class Datahive {
         });
         const workerId = worker.threadId;
 
+        /*this.workerManager.onWorkerMessage(worker.threadId, (message) => {
+          if (message.status === "completed") {
+            // Call endRun when a worker completes its task
+            this.runManager.endRun("databee", message.run.data.id, "completed");
+          }
+        });
+        */
         console.log(`Worker created with ID !!: ${workerId}`);
 
         worker.on("message", async (message) => {
@@ -185,6 +192,7 @@ class Datahive {
                   : "encountered an error"
               }.`
             );
+            this.runManager.endRun(message.caller, message.runId, "completed");
             await this.workerManager.terminateWorker(workerId);
           }
         });

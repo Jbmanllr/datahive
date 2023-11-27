@@ -107,6 +107,7 @@ export class RunManager {
 
       if (run && run.data) {
         this.activeRuns.set(run.data.id, run);
+        console.log("ACTIVE RUNS", this.activeRuns);
       }
     } catch (error) {
       throw error;
@@ -125,6 +126,7 @@ export class RunManager {
     if (!runId) {
       throw new Error("Run ID is required.");
     }
+    console.log("ACTIVE RUNS GET TO END", this.activeRuns);
     const run = this.activeRuns.get(runId);
     if (run) {
       await run.end(status);

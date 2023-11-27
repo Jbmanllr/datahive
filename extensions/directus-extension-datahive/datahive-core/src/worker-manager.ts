@@ -42,6 +42,16 @@ class WorkerManager implements IWorkerManager {
     }
   }
 
+  public onWorkerMessage(
+    workerId: number,
+    callback: (message: any) => void
+  ): void {
+    const worker = this.activeWorkers.get(workerId);
+    if (worker) {
+      worker.on("message", callback);
+    }
+  }
+
   getWorker(threadId: number): Worker | undefined {
     return this.activeWorkers.get(threadId);
   }
