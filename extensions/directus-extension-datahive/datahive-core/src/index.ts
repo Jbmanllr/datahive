@@ -145,9 +145,9 @@ class Datahive {
   }
 
   // Handle main thread messages
-  private async handleMainThreadMessages(): Promise<void> {
+  public async handleMainThreadMessages(): Promise<void> {
     console.log("handle Main ThreadMessages", process.pid, process.ppid);
-
+    console.log("LOG RUN MANAGER  handleMainThreadMessages", this.runManager);
     process.on("message", async (message: any) => {
       if (message.command === "start") {
         try {
@@ -192,6 +192,7 @@ class Datahive {
                   : "encountered an error"
               }.`
             );
+            console.log("LOG RUN MANAGER", this.runManager);
             this.runManager.endRun(message.caller, message.runId, "completed");
             await this.workerManager.terminateWorker(workerId);
           }
@@ -201,7 +202,7 @@ class Datahive {
           console.log(`Worker ${workerId} stopped with exit code ${code}`);
           await this.workerManager.terminateWorker(workerId);
         });
-        console.log("test hereeee", message, message.run.project.data.id);
+
         worker.postMessage({ run: message.run, workerId });
       } else if (message.command === "heartbeat") {
         if (typeof process.send === "function") {
@@ -212,8 +213,9 @@ class Datahive {
   }
 
   // Handle worker thread logic
-  private handleWorkerThreadLogic(): void {
+  public handleWorkerThreadLogic(): void {
     console.log("Handling worker thread logic");
+    console.log("LOG RUN MANAGER  handleWorkerThreadLogic", this.runManager);
     if (parentPort) {
       parentPort.on("message", async (message) => {
         const workerId = message.workerId;

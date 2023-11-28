@@ -107,7 +107,6 @@ export class RunManager {
 
       if (run && run.data) {
         this.activeRuns.set(run.data.id, run);
-        console.log("ACTIVE RUNS", this.activeRuns);
       }
     } catch (error) {
       throw error;
