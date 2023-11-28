@@ -111,7 +111,15 @@ class Datahive {
           config
         );
         activeProcess.send({ command: "startWorker", run });
-        
+        activeProcess.on("message", (message) => {
+          console.log("MESSAGE FROM WORKER: ")
+          //@ts-ignore
+          if (message.status === "completed") {
+            // Call endRun within startProcess when a worker completes its task
+            this.runManager.endRun(caller, run.data!.id, "completed");
+            // Consider terminating the worker if needed
+          }
+        });
       }
       console.log("Datahive Instance", Datahive.getInstance());
       return run;
