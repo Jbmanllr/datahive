@@ -111,6 +111,7 @@ class Datahive {
           config
         );
         activeProcess.send({ command: "startWorker", run });
+        
       }
       console.log("Datahive Instance", Datahive.getInstance());
       return run;
@@ -147,7 +148,7 @@ class Datahive {
   // Handle main thread messages
   public async handleMainThreadMessages(): Promise<void> {
     console.log("handle Main ThreadMessages", process.pid, process.ppid);
-    console.log("LOG RUN MANAGER  handleMainThreadMessages", this.runManager);
+
     process.on("message", async (message: any) => {
       if (message.command === "start") {
         try {
@@ -192,6 +193,10 @@ class Datahive {
                   : "encountered an error"
               }.`
             );
+            console.log(
+              "Datahive Instance handleMainThreadMessages",
+              Datahive.getInstance()
+            );
             console.log("LOG RUN MANAGER", this.runManager);
             this.runManager.endRun(message.caller, message.runId, "completed");
             await this.workerManager.terminateWorker(workerId);
@@ -215,7 +220,11 @@ class Datahive {
   // Handle worker thread logic
   public handleWorkerThreadLogic(): void {
     console.log("Handling worker thread logic");
-    console.log("LOG RUN MANAGER  handleWorkerThreadLogic", this.runManager);
+    console.log(
+      "Datahive Instance handleWorkerThreadLogic",
+      Datahive.getInstance()
+    );
+
     if (parentPort) {
       parentPort.on("message", async (message) => {
         const workerId = message.workerId;

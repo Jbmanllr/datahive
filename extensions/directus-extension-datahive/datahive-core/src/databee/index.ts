@@ -36,7 +36,7 @@ export default async function GoGather(runInstance: any): Promise<void> {
 
   async function time() {
     console.log("Start of delay");
-    await delay(5000); // Delay for 5000 milliseconds (5 seconds)
+    await delay(15000); // Delay for 5000 milliseconds (5 seconds)
     console.log("End of delay");
   }
 
