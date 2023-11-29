@@ -34,7 +34,7 @@ const defaultModuleConfig: any = {
 
 class Datahive {
   private static instance: Datahive;
-  
+
   private runManager: RunManager;
   private processManager: ProcessManager;
   private workerManager: WorkerManager;
@@ -144,7 +144,8 @@ class Datahive {
   private async handleChildProcessLogic(): Promise<void> {
     process.on("message", async (message: any) => {
       if (message.command === "start") {
-        await goGather(message.run);
+        const result = await goGather(message.run);
+        //parentPort?.postMessage({ command: "completed", result });
       }
 
       if (message.command === "startWorker") {
@@ -152,8 +153,6 @@ class Datahive {
           projectId: message.run.project.data.id,
         });
         const workerId = worker.threadId;
-
-        console.log(`Worker created with ID !!: ${workerId}`);
 
         worker.on("message", async (message) => {
           if (message.status === "completed" || message.status === "error") {

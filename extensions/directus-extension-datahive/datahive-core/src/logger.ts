@@ -14,3 +14,13 @@ export const Logger: logger = createLogger({
     // Add other transports like file, database, etc. as needed
   ],
 });
+
+export function handleError(
+  message: string,
+  error: any = null,
+  shouldExit: boolean = false
+): void {
+  Logger.error(message);
+  if (error) Logger.error(error);
+  if (shouldExit) process.exit(1);
+}

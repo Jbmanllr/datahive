@@ -4,13 +4,13 @@ import CrawlerRunner from "./crawl-manager/index";
 import RouterFactory from "./crawl-manager/routers/index";
 import CrawlerFactory from "./crawl-manager/crawlers/index";
 import { loadProjectHandlers } from "./crawl-manager/index";
-import { Logger } from "../logger";
 import { Configuration, KeyValueStore } from "crawlee";
 import { generateStorageName } from "./utils";
+//import { time } from "../utils";
 
 dotenv.config();
 
-export default async function GoGather(runInstance: any): Promise<void> {
+export default async function GoGather(runInstance: any): Promise<any> {
   const routerFactory = new RouterFactory();
   const crawlerFactory = new CrawlerFactory();
   const handlerLoader = { load: loadProjectHandlers };
@@ -22,25 +22,18 @@ export default async function GoGather(runInstance: any): Promise<void> {
     runInstance.data.id
   );
 
+  // Setting CRAWLEE_DEFAULT_KEY_VALUE_STORE_ID env variable.
   process.env.CRAWLEE_DEFAULT_KEY_VALUE_STORE_ID = storageName;
+
+  // Setting KeyValueStore values.
   await KeyValueStore.setValue("databee_data", {
     databee: runInstance,
     current_run_session_id: runInstance.runSession.data.id,
   });
 
-  function delay(milliseconds: any) {
-    return new Promise((resolve) => setTimeout(resolve, milliseconds));
-  }
+  //await time(10000);
 
-  async function time() {
-    console.log("Start of delay");
-    await delay(30000); // Delay for 5000 milliseconds (5 seconds)
-    console.log("End of delay");
-  }
-
-  await time();
-
-  if (false) {
+  if (true) {
     const runner = new CrawlerRunner(
       runInstance,
       routerFactory,
@@ -80,7 +73,6 @@ export default async function GoGather(runInstance: any): Promise<void> {
   // Note: It's not safe to call async functions within the 'exit' event listener.
   // });
 
-  //@ts-ignore
   return "Run Completed Succesfully";
 }
 
@@ -100,36 +92,3 @@ process.on("unhandledRejection", async (reason, promise) => {
   console.error("Unhandled rejection at:", promise, "reason:", reason);
    await databee.run.end("aborted", databee.run.data?.id, databee.config);
 });*/
-
-function handleError(
-  message: string,
-  error: any = null,
-  shouldExit: boolean = false
-): void {
-  Logger.error(message);
-  if (error) Logger.error(error);
-  if (shouldExit) process.exit(1);
-}
-
-interface IRunSession {
-  data: any;
-}
-
-interface IRun {
-  data: any;
-  runSession: IRunSession;
-  end: (status: string, session: IRunSession) => Promise<void>;
-}
-
-interface IRunManager {
-  project: {
-    data: any;
-  };
-  run: IRun;
-  isNewRun: boolean;
-}
-
-interface IDataBee {
-  init: (process: NodeJS.Process) => Promise<void>;
-  runManager: IRunManager;
-}
