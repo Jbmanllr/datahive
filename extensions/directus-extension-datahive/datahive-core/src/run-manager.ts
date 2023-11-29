@@ -11,8 +11,8 @@ export class Module {
     try {
       const config = await apiRequest({
         method: "GET",
-        collection: caller,
-        id: "config",
+        collection: caller + "_config",
+        id: caller + "_config",
       });
 
       return config.data;
@@ -43,13 +43,19 @@ export class ProjectInstance {
     config: any
   ): Promise<any> {
     let project;
+    const { runs_collection } = config;
     try {
       project = await apiRequest({
         method: "GET",
-        collection: config.project_collection,
+        collection: config.projects_collection,
         id: projectId,
-        fields:
-          "/?fields=*,databee_orchestrations.*,databee_runs.*&deep[databee_orchestrations][_sort]=sort&deep[databee_runs][_filter][status][_neq]=running&deep[databee_runs][_filter][date_end][_nnull]=true&deep[databee_runs][_filter][isTestRun][_eq]=false&deep[databee_runs][_limit]=1&deep[databee_runs][_sort]=-date_end",
+        fields: `/?fields=*,${
+          config.id === "databee_config" ? "databee_orchestrations.*," : ""
+        }${runs_collection}.*${
+          config.id === "databee_config"
+            ? "&deep[databee_orchestrations][_sort]=sort"
+            : ""
+        }&deep[${runs_collection}][_filter][status][_neq]=running&deep[${runs_collection}][_filter][date_end][_nnull]=true&deep[${runs_collection}][_filter][isTestRun][_eq]=false&deep[${runs_collection}][_limit]=1&deep[${runs_collection}][_sort]=-date_end`,
       });
     } catch (error: any) {
       throw new Error("Failed to fetch project: " + error.message);
@@ -113,7 +119,6 @@ export class RunManager {
     } finally {
       release();
     }
-
     return run;
   }
 
@@ -125,7 +130,6 @@ export class RunManager {
     if (!runId) {
       throw new Error("Run ID is required.");
     }
-    console.log("ACTIVE RUNS GET TO END", this.activeRuns);
     const run = this.activeRuns.get(runId);
     if (run) {
       await run.end(status);
@@ -162,7 +166,6 @@ export class RunInstance {
         collection: config.runs_collection,
         id: runId,
         fields: "/?fields=*",
-        //,databee_run_sessions.*
       });
       this.data = run.data;
     } catch (error: any) {

@@ -1,11 +1,9 @@
-// Datahive>index.js
+// Datahive > index.ts
 import { isMainThread, parentPort } from "worker_threads";
 import ProcessManager from "./process-manager";
 import WorkerManager from "./worker-manager";
-import { Mutex } from "async-mutex";
-import goGather from "./databee/index"; // Ensure this path is correct
+import goGather from "./databee/index";
 import { RunManager, RunInstance } from "./run-manager";
-//import { fileURLToPath } from 'url';
 
 const defaultConfig: any = {
   workerManager: {
@@ -36,8 +34,8 @@ const defaultModuleConfig: any = {
 
 class Datahive {
   private static instance: Datahive;
-  public runManager: RunManager;
-
+  
+  private runManager: RunManager;
   private processManager: ProcessManager;
   private workerManager: WorkerManager;
   private processPath: string;
@@ -73,55 +71,46 @@ class Datahive {
 
     config ? config : defaultModuleConfig;
 
-    let multiprocess = config.multiprocess;
-    let multithread = config.multithread;
-    let child_process_type = config.child_process_type;
+    let multiprocess = true; //config.multiprocess;
 
     try {
-      let activeProcess = null;
+      let childProcess = null;
 
       if (multiprocess) {
-        activeProcess = await this.processManager.createProcess({
+        childProcess = await this.processManager.createProcess({
           caller,
           projectId: run.project.data.id,
           runId: run.data?.id,
           processPath: this.processPath,
           config,
         });
-        run.process_id = activeProcess.pid;
-        activeProcess.send({ command: "start", run });
-        activeProcess.on("message", (message) => {
+        run.process_id = childProcess.pid;
+        console.log("Datahive Instance after start", Datahive.getInstance());
+        childProcess.send({ command: "start", run });
+        childProcess.on("message", async (message: any) => {
           console.log("Message from child:", message);
-          //@ts-ignore
           if (["completed", "aborted", "stopped"].includes(message.command)) {
-            //@ts-ignore
-            const status = message.command;
-            this.processManager.terminateProcess(run.process_id);
-            if (run && run.data) {
-              this.runManager.endRun(caller, run.data.id, status);
-            }
+            await this.runManager.endRun(caller, run.data!.id, message.command);
+            await this.processManager.terminateProcess(run.process_id);
+            console.log("Datahive Instance after end", Datahive.getInstance());
           }
         });
+        //childProcess.on("error", (error: any) => {});
       } else {
-        activeProcess = await this.processManager.getOrCreateActiveProcess(
+        childProcess = await this.processManager.getOrCreateActiveProcess(
           caller,
           run.project.data.id,
           run.data!.id,
           this.processPath,
           config
         );
-        activeProcess.send({ command: "startWorker", run });
-        activeProcess.on("message", (message) => {
-          console.log("MESSAGE FROM WORKER: ")
-          //@ts-ignore
+        childProcess.send({ command: "startWorker", run });
+        childProcess.on("message", async (message: any) => {
           if (message.status === "completed") {
-            // Call endRun within startProcess when a worker completes its task
-            this.runManager.endRun(caller, run.data!.id, "completed");
-            // Consider terminating the worker if needed
+            await this.runManager.endRun(caller, run.data!.id, "completed");
           }
         });
       }
-      console.log("Datahive Instance", Datahive.getInstance());
       return run;
     } catch (error: any) {
       throw new Error("Error starting process: " + error.message);
@@ -144,55 +133,29 @@ class Datahive {
     }
   }
 
-  // Method to manage worker threads
   public async manageThreads(): Promise<void> {
     if (isMainThread) {
-      this.handleMainThreadMessages();
+      this.handleChildProcessLogic();
     } else {
-      this.handleWorkerThreadLogic();
+      this.handleWorkerLogic();
     }
   }
 
-  // Handle main thread messages
-  public async handleMainThreadMessages(): Promise<void> {
-    console.log("handle Main ThreadMessages", process.pid, process.ppid);
-
+  private async handleChildProcessLogic(): Promise<void> {
     process.on("message", async (message: any) => {
       if (message.command === "start") {
-        try {
-          const result = await goGather(message.run);
-          console.log(
-            `goGather completed for project ID: ${message.run.project.id}`,
-            result
-          );
-          //this.processManager.terminateProcess(process);
-          //parentPort?.postMessage({ status: 'completed', result });
-        } catch (error) {
-          console.error(
-            `Error in goGather for project ID: ${message.run.project.id}:`,
-            error
-          );
-          //this.processManager.terminateProcess(process);
-          //parentPort?.postMessage({ status: 'error', error });
-        }
+        await goGather(message.run);
       }
+
       if (message.command === "startWorker") {
         const worker = await this.workerManager.createWorker(this.processPath, {
           projectId: message.run.project.data.id,
         });
         const workerId = worker.threadId;
 
-        /*this.workerManager.onWorkerMessage(worker.threadId, (message) => {
-          if (message.status === "completed") {
-            // Call endRun when a worker completes its task
-            this.runManager.endRun("databee", message.run.data.id, "completed");
-          }
-        });
-        */
         console.log(`Worker created with ID !!: ${workerId}`);
 
         worker.on("message", async (message) => {
-          console.log("RECEIVED MESSAGE???", message);
           if (message.status === "completed" || message.status === "error") {
             console.log(
               `Worker ${workerId} ${
@@ -201,12 +164,8 @@ class Datahive {
                   : "encountered an error"
               }.`
             );
-            console.log(
-              "Datahive Instance handleMainThreadMessages",
-              Datahive.getInstance()
-            );
-            console.log("LOG RUN MANAGER", this.runManager);
-            this.runManager.endRun(message.caller, message.runId, "completed");
+
+            //this.runManager.endRun(message.caller, message.runId, "completed");
             await this.workerManager.terminateWorker(workerId);
           }
         });
@@ -225,19 +184,11 @@ class Datahive {
     });
   }
 
-  // Handle worker thread logic
-  public handleWorkerThreadLogic(): void {
-    console.log("Handling worker thread logic");
-    console.log(
-      "Datahive Instance handleWorkerThreadLogic",
-      Datahive.getInstance()
-    );
-
+  private handleWorkerLogic(): void {
     if (parentPort) {
       parentPort.on("message", async (message) => {
         const workerId = message.workerId;
-        console.log("message ooooo", message);
-        // Override console functions
+
         const originalConsoleLog = console.log;
         const originalConsoleWarn = console.warn;
         const originalConsoleError = console.error;
@@ -268,7 +219,7 @@ export async function relay(
   type: string,
   projectId: string | undefined,
   runId: string | undefined
-): Promise<RunInstance> {
+): Promise<any> {
   let response;
   try {
     if (type === "start" && projectId) {
@@ -280,10 +231,9 @@ export async function relay(
     if (type === "resume" && runId) {
       response = datahive.startProcess(caller, null, runId, "resume");
     }
-    //@ts-ignore
     return response;
   } catch (error: any) {
-    throw new Error("GNEGNEGNEG" + error);
+    throw new Error("Error in relay: " + error);
   }
 }
 
