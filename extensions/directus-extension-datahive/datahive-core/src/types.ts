@@ -43,7 +43,6 @@ export interface ApiRequestOptions {
   params?: any;
   id?: string | number;
   isErrorReport?: boolean;
-  run?: { data: { id: string | number } };
+  run?: any;
   fields?: string;
-  errorCollection?: string;
 }

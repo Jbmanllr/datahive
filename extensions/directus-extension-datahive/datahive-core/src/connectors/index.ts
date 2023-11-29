@@ -9,8 +9,7 @@ export async function apiRequest({
   id,
   isErrorReport = false,
   run,
-  fields = "",
-  errorCollection = "run_reports",
+  fields = ""
 }: ApiRequestOptions): Promise<any> {
   const endpoint = id
     ? `${process.env.DIRECTUS_API_BASE_URL}/items/${collection}/${id}${fields}`
@@ -63,7 +62,9 @@ export async function apiRequest({
               data: {
                 type: "info",
                 run_id: run?.data.id,
-                item_id: data?.raw_data_id,
+                //@ts-ignore
+                run_session_id: run?.runSession.data.id,
+                //item_id: data?.raw_data_id,
                 code: err.extensions.code,
                 message: err.message,
                 raw_data: error,

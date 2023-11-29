@@ -265,7 +265,7 @@ export const handlers = {
               data: preparedData,
               entity_type: request.label,
               source: databee.project.data.key,
-              project_id: "databee.project.data.id",
+              project_id: databee.project.data.id,
               run_id: databee.data.id,
               run_session_id: databee.runSession.data.id,
               label: "updater",
