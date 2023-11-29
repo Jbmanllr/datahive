@@ -42,7 +42,7 @@ class ProcessManager implements IProcessManager {
     try {
       const ID = projectId ? projectId : runId;
       //@ts-ignore
-      const newProcess = fork(processPath, [ID, "--name=Databee"], {
+      const newProcess = fork(processPath, [ID, `--name=${caller}`], {
         stdio: ["ignore", "pipe", "pipe", "ipc"],
         detached: false,
         env: {
@@ -55,11 +55,11 @@ class ProcessManager implements IProcessManager {
       });
 
       newProcess.stdout?.on("data", (data) => {
-        logWithPrefix(`[Databee (${newProcess.pid})]: `, data.toString());
+        logWithPrefix(`[${caller} (${newProcess.pid})]: `, data.toString());
       });
 
       newProcess.stderr?.on("data", (data) => {
-        logWithPrefix(`[Databee (${newProcess.pid})]: `, data.toString());
+        logWithPrefix(`[${caller} (${newProcess.pid})]: `, data.toString());
       });
 
       newProcess.on("exit", () => {
@@ -78,12 +78,12 @@ class ProcessManager implements IProcessManager {
         };
 
         this.activeProcesses.set(newProcess.pid, processInfo);
-        console.log("Active Databee Processes", this.activeProcesses.size);
+        console.log(`Active ${caller} Processes, ${this.activeProcesses.size}`);
       }
 
       return newProcess;
     } catch (error) {
-      console.error("Error creating Databee process:", error);
+      console.error(`Error creating ${caller} process:, ${error}`);
       throw error;
     }
   }
