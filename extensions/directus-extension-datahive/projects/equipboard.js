@@ -1,8 +1,8 @@
 // equipboard.js (handlers)
 import { RequestQueue, KeyValueStore, Dataset } from "crawlee";
 
-export const EXTRACT_FREQUENCY_MINUTES = 14400;
-const useLastRunEndDate = false;
+export const EXTRACT_FREQUENCY_MINUTES = 60;
+const useLastRunEndDate = true;
 
 const LABEL_NAMES = {
   HOMEPAGE: "HOMEPAGE",
@@ -96,13 +96,15 @@ export const handlers = {
     await page.goto("https://equipboard.com/?filter=gear");
     await page.waitForTimeout(1000);
 
-    console.log("DATABEE IN HOMEPAGE", databee);
+    //console.log("DATABEE IN HOMEPAGE", databee);
 
     const latest_run = databee.project.data.databee_runs[0];
 
+    //console.log("Latest run:", databee.project.data.databee_runs, latest_run);
+
     // Calculate the date threshold. Items older than this date will not be processed
     let thresholdDate;
-    if (useLastRunEndDate && latest_run && latest_run.length > 0) {
+    if (useLastRunEndDate && latest_run) {
       thresholdDate = new Date(latest_run.date_end);
     } else {
       thresholdDate = new Date(
@@ -139,7 +141,7 @@ export const handlers = {
 
         // Check if the item has already been processed
         if (processedItems.has(uniqueId)) {
-          console.log("Item has already been processed. Skipping...");
+          //console.log("Item has already been processed. Skipping...");
           continue;
         }
 
@@ -149,16 +151,10 @@ export const handlers = {
           (el) => el.textContent
         );
         const approxDatePublished = await getApproxPublishDate(timeText);
-        console.log("Approximate date published:", approxDatePublished);
-
         console.log(
-          "REQUETS QUEUE NAME",
-          generateRequestQueueName(
-            databee.project.data.id,
-            databee.data.id,
-            "label"
-          )
+          `Approx date published: ${approxDatePublished} (${timeText})`
         );
+
         if (approxDatePublished >= thresholdDate) {
           // Enqueue details for further processing
           const enqueueDetails = async (label, url) => {
@@ -194,7 +190,7 @@ export const handlers = {
 
           // Add the unique identifier to the set of processed items
           processedItems.add(uniqueId);
-          console.log("Item processed and added to the set of processed items");
+          //console.log("Item processed and added to the set of processed items");
         } else {
           continueScraping = false;
           break;
@@ -1370,15 +1366,10 @@ export async function getApproxPublishDate(timeText) {
           case "day":
             datePublished = new Date(Date.now() - number * 24 * 60 * 60 * 1000);
             break;
-          // Add cases for week, month, year, etc. if needed
           default:
             console.log(`Unknown time unit: ${unit}`);
         }
       }
-
-      console.log(
-        `Approximate publish date for card: ${datePublished} with ${timeText}`
-      );
     } else {
       console.log("Failed to parse time text:", timeText);
     }

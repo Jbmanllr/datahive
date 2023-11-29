@@ -54,7 +54,7 @@ export class ProjectInstance {
           config.id === "databee_config"
             ? "&deep[databee_orchestrations][_sort]=sort"
             : ""
-        }&deep[${runs_collection}][_filter][status][_neq]=running&deep[${runs_collection}][_filter][date_end][_nnull]=true&deep[${runs_collection}][_filter][isTestRun][_eq]=false&deep[${runs_collection}][_limit]=1&deep[${runs_collection}][_sort]=-date_end`,
+        }&deep[${runs_collection}][_filter][status][_eq]=completed&deep[${runs_collection}][_filter][date_end][_nnull]=true&deep[${runs_collection}][_filter][isTestRun][_eq]=false&deep[${runs_collection}][_limit]=1&deep[${runs_collection}][_sort]=-date_end`,
       });
     } catch (error: any) {
       throw new Error("Failed to fetch project: " + error.message);

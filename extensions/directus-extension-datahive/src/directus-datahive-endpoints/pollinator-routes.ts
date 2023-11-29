@@ -5,40 +5,57 @@ const moduleName = "pollinator";
 const capModuleName = capitalizeFirstLetter(moduleName);
 
 export default function (router: any) {
-  router.get(`/${moduleName}/start/:projectId`, async (req: any, res: any) => {
+  router.post(`/${moduleName}/start/:projectId`, async (req: any, res: any) => {
     const projectId = req.params.projectId;
     try {
-      //@ts-ignore
-      await relay(moduleName, "start", projectId);
-      res.send(`New ${capModuleName} run started successfully.`);
+      const response = await relay(moduleName, "start", projectId, undefined);
+      delete response.runSession.data!.env;
+      const resdata = {
+        error: false,
+        message: `${capModuleName} run started successfully.`,
+        response: response,
+      };
+      res.send(resdata);
     } catch (error: any) {
       res.status(500).json({
         error: true,
-        message: `Error in starting run: ${error.message || error}`,
-      });
-    }
-  });
-
-  router.get(`/${moduleName}/pause/:runId`, (req: any, res: any) => {
-    const runId = req.params.runId;
-    try {
-      console.log(`Pausing ${capModuleName} run ID ${runId}...`);
-      res.send(`${capitalizeFirstLetter(moduleName)} run stopped successfully.`);
-    } catch (error: any) {
-      res.status(500).json({
-        error: true,
-        message: `Error pausing ${capModuleName} run: ${
+        message: `Error starting ${capModuleName} run: ${
           error.message || error
         }`,
       });
     }
   });
 
-  router.get(`/${moduleName}/resume/:runId`, (req: any, res: any) => {
+  router.post(`/${moduleName}/stop/:runId`, async (req: any, res: any) => {
     const runId = req.params.runId;
     try {
-      console.log(`Resuming ${capModuleName} run ID ${runId}...`);
-      res.send(`${capModuleName} run resumed successfully.`);
+      //console.log(`Stopping ${capModuleName} run ID ${runId}...`);
+      await relay(moduleName, "stop", undefined, runId);
+      res.send(
+        `${capitalizeFirstLetter(moduleName)} run stopped successfully.`
+      );
+    } catch (error: any) {
+      res.status(500).json({
+        error: true,
+        message: `Error stopping
+         ${capModuleName} run: ${error.message || error}`,
+      });
+    }
+  });
+
+  router.post(`/${moduleName}/resume/:runId`, async (req: any, res: any) => {
+    const runId = req.params.runId;
+    try {
+      const response = await relay(moduleName, "resume", undefined, runId);
+      delete response.runSession.data!.env;
+
+      const resdata = {
+        error: false,
+        message: `${capModuleName} run resumed successfully.`,
+        data: response,
+      };
+
+      res.send(resdata);
     } catch (error: any) {
       res.status(500).json({
         error: true,

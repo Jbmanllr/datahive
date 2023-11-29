@@ -3,6 +3,7 @@ import { isMainThread, parentPort } from "worker_threads";
 import ProcessManager from "./process-manager";
 import WorkerManager from "./worker-manager";
 import goGather from "./databee/index";
+import { pollinaGo } from "./pollinator/index";
 import { RunManager, RunInstance } from "./run-manager";
 
 const defaultConfig: any = {
@@ -86,7 +87,7 @@ class Datahive {
         });
         run.process_id = childProcess.pid;
         console.log("Datahive Instance after start", Datahive.getInstance());
-        childProcess.send({ command: "start", run });
+        childProcess.send({ command: "start", run, caller });
         childProcess.on("message", async (message: any) => {
           console.log("Message from child:", message);
           if (["completed", "aborted", "stopped"].includes(message.command)) {
@@ -104,7 +105,7 @@ class Datahive {
           this.processPath,
           config
         );
-        childProcess.send({ command: "startWorker", run });
+        childProcess.send({ command: "startWorker", run, caller });
         childProcess.on("message", async (message: any) => {
           if (message.status === "completed") {
             await this.runManager.endRun(caller, run.data!.id, "completed");
@@ -144,7 +145,14 @@ class Datahive {
   private async handleChildProcessLogic(): Promise<void> {
     process.on("message", async (message: any) => {
       if (message.command === "start") {
-        const result = await goGather(message.run);
+        let result;
+        if (message.caller === "databee") {
+          result = await goGather(message.run);
+        } else if (message.caller === "pollinator") {
+          result = await pollinaGo(message.run);
+        } else if (message.caller === "honeycomb") {
+          //result = await honeycomb(message.run);
+        }
         //parentPort?.postMessage({ command: "completed", result });
       }
 

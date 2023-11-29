@@ -12,7 +12,7 @@ const CONCURRENCIES = 25;
 const BATCH_SIZE = 100;
 
 const PROJECT_NAME = "equipboard";
-// @ts-ignore
+
 const PROJECT_ID = "project_id";
 
 const SOURCE_TABLE = "databee_raw_data";
@@ -41,36 +41,36 @@ interface TransformedData {
   [key: string]: any; // This should be typed more specifically if possible
 }
 
-export async function testFC(): Promise<void> {
-  console.log("TEST POLLINATOR");
+export async function pollinaGo(run: any): Promise<string> {
+  console.log("TEST POLLINATOR", run);
   function delay(milliseconds: any) {
     return new Promise((resolve) => setTimeout(resolve, milliseconds));
   }
 
   async function time() {
     console.log("Start of delay");
-    await delay(60000); // Delay for 5000 milliseconds (5 seconds)
+    await delay(20000); // Delay for 5000 milliseconds (5 seconds)
     console.log("End of delay");
   }
 
   await time();
+  //@ts-ignore
+  process.send({ command: "completed" });
+  return "finished pollinator";
 }
 
 export async function runPollinator(): Promise<void> {
-  // @ts-ignore
   console.log("Process ENV", process.env);
   let run: RunData | undefined;
 
   run = await apiRequest({
     method: "POST",
     collection: DATA_FACTORY_RUNS_COLLECTION,
-    // @ts-ignore
     data: {
       date_start: new Date(),
       status: "running",
       batch_size: BATCH_SIZE,
       concurrencies: CONCURRENCIES,
-      // @ts-ignore
       env: process.env,
     },
     isErrorReport: false,
@@ -83,7 +83,6 @@ export async function runPollinator(): Promise<void> {
       const rawDataResponse = await apiRequest({
         method: "GET",
         collection: SOURCE_TABLE,
-        // @ts-ignore
         params: {
           limit: BATCH_SIZE,
           offset: offset,
@@ -123,9 +122,7 @@ export async function runPollinator(): Promise<void> {
     await apiRequest({
       method: "PATCH",
       collection: DATA_FACTORY_RUNS_COLLECTION,
-      // @ts-ignore
       id: run.data.id,
-      // @ts-ignore
       data: {
         date_end: new Date(),
         status: "completed",
@@ -158,7 +155,6 @@ async function migrateData(
       apiRequest({
         method: "POST",
         collection: ENTITY_TABLES[entityType],
-        // @ts-ignore
         data: dataToInsert,
         isErrorReport: false,
       })
@@ -189,7 +185,7 @@ function transformData(data: any, entityType: EntityType): TransformedData {
   if (!mapping) return {};
 
   const transformedData: TransformedData = {};
-  // @ts-ignore
+
   for (const [key, value] of Object.entries(mapping)) {
     if (typeof value === "string") {
       transformedData[key] = data[value];

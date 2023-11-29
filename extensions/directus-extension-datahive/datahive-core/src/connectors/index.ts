@@ -16,7 +16,6 @@ export async function apiRequest({
     : `${process.env.DIRECTUS_API_BASE_URL}/items/${collection}`;
 
   try {
-    console.log("RUN api request", run);
     const config: AxiosRequestConfig = {
       method: method,
       url: endpoint,
