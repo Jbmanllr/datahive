@@ -96,6 +96,8 @@ export const handlers = {
     await page.goto("https://equipboard.com/?filter=gear");
     await page.waitForTimeout(1000);
 
+    console.log("DATABEE IN HOMEPAGE", databee)
+
     const latest_run = databee.project.data.databee_runs[0];
 
     // Calculate the date threshold. Items older than this date will not be processed
@@ -153,7 +155,7 @@ export const handlers = {
           "REQUETS QUEUE NAME",
           generateRequestQueueName(
             databee.project.data.id,
-            databee.run.data.id,
+            databee.data.id,
             "label"
           )
         );
@@ -164,7 +166,7 @@ export const handlers = {
               const requestQueue = await RequestQueue.open(
                 generateRequestQueueName(
                   databee.project.data.id,
-                  databee.run.data.id,
+                  databee.data.id,
                   label
                 )
               );
@@ -174,7 +176,7 @@ export const handlers = {
                 userData: {
                   pro: proLink,
                   approx_date_published: approxDatePublished,
-                  run_id: databee.run.data.id,
+                  run_id: databee.data.id,
                 },
               });
               //console.log(`Details enqueued for ${label}`);
@@ -251,7 +253,7 @@ export const handlers = {
         );
         if (true) {
           const dataset = await Dataset.open(
-            `${databee.project.data.id}__${databee.run.data.id}`
+            `${databee.project.data.id}__${databee.data.id}`
           );
           await dataset.pushData(preparedData);
         }
@@ -264,7 +266,7 @@ export const handlers = {
               entity_type: request.label,
               source: databee.project.data.key,
               project_id: databee.project.data.id,
-              run_id: databee.run.data.id,
+              run_id: databee.data.id,
               run_session_id: databee.run.runSession.data.id,
               label: "updater",
             },
@@ -331,7 +333,7 @@ export const handlers = {
       const requestQueueListingOccurrences = await RequestQueue.open(
         generateRequestQueueName(
           databee.project.data.id,
-          databee.run.data.id,
+          databee.data.id,
           LABEL_NAMES.LISTING_OCCURRENCES
         )
       );
@@ -458,7 +460,7 @@ export const handlers = {
         const bandRequestQueue = await RequestQueue.open(
           generateRequestQueueName(
             databee.project.data.id,
-            databee.run.data.id,
+            databee.data.id,
             LABEL_NAMES.DETAIL_BANDS
           )
         );
@@ -499,7 +501,7 @@ export const handlers = {
         const proPictureRequestQueue = await RequestQueue.open(
           generateRequestQueueName(
             databee.project.data.id,
-            databee.run.data.id,
+            databee.data.id,
             LABEL_NAMES.PICTURES_PROS
           )
         );
@@ -534,11 +536,11 @@ export const handlers = {
       groups: groups,
       social_links: socialData,
       crawl_errors: errors,
-      run_id: databee.run.data.id,
+      run_id: databee.data.id,
     };
     if (true) {
       const dataset = await Dataset.open(
-        `${databee.project.data.id}__${databee.run.data.id}`
+        `${databee.project.data.id}__${databee.data.id}`
       );
       await dataset.pushData(preparedData);
     }
@@ -551,7 +553,7 @@ export const handlers = {
           entity_type: request.label,
           source: databee.project.data.key,
           project_id: databee.project.data.id,
-          run_id: databee.run.data.id,
+          run_id: databee.data.id,
           run_session_id: databee.run.runSession.data.id,
           label: "updater",
         },
@@ -805,7 +807,7 @@ export const handlers = {
         const productPictureRequestQueue = await RequestQueue.open(
           generateRequestQueueName(
             databee.project.data.id,
-            databee.run.data.id,
+            databee.data.id,
             LABEL_NAMES.PICTURES_PRODUCTS
           )
         );
@@ -846,7 +848,7 @@ export const handlers = {
     };
     if (true) {
       const dataset = await Dataset.open(
-        `${databee.project.data.id}__${databee.run.data.id}`
+        `${databee.project.data.id}__${databee.data.id}`
       );
       await dataset.pushData(preparedData);
     }
@@ -859,7 +861,7 @@ export const handlers = {
           entity_type: request.label,
           source: databee.project.data.key,
           project_id: databee.project.data.id,
-          run_id: databee.run.data.id,
+          run_id: databee.data.id,
           run_session_id: databee.run.runSession.data.id,
           label: "updater",
         },
@@ -870,7 +872,7 @@ export const handlers = {
     const requestQueueBrandDetail = await RequestQueue.open(
       generateRequestQueueName(
         databee.project.data.id,
-        databee.run.data.id,
+        databee.data.id,
         LABEL_NAMES.DETAIL_BRANDS
       )
     );
@@ -994,7 +996,7 @@ export const handlers = {
         const proPictureRequestQueue = await RequestQueue.open(
           generateRequestQueueName(
             databee.project.data.id,
-            databee.run.data.id,
+            databee.data.id,
             LABEL_NAMES.PICTURES_BANDS
           )
         );
@@ -1025,7 +1027,7 @@ export const handlers = {
     };
     if (true) {
       const dataset = await Dataset.open(
-        `${databee.project.data.id}__${databee.run.data.id}`
+        `${databee.project.data.id}__${databee.data.id}`
       );
       await dataset.pushData(preparedData);
     }
@@ -1038,7 +1040,7 @@ export const handlers = {
           entity_type: request.label,
           source: databee.project.data.key,
           project_id: databee.project.data.id,
-          run_id: databee.run.data.id,
+          run_id: databee.data.id,
           run_session_id: databee.run.runSession.data.id,
           label: "updater",
         },
@@ -1071,7 +1073,7 @@ export const handlers = {
         const brandPictureRequestQueue = await RequestQueue.open(
           generateRequestQueueName(
             databee.project.data.id,
-            databee.run.data.id,
+            databee.data.id,
             LABEL_NAMES.PICTURES_BRANDS
           )
         );
@@ -1100,7 +1102,7 @@ export const handlers = {
     };
     if (true) {
       const dataset = await Dataset.open(
-        `${databee.project.data.id}__${databee.run.data.id}`
+        `${databee.project.data.id}__${databee.data.id}`
       );
       await dataset.pushData(preparedData);
     }
@@ -1113,7 +1115,7 @@ export const handlers = {
           entity_type: request.label,
           source: databee.project.data.key,
           project_id: databee.project.data.id,
-          run_id: databee.run.data.id,
+          run_id: databee.data.id,
           run_session_id: databee.run.runSession.data.id,
           label: "updater",
         },
@@ -1292,7 +1294,7 @@ async function handleImage(data, submissionId, databee) {
       const proPictureRequestQueue = await RequestQueue.open(
         generateRequestQueueName(
           databee.project.data.id,
-          databee.run.data.id,
+          databee.data.id,
           LABEL_NAMES.PICTURES_OCCURRENCES
         )
       );
@@ -1332,7 +1334,7 @@ function prepareDataForPush(data, request, proPath, submissionId, databee) {
     comment_nb: data.numberOfComments,
     crawl_errors: data.errors,
     approx_date_published: request.userData.approx_date_published,
-    run_id: databee.run.data.id,
+    run_id: databee.data.id,
   };
 }
 
