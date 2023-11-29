@@ -1,5 +1,5 @@
 # Start from the Directus base image
-FROM directus-node18:10.8.1
+FROM directus-node18:10.8.2
 
 # Set the working directory in the container
 WORKDIR /directus
