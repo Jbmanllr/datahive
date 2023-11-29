@@ -1,6 +1,6 @@
-import { DatabeeProjectData } from "./databee/types"
-import { PollinatorProjectData } from "./pollinator/types"
-import { HoneycombProjectData } from "./honeycomb/types"
+import { DatabeeProjectData } from "./databee/types";
+import { PollinatorProjectData } from "./pollinator/types";
+import { HoneycombProjectData } from "./honeycomb/types";
 import { Method } from "axios";
 
 export interface BaseProperties {
@@ -19,7 +19,7 @@ export interface Run extends BaseProperties {
   project_id: string;
   status: string;
   time_elapsed?: number;
-  env?: any
+  env?: any;
 }
 
 export interface RunSession extends BaseProperties {
@@ -28,18 +28,22 @@ export interface RunSession extends BaseProperties {
   run_id: string;
   status: string;
   time_elapsed?: number;
-  env?: any
+  env?: any;
 }
 
-export type ProjectData = DatabeeProjectData | PollinatorProjectData | HoneycombProjectData;
+export type ProjectData =
+  | DatabeeProjectData
+  | PollinatorProjectData
+  | HoneycombProjectData;
 
 export interface ApiRequestOptions {
   method: Method;
   collection: string;
-  data?: any;
+  data?: null | any;
   params?: any;
   id?: string | number;
   isErrorReport?: boolean;
   run?: { data: { id: string | number } };
   fields?: string;
+  errorCollection?: string;
 }

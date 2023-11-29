@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { ApiRequestOptions } from "../types"
+import { ApiRequestOptions } from "../types";
 
 export async function apiRequest({
   method,
@@ -10,12 +10,14 @@ export async function apiRequest({
   isErrorReport = false,
   run,
   fields = "",
+  errorCollection = "run_reports",
 }: ApiRequestOptions): Promise<any> {
   const endpoint = id
     ? `${process.env.DIRECTUS_API_BASE_URL}/items/${collection}/${id}${fields}`
     : `${process.env.DIRECTUS_API_BASE_URL}/items/${collection}`;
 
   try {
+    console.log("RUN api request", run);
     const config: AxiosRequestConfig = {
       method: method,
       url: endpoint,
@@ -53,7 +55,11 @@ export async function apiRequest({
           try {
             await apiRequest({
               method: "POST",
-              collection: "databee_run_reports",
+              //@ts-ignore
+              collection: run.config.run_reports_collection
+                ? //@ts-ignore
+                  run.config.run_reports_collection
+                : "run_reports",
               data: {
                 type: "info",
                 run_id: run?.data.id,

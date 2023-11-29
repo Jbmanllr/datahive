@@ -1,7 +1,7 @@
 // equipboard.js (handlers)
 import { RequestQueue, KeyValueStore, Dataset } from "crawlee";
 
-export const EXTRACT_FREQUENCY_MINUTES = 100;
+export const EXTRACT_FREQUENCY_MINUTES = 300;
 const useLastRunEndDate = false;
 
 const LABEL_NAMES = {
@@ -96,7 +96,7 @@ export const handlers = {
     await page.goto("https://equipboard.com/?filter=gear");
     await page.waitForTimeout(1000);
 
-    console.log("DATABEE IN HOMEPAGE", databee)
+    console.log("DATABEE IN HOMEPAGE", databee);
 
     const latest_run = databee.project.data.databee_runs[0];
 
@@ -265,11 +265,12 @@ export const handlers = {
               data: preparedData,
               entity_type: request.label,
               source: databee.project.data.key,
-              project_id: databee.project.data.id,
+              project_id: "databee.project.data.id",
               run_id: databee.data.id,
-              run_session_id: databee.run.runSession.data.id,
+              run_session_id: databee.runSession.data.id,
               label: "updater",
             },
+            run: databee,
           });
         }
         console.log(`Submission #${submissionId} extracted successfully`);
@@ -554,9 +555,10 @@ export const handlers = {
           source: databee.project.data.key,
           project_id: databee.project.data.id,
           run_id: databee.data.id,
-          run_session_id: databee.run.runSession.data.id,
+          run_session_id: databee.runSession.data.id,
           label: "updater",
         },
+        run: databee,
       });
     }
   },
@@ -862,9 +864,10 @@ export const handlers = {
           source: databee.project.data.key,
           project_id: databee.project.data.id,
           run_id: databee.data.id,
-          run_session_id: databee.run.runSession.data.id,
+          run_session_id: databee.runSession.data.id,
           label: "updater",
         },
+        run: databee,
       });
     }
 
@@ -1041,9 +1044,10 @@ export const handlers = {
           source: databee.project.data.key,
           project_id: databee.project.data.id,
           run_id: databee.data.id,
-          run_session_id: databee.run.runSession.data.id,
+          run_session_id: databee.runSession.data.id,
           label: "updater",
         },
+        run: databee,
       });
     }
   },
@@ -1116,9 +1120,10 @@ export const handlers = {
           source: databee.project.data.key,
           project_id: databee.project.data.id,
           run_id: databee.data.id,
-          run_session_id: databee.run.runSession.data.id,
+          run_session_id: databee.runSession.data.id,
           label: "updater",
         },
+        run: databee,
       });
     }
   },
