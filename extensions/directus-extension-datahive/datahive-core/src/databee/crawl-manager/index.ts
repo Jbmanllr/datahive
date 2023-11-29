@@ -16,12 +16,11 @@ class CrawlerRunner {
     this.databee = databee;
     this.routerFactory = routerFactory;
     this.crawlerFactory = crawlerFactory;
-    this.handlerLoader = handlerLoader; // This will be used to load handlers
+    this.handlerLoader = handlerLoader;
     this.handlers = null;
   }
 
   async run(): Promise<void> {
-    console.log("RUN INSTANCE CRAWLER HANDLER", this.databee);
     if (!this.databee) {
       console.log("No Databee provided.");
       return;
@@ -51,7 +50,6 @@ class CrawlerRunner {
   }
 
   private async runHandler(sequence: any): Promise<void> {
-    //console.log("LOG HANDLER FACTORY", this.routerFactory);
     const handlerFunction =
       this.handlers[sequence.handler_label] || this.handlers["DEFAULT"];
     if (!handlerFunction) {
@@ -80,8 +78,6 @@ class CrawlerRunner {
     handlerFunction: any,
     router: any
   ): Promise<void> {
-    //console.log(`RUNNING ${params.requestQueueLabel} CRAWLER WITH ${sequence.crawler_type.toUpperCase()}`);
-
     this.routerFactory.addHandler(
       sequence,
       handlerFunction,
@@ -94,7 +90,7 @@ class CrawlerRunner {
       this.databee.data.id,
       params.requestQueueLabel
     );
-    //params.requestQueueLabel + (timestampRQ ? `-${Date.now()}` : "");
+
     const requestQueue = await RequestQueue.open(`${queueName}`);
 
     const commonCrawlerOptions = { requestHandler: router, requestQueue };

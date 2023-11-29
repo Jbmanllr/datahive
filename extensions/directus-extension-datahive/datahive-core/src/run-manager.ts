@@ -1,7 +1,6 @@
 import { apiRequest } from "./connectors/index";
 import { Logger } from "./logger";
 import { Run, RunSession } from "./types";
-import { generateStorageName, cleanRunStorage } from "./databee/utils";
 import { Mutex } from "async-mutex";
 
 const RUN_STATUS_RUNNING = "running";
@@ -145,9 +144,8 @@ export class RunManager {
 export class RunInstance {
   data: Run | null | undefined;
   runSession: RunSessionInstance;
-  config: any | null;
+  config: any;
   project: any;
-  storageName: string | null;
   process_id: number | null | undefined;
 
   constructor() {
@@ -155,7 +153,6 @@ export class RunInstance {
     this.runSession = new RunSessionInstance();
     this.config = null;
     this.project = new ProjectInstance();
-    this.storageName = null;
     this.process_id = null;
   }
 
@@ -199,12 +196,6 @@ export class RunInstance {
           this.data?.project_id,
           this.config
         );
-        if (this.project.data && this.data) {
-          this.storageName = generateStorageName(
-            this.project.data.id,
-            this.data.id
-          );
-        }
       }
 
       return this;
@@ -223,12 +214,6 @@ export class RunInstance {
     try {
       this.project = await this.project.init(projectId, this.config);
       await this.create(projectId, this.config);
-      if (this.project.data && this.data) {
-        this.storageName = generateStorageName(
-          this.project.data.id,
-          this.data.id
-        );
-      }
       return this;
     } catch (error: any) {
       throw new Error("Failed to initialize Databee: " + error);

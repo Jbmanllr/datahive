@@ -6,6 +6,7 @@ import CrawlerFactory from "./crawl-manager/crawlers/index";
 import { loadProjectHandlers } from "./crawl-manager/index";
 import { Logger } from "../logger";
 import { Configuration, KeyValueStore } from "crawlee";
+import { generateStorageName } from "./utils";
 
 dotenv.config();
 
@@ -14,19 +15,17 @@ export default async function GoGather(runInstance: any): Promise<void> {
   const crawlerFactory = new CrawlerFactory();
   const handlerLoader = { load: loadProjectHandlers };
 
-  // START RUN
+  console.log("Run instance infos passed to GoGather", runInstance);
 
-  //console.log("Run GGATHER", runInstance);
-
-  const project: any = runInstance.project;
-  const run: any = runInstance;
-  const runSession: any = runInstance.runSession;
-  const storageName: any = runInstance.storageName;
+  const storageName: any = generateStorageName(
+    runInstance.project.data.id,
+    runInstance.data.id
+  );
 
   process.env.CRAWLEE_DEFAULT_KEY_VALUE_STORE_ID = storageName;
   await KeyValueStore.setValue("databee_data", {
     databee: runInstance,
-    current_run_session_id: runSession.data.id,
+    current_run_session_id: runInstance.runSession.data.id,
   });
 
   function delay(milliseconds: any) {
