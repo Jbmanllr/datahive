@@ -92,7 +92,7 @@ class Datahive {
           if (["completed", "aborted", "stopped"].includes(message.command)) {
             await this.runManager.endRun(caller, run.data!.id, message.command);
             await this.processManager.terminateProcess(run.process_id);
-            console.log("Datahive Instance after end", Datahive.getInstance());
+            //console.log("Datahive Instance after end", Datahive.getInstance());
           }
         });
         //childProcess.on("error", (error: any) => {});

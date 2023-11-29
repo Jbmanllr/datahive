@@ -1,7 +1,7 @@
 // equipboard.js (handlers)
 import { RequestQueue, KeyValueStore, Dataset } from "crawlee";
 
-export const EXTRACT_FREQUENCY_MINUTES = 300;
+export const EXTRACT_FREQUENCY_MINUTES = 14400;
 const useLastRunEndDate = false;
 
 const LABEL_NAMES = {
@@ -1344,42 +1344,51 @@ function prepareDataForPush(data, request, proPath, submissionId, databee) {
 }
 
 export async function getApproxPublishDate(timeText) {
-  // Parse the timeText to get the number and time unit
-  const timeRegex = /(?:about )?(\d+) (minute|hour|day|week|month|year)/;
+  try {
+    // Extended regex to include "less than 1 minute ago"
+    const timeRegex =
+      /(?:about )?(\d+) (minute|hour|day|week|month|year)s?|less than a minute ago/;
 
-  const match = timeText.match(timeRegex);
-  let datePublished = null;
+    const match = timeText.match(timeRegex);
+    let datePublished = null;
 
-  if (match) {
-    const number = parseInt(match[1]);
-    const unit = match[2];
+    if (match) {
+      if (match[0] === "less than a minute ago") {
+        // Set datePublished to current time for "less than a minute ago"
+        datePublished = new Date();
+      } else {
+        const number = parseInt(match[1]);
+        const unit = match[2];
 
-    switch (unit) {
-      case "minute":
-      case "minutes":
-        datePublished = new Date(Date.now() - number * 60 * 1000);
-        break;
-      case "hour":
-      case "hours":
-        datePublished = new Date(Date.now() - number * 60 * 60 * 1000);
-        break;
-      case "day":
-      case "days":
-        datePublished = new Date(Date.now() - number * 24 * 60 * 60 * 1000);
-        break;
-      // Add cases for week, month, year, etc. if needed
-      default:
-        console.log(`Unknown time unit: ${unit}`);
+        switch (unit) {
+          case "minute":
+            datePublished = new Date(Date.now() - number * 60 * 1000);
+            break;
+          case "hour":
+            datePublished = new Date(Date.now() - number * 60 * 60 * 1000);
+            break;
+          case "day":
+            datePublished = new Date(Date.now() - number * 24 * 60 * 60 * 1000);
+            break;
+          // Add cases for week, month, year, etc. if needed
+          default:
+            console.log(`Unknown time unit: ${unit}`);
+        }
+      }
+
+      console.log(
+        `Approximate publish date for card: ${datePublished} with ${timeText}`
+      );
+    } else {
+      console.log("Failed to parse time text:", timeText);
     }
 
-    console.log(
-      `Approximate publish date for card: ${datePublished} with ${timeText}`
-    );
-  } else {
-    console.log("Failed to parse time text:", timeText);
+    return datePublished;
+  } catch (error) {
+    console.error("Error occurred in getApproxPublishDate:", error);
+    // You might want to handle the error or rethrow it depending on your application's needs
+    throw error; // or return a default value, or just return;
   }
-
-  return datePublished;
 }
 
 function prepareLink(rawLink) {
